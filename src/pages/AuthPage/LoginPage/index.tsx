@@ -49,7 +49,6 @@ const LoginPage = () => {
             const res = await authService.login(data);
             CookiesService.set(COOKIES.ACCESS_TOKEN, res.data.data.accessToken);
             const decodeToken = decodeJWT();
-            console.log('decodeToken', decodeToken);
             const mappedRole = mapRoleIdToRole((decodeToken as any)?.roleId);
             const decodedUserId = (decodeToken as any)?.userId ?? ((decodeToken as any)?.sub ? Number((decodeToken as any)?.sub) : null);
 
