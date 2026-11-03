@@ -2,15 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import answerService from "@services/answer";
 import { ICreateAnswerRequest } from "@models/answer/request";
-
-interface ApiError {
-  response?: {
-    status?: number;
-    data?: {
-      message?: string | string[];
-    };
-  };
-}
+import { getApiErrorMessage } from "@utils/api-error";
 
 /**
  * Hook for updating a single answer
@@ -29,17 +21,7 @@ export const useUpdateAnswer = () => {
     },
     onError: (error: unknown) => {
       console.error("Error updating answer:", error);
-      const apiError = error as ApiError;
-      if (apiError?.response?.status === 422) {
-        const messages = apiError?.response?.data?.message;
-        if (Array.isArray(messages)) {
-          toast.error(`Lỗi validation: ${messages.join(', ')}`);
-        } else {
-          toast.error(messages || "Lỗi validation");
-        }
-      } else {
-        toast.error(apiError?.response?.data?.message || "Có lỗi xảy ra khi cập nhật đáp án");
-      }
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật đáp án"));
     },
   });
 
@@ -63,17 +45,7 @@ export const useCreateAnswer = () => {
     },
     onError: (error: unknown) => {
       console.error("Error creating answer:", error);
-      const apiError = error as ApiError;
-      if (apiError?.response?.status === 422) {
-        const messages = apiError?.response?.data?.message;
-        if (Array.isArray(messages)) {
-          toast.error(`Lỗi validation: ${messages.join(', ')}`);
-        } else {
-          toast.error(messages || "Lỗi validation");
-        }
-      } else {
-        toast.error(apiError?.response?.data?.message || "Có lỗi xảy ra khi tạo đáp án");
-      }
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo đáp án"));
     },
   });
 
@@ -96,8 +68,7 @@ export const useDeleteAnswer = () => {
     },
     onError: (error: unknown) => {
       console.error("Error deleting answer:", error);
-      const apiError = error as ApiError;
-      toast.error(apiError?.response?.data?.message || "Có lỗi xảy ra khi xóa đáp án");
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi xóa đáp án"));
     },
   });
 

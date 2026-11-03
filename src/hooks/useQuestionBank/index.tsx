@@ -20,15 +20,7 @@ import { useSelector } from "react-redux";
 import answerService from "@services/answer";
 import { IQueryAnswerRequest } from "@models/answer/request";
 import { useUpdateAnswer, useCreateAnswer } from "@hooks/useAnswer";
-
-interface ApiError {
-  response?: {
-    status?: number;
-    data?: {
-      message?: string | string[];
-    };
-  };
-}
+import { getApiErrorMessage } from "@utils/api-error";
 
 /**
  * Hook for managing QuestionBank list with filters and pagination
@@ -78,19 +70,7 @@ export const useCreateQuestion = () => {
     },
     onError: (error: unknown) => {
       console.error("Error creating question:", error);
-      const apiError = error as ApiError;
-      if (apiError?.response?.status === 422) {
-        const messages = apiError?.response?.data?.message;
-        if (Array.isArray(messages)) {
-          toast.error(`Lỗi validation: ${messages.join(", ")}`);
-        } else {
-          toast.error(messages || "Lỗi validation");
-        }
-      } else {
-        toast.error(
-          apiError?.response?.data?.message || "Có lỗi xảy ra khi tạo câu hỏi"
-        );
-      }
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo câu hỏi"));
     },
   });
 
@@ -113,20 +93,7 @@ export const useUpdateQuestion = () => {
     },
     onError: (error: unknown) => {
       console.error("Error updating question:", error);
-      const apiError = error as ApiError;
-      if (apiError?.response?.status === 422) {
-        const messages = apiError?.response?.data?.message;
-        if (Array.isArray(messages)) {
-          toast.error(`Lỗi validation: ${messages.join(", ")}`);
-        } else {
-          toast.error(messages || "Lỗi validation");
-        }
-      } else {
-        toast.error(
-          apiError?.response?.data?.message ||
-            "Có lỗi xảy ra khi cập nhật câu hỏi"
-        );
-      }
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật câu hỏi"));
     },
   });
 
@@ -148,10 +115,7 @@ export const useDeleteQuestion = () => {
     },
     onError: (error: unknown) => {
       console.error("Error deleting question:", error);
-      const apiError = error as ApiError;
-      toast.error(
-        apiError?.response?.data?.message || "Có lỗi xảy ra khi xóa câu hỏi"
-      );
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi xóa câu hỏi"));
     },
   });
 

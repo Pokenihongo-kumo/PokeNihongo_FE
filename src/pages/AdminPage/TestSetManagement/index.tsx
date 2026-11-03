@@ -42,7 +42,7 @@ import { IQueryQuestionRequest } from "@models/questionBank/request";
 import { QuestionEntityType } from "@models/questionBank/entity";
 import { QuestionType } from "@constants/questionBank";
 import { toast } from "react-toastify";
-import { AxiosError } from "axios";
+import { getApiErrorMessage } from "@utils/api-error";
 import FilterSection from "./components/FilterSection";
 import TestSetCard from "./components/TestSetCard";
 import { extractText, getTranslation } from "./utils/helpers";
@@ -54,18 +54,6 @@ const TestSetManagement: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
   // Helper function to extract error message from axios error response
-  const getErrorMessage = (error: unknown, defaultMessage: string): string => {
-    if (error instanceof AxiosError) {
-      const message = error.response?.data?.message;
-      if (message) {
-        return Array.isArray(message) ? message.join(", ") : message;
-      }
-    }
-    if (error instanceof Error) {
-      return error.message;
-    }
-    return defaultMessage;
-  };
   const {
     testSets,
     isLoading,
@@ -196,7 +184,7 @@ const TestSetManagement: React.FC = () => {
       },
       onError: (e) => {
         console.error(t("testSetManagement.removeQuestionError"), e);
-        toast.error(getErrorMessage(e, t("testSetManagement.removeQuestionError")));
+        toast.error(getApiErrorMessage(e, t("testSetManagement.removeQuestionError")));
       },
     });
   };
@@ -223,7 +211,7 @@ const TestSetManagement: React.FC = () => {
       },
       onError: (e) => {
         console.error(t("testSetManagement.removeQuestionError"), e);
-        toast.error(getErrorMessage(e, t("testSetManagement.removeQuestionError")));
+        toast.error(getApiErrorMessage(e, t("testSetManagement.removeQuestionError")));
       },
     });
   };
@@ -352,7 +340,7 @@ const TestSetManagement: React.FC = () => {
       }
     } catch (e) {
       console.error(t("testSetManagement.unknownError"), e);
-      toast.error(getErrorMessage(e, t("testSetManagement.unknownError")));
+      toast.error(getApiErrorMessage(e, t("testSetManagement.unknownError")));
       setSaving(false);
     }
   };

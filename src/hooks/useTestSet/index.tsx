@@ -5,32 +5,8 @@ import testSetService from "@services/testSet";
 import { TestSetListRequest, TestSetCreateRequest, TestSetQuestionBankLinkMultipleRequest, TestSetUpsertWithQuestionBanksRequest } from "@models/testSet/request";
 import { selectCurrentLanguage } from "@redux/features/language/selector";
 import { useSelector } from "react-redux";
-import { AxiosError } from "axios";
+import { getApiErrorMessage } from "@utils/api-error";
 
-interface ApiError {
-  response?: {
-    status?: number;
-    data?: {
-      message?: string | string[];
-    };
-  };
-}
-
-/**
- * Helper function to extract error message from axios error response
- */
-const getErrorMessage = (error: unknown, defaultMessage: string): string => {
-  if (error instanceof AxiosError) {
-    const message = error.response?.data?.message;
-    if (message) {
-      return Array.isArray(message) ? message.join(", ") : message;
-    }
-  }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return defaultMessage;
-};
 
 
 
@@ -180,19 +156,7 @@ export const useCreateTestSet = () => {
     },
     onError: (error: unknown) => {
       console.error("Error creating test set:", error);
-      const apiError = error as ApiError;
-      if (apiError?.response?.status === 422) {
-        const messages = apiError?.response?.data?.message;
-        if (Array.isArray(messages)) {
-          toast.error(`Lỗi validation: ${messages.join(", ")}`);
-        } else {
-          toast.error(messages || "Lỗi validation");
-        }
-      } else {
-        toast.error(
-          getErrorMessage(error, "Có lỗi xảy ra khi tạo test set")
-        );
-      }
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo test set"));
     },
   });
 
@@ -219,19 +183,7 @@ export const useUpdateTestSet = () => {
     },
     onError: (error: unknown) => {
       console.error("Error updating test set:", error);
-      const apiError = error as ApiError;
-      if (apiError?.response?.status === 422) {
-        const messages = apiError?.response?.data?.message;
-        if (Array.isArray(messages)) {
-          toast.error(`Lỗi validation: ${messages.join(", ")}`);
-        } else {
-          toast.error(messages || "Lỗi validation");
-        }
-      } else {
-        toast.error(
-          getErrorMessage(error, "Có lỗi xảy ra khi cập nhật test set")
-        );
-      }
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật test set"));
     },
   });
 
@@ -256,7 +208,7 @@ export const useLinkQuestionBanksToTestSet = () => {
     onError: (error: unknown) => {
       console.error("Error linking question banks:", error);
       toast.error(
-        getErrorMessage(error, "Có lỗi xảy ra khi liên kết câu hỏi")
+        getApiErrorMessage(error, "Có lỗi xảy ra khi liên kết câu hỏi")
       );
     },
   });
@@ -305,7 +257,7 @@ export const useDeleteLinkedQuestionBanksFromTestSet = () => {
     onError: (error: unknown) => {
       console.error("Error deleting linked question banks:", error);
       toast.error(
-        getErrorMessage(error, "Có lỗi xảy ra khi xóa câu hỏi")
+        getApiErrorMessage(error, "Có lỗi xảy ra khi xóa câu hỏi")
       );
     },
   });
@@ -329,30 +281,7 @@ export const useUpsertTestSetWithQuestionBanks = () => {
     },
     onError: (error: unknown) => {
       console.error("Error upserting test set with question banks:", error);
-      const apiError = error as ApiError;
-      if (apiError?.response?.status === 422) {
-        const raw = (apiError?.response?.data as unknown as { message?: unknown })?.message;
-        if (Array.isArray(raw)) {
-          const parts = raw.map((item) => {
-            if (typeof item === 'string') return item;
-            if (item && typeof item === 'object') {
-              const msg = (item as { message?: string }).message || 'Dữ liệu không hợp lệ';
-              const path = (item as { path?: string }).path;
-              return path ? `${path}: ${msg}` : msg;
-            }
-            return String(item);
-          });
-          toast.error(`Lỗi validation:\n${parts.join("\n")}`);
-        } else if (typeof raw === 'string') {
-          toast.error(raw);
-        } else {
-          toast.error("Lỗi validation");
-        }
-      } else {
-        toast.error(
-          getErrorMessage(error, "Có lỗi xảy ra khi lưu test set")
-        );
-      }
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi lưu test set"));
     },
   });
 
@@ -375,7 +304,7 @@ export const useDeleteTestSet = () => {
     onError: (error: unknown) => {
       console.error("Error deleting test set:", error);
       toast.error(
-        getErrorMessage(error, "Có lỗi xảy ra khi xóa test set")
+        getApiErrorMessage(error, "Có lỗi xảy ra khi xóa test set")
       );
     },
   });

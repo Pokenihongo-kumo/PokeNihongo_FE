@@ -2,15 +2,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import exerciseService from "@services/exercise";
 import { CreateExerciseRequest, UpdateExerciseRequest } from "@models/exercise/request";
-
-interface ApiError {
-  response?: {
-    status?: number;
-    data?: {
-      message?: string | string[];
-    };
-  };
-}
+import { getApiErrorMessage } from "@utils/api-error";
 
 /**
  * Hook for creating a new exercise
@@ -26,15 +18,8 @@ export const useCreateExercise = () => {
       // Invalidate and refetch exercises list
       queryClient.invalidateQueries({ queryKey: ["exercises"] });
     },
-    onError: (error: ApiError) => {
-      const errorMessage = error.response?.data?.message;
-      if (Array.isArray(errorMessage)) {
-        toast.error(errorMessage.join(", "));
-      } else if (errorMessage) {
-        toast.error(errorMessage);
-      } else {
-        toast.error("Có lỗi xảy ra khi tạo bài tập");
-      }
+    onError: (error: unknown) => {
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo bài tập"));
     },
   });
 
@@ -72,10 +57,8 @@ export const useDeleteExercise = (lessonId: number) => {
       toast.success((response as any)?.message || 'Xóa bài tập thành công');
       queryClient.invalidateQueries({ queryKey: ["exercises", { lessonId }] });
     },
-    onError: (error: ApiError) => {
-      const msg = error?.response?.data?.message;
-      if (Array.isArray(msg)) toast.error(msg.join(', '));
-      else toast.error(msg || 'Không thể xóa bài tập');
+    onError: (error: unknown) => {
+      toast.error(getApiErrorMessage(error, 'Không thể xóa bài tập'));
     },
   });
 
@@ -99,15 +82,8 @@ export const useUpdateExercise = (lessonId: number) => {
       toast.success(response.message || "Cập nhật bài tập thành công");
       queryClient.invalidateQueries({ queryKey: ["exercises", { lessonId }] });
     },
-    onError: (error: ApiError) => {
-      const errorMessage = error.response?.data?.message;
-      if (Array.isArray(errorMessage)) {
-        toast.error(errorMessage.join(", "));
-      } else if (errorMessage) {
-        toast.error(errorMessage);
-      } else {
-        toast.error("Có lỗi xảy ra khi cập nhật bài tập");
-      }
+    onError: (error: unknown) => {
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật bài tập"));
     },
   });
 

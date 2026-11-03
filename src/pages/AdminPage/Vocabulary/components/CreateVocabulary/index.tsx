@@ -13,6 +13,7 @@ import vocabularyService from '@services/vocabulary';
 import { CreateVocabularyFullMultipartSchema, ICreateVocabularyFullMultipartType } from '@models/vocabulary/request';
 import { Card, CardContent, CardHeader, CardTitle } from '@ui/Card';
 import { Plus, Trash2, Languages, UploadCloud } from 'lucide-react';
+import { getApiErrorMessage } from '@utils/api-error';
 import { cn } from '@utils/CN';
 import ImageDropzone from '@ui/ImageDropzone/ImageDropzone';
 import AudioDropzone from '@ui/AudioDropzone';
@@ -98,16 +99,7 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
             console.error('Error creating Vocabulary:', error);
             console.error('Error response:', error.response?.data?.message);
 
-            if (error.response?.status === 422) {
-                const messages = error.response?.data?.message;
-                if (Array.isArray(messages)) {
-                    toast.error(`${t('vocabulary.createVocabulary.validationErrors')}: ${messages.join(', ')}`);
-                } else {
-                    toast.error(messages || t('vocabulary.createVocabulary.validationError'));
-                }
-            } else {
-                toast.error(error.response?.data?.message || t('vocabulary.createVocabulary.generalError'));
-            }
+            toast.error(getApiErrorMessage(error, t('vocabulary.createVocabulary.generalError')));
         }
     });
 
