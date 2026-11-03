@@ -1,6 +1,6 @@
-import { useTranslation } from 'react-i18next';
-import { Card, CardContent, CardHeader, CardTitle } from '@ui/Card';
-import { CheckCircle2 } from 'lucide-react';
+import { useTranslation } from "react-i18next";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card";
+import { CheckCircle2 } from "lucide-react";
 
 const PaymentSuccess = () => {
     const { t } = useTranslation();
@@ -17,30 +17,22 @@ const PaymentSuccess = () => {
                             </div>
                         </div>
                     </div>
-                    <CardTitle className="text-3xl font-bold text-green-600">
-                        {t('payment.success.title')}
-                    </CardTitle>
+                    <CardTitle className="text-3xl font-bold text-green-600">{t("payment.success.title")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
                     {/* Success Message */}
                     <div className="text-center">
-                        <p className="text-lg text-gray-700 mb-4">
-                            {t('payment.success.description')}
-                        </p>
+                        <p className="text-lg text-gray-700 mb-4">{t("payment.success.description")}</p>
                     </div>
 
                     {/* Additional Info */}
                     <div className="bg-white/60 rounded-lg p-4 border border-green-200">
-                        <p className="text-sm text-gray-600 text-center">
-                            {t('payment.success.helpText')}
-                        </p>
+                        <p className="text-sm text-gray-600 text-center">{t("payment.success.helpText")}</p>
                     </div>
 
                     {/* Return to App Message */}
                     <div className="text-center pt-4">
-                        <p className="text-base font-medium text-gray-700">
-                            {t('payment.success.returnToApp')}
-                        </p>
+                        <p className="text-base font-medium text-gray-700">{t("payment.success.returnToApp")}</p>
                     </div>
                 </CardContent>
             </Card>
@@ -49,4 +41,3 @@ const PaymentSuccess = () => {
 };
 
 export default PaymentSuccess;
-

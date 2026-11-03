@@ -7,8 +7,8 @@ import { useTranslation } from "react-i18next";
 
 /**
  * hanlde Kanji List
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export const useKanjiList = (params: IQueryRequest & { enabled?: boolean; dialogKey?: number }) => {
     const { enabled = true, dialogKey, ...queryParams } = params;
@@ -23,8 +23,8 @@ export const useKanjiList = (params: IQueryRequest & { enabled?: boolean; dialog
 
 /**
  * hanlde KạniList Management
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export const useKanjiListManagement = (params: IQueryRequest & { enabled?: boolean; dialogKey?: number }) => {
     const { enabled = true, dialogKey, ...queryParams } = params;
@@ -38,7 +38,7 @@ export const useKanjiListManagement = (params: IQueryRequest & { enabled?: boole
 
 /**
  * hanlde Create Kanji With Meaning
- * @returns 
+ * @returns
  */
 export const useCreateKanjiWithMeaning = () => {
     const queryClient = useQueryClient();
@@ -46,7 +46,7 @@ export const useCreateKanjiWithMeaning = () => {
     return useMutation({
         mutationFn: (data: IKanjiWithMeaningRequest) => kanjiService.createKanjiWithMeaning(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['kanji-list-management'] });
+            queryClient.invalidateQueries({ queryKey: ["kanji-list-management"] });
         },
     });
 };
@@ -63,12 +63,12 @@ export const useUpdateKanjiWithMeaning = () => {
         mutationFn: ({ identifier, data }: { identifier: string | number; data: Partial<IKanjiWithMeaningRequest> }) =>
             kanjiService.updateKanjiWithMeaning(identifier, data),
         onSuccess: (response: any) => {
-            queryClient.invalidateQueries({ queryKey: ['kanji-list'] });
-            queryClient.invalidateQueries({ queryKey: ['kanji-list-management'] });
-            toast.success(response?.data?.message || t('vocabulary.kanji.updateSuccess'));
+            queryClient.invalidateQueries({ queryKey: ["kanji-list"] });
+            queryClient.invalidateQueries({ queryKey: ["kanji-list-management"] });
+            toast.success(response?.data?.message || t("vocabulary.kanji.updateSuccess"));
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || t('vocabulary.kanji.updateError'));
+            toast.error(error?.response?.data?.message || t("vocabulary.kanji.updateError"));
         },
     });
 };
@@ -84,12 +84,12 @@ export const useDeleteKanji = () => {
     return useMutation({
         mutationFn: (id: number) => kanjiService.deleteKanji(id),
         onSuccess: (data: any) => {
-            queryClient.invalidateQueries({ queryKey: ['kanji-list'] });
-            queryClient.invalidateQueries({ queryKey: ['kanji-list-management'] });
-            toast.success(data?.message || t('vocabulary.kanji.deleteSuccess'));
+            queryClient.invalidateQueries({ queryKey: ["kanji-list"] });
+            queryClient.invalidateQueries({ queryKey: ["kanji-list-management"] });
+            toast.success(data?.message || t("vocabulary.kanji.deleteSuccess"));
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || t('vocabulary.kanji.deleteError'));
+            toast.error(error?.response?.data?.message || t("vocabulary.kanji.deleteError"));
         },
     });
 };

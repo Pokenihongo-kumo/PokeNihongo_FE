@@ -1,6 +1,5 @@
 import z from "zod";
 
-
 /**
  * Login form data request
  */
@@ -10,7 +9,6 @@ export const LoginFormDataRequest = z.object({
 });
 export type ILoginFormDataRequest = z.infer<typeof LoginFormDataRequest>;
 //-----------------End-Login-Request-----------------//
-
 
 /**
  * Create User Request

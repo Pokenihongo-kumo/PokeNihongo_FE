@@ -1,33 +1,33 @@
-import { Button } from '@ui/Button';
-import { DialogContent, DialogFooter } from '@ui/Dialog';
-import { DialogHeader, DialogTitle } from '@ui/Dialog';
-import { Input } from '@ui/Input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui/Select';
-import { Controller, useForm } from 'react-hook-form';
-import { Textarea } from '@ui/Textarea';
-import { useEffect, useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { toast } from 'react-toastify';
-import vocabularyService from '@services/vocabulary';
-import { CreateVocabularyFullMultipartSchema, ICreateVocabularyFullMultipartType } from '@models/vocabulary/request';
-import { Card, CardContent, CardHeader, CardTitle } from '@ui/Card';
-import { Plus, Trash2, Languages, UploadCloud } from 'lucide-react';
-import { getApiErrorMessage } from '@utils/api-error';
-import { cn } from '@utils/CN';
-import ImageDropzone from '@ui/ImageDropzone/ImageDropzone';
-import AudioDropzone from '@ui/AudioDropzone';
-import { useWordTypeList } from '@hooks/useWordType';
-import { useTranslation } from 'react-i18next';
+import { Button } from "@ui/Button";
+import { DialogContent, DialogFooter } from "@ui/Dialog";
+import { DialogHeader, DialogTitle } from "@ui/Dialog";
+import { Input } from "@ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import { Controller, useForm } from "react-hook-form";
+import { Textarea } from "@ui/Textarea";
+import { useEffect, useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import vocabularyService from "@services/vocabulary";
+import { CreateVocabularyFullMultipartSchema, ICreateVocabularyFullMultipartType } from "@models/vocabulary/request";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card";
+import { Plus, Trash2, Languages, UploadCloud } from "lucide-react";
+import { getApiErrorMessage } from "@utils/api-error";
+import { cn } from "@utils/CN";
+import ImageDropzone from "@ui/ImageDropzone/ImageDropzone";
+import AudioDropzone from "@ui/AudioDropzone";
+import { useWordTypeList } from "@hooks/useWordType";
+import { useTranslation } from "react-i18next";
 
 interface CreateVocabularyProps {
     setIsAddDialogOpen: (value: boolean) => void;
 }
 
 const LANGUAGE_OPTIONS = [
-    { code: 'vi', label: 'Tiếng Việt (vi)' },
-    { code: 'en', label: 'English (en)' },
-    { code: 'ja', label: '日本語 (ja)' },
+    { code: "vi", label: "Tiếng Việt (vi)" },
+    { code: "en", label: "English (en)" },
+    { code: "ja", label: "日本語 (ja)" },
 ];
 
 const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
@@ -36,33 +36,40 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
 
     // Form setup
     // Keep form type broad to avoid resolver generic mismatch; Zod will validate and transform
-    const { control, handleSubmit, formState: { errors }, reset, setValue, watch } = useForm<any>({
+    const {
+        control,
+        handleSubmit,
+        formState: { errors },
+        reset,
+        setValue,
+        watch,
+    } = useForm<any>({
         resolver: zodResolver(CreateVocabularyFullMultipartSchema),
         defaultValues: {
-            word_jp: '',
-            reading: '',
-            level_n: '',
-            word_type_id: '',
-            translations: '',
+            word_jp: "",
+            reading: "",
+            level_n: "",
+            word_type_id: "",
+            translations: "",
             imageFile: undefined,
             audioFile: undefined,
-        }
+        },
     });
 
     const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-    const [creationMode, setCreationMode] = useState<'manual' | 'import'>('manual');
+    const [creationMode, setCreationMode] = useState<"manual" | "import">("manual");
     const [selectedImportFile, setSelectedImportFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
 
     const [audioPreview, setAudioPreview] = useState<string | null>(null);
 
-
-
     // Friendlier translations UI state
     // meanings grouped by language for easier editing
-    const [meaningsByLang, setMeaningsByLang] = useState<Record<string, string[]>>({ vi: [''] });
-    const [selectedMeaningLang, setSelectedMeaningLang] = useState<string>('vi');
-    const [examples, setExamples] = useState<Array<{ original_sentence: string; translations: Array<{ language_code: string; sentence: string }> }>>([]);
+    const [meaningsByLang, setMeaningsByLang] = useState<Record<string, string[]>>({ vi: [""] });
+    const [selectedMeaningLang, setSelectedMeaningLang] = useState<string>("vi");
+    const [examples, setExamples] = useState<
+        Array<{ original_sentence: string; translations: Array<{ language_code: string; sentence: string }> }>
+    >([]);
 
     // Keep hidden translations JSON in sync for zod validation
     useEffect(() => {
@@ -75,7 +82,7 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
             });
         });
         const payload = { meaning: meaningArray, examples: examples.length ? examples : [] };
-        setValue('translations', JSON.stringify(payload));
+        setValue("translations", JSON.stringify(payload));
     }, [meaningsByLang, examples, setValue]);
 
     // Cleanup object URLs
@@ -92,15 +99,15 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
             reset();
             setIsAddDialogOpen(false);
             setIsSubmitting(false);
-            toast.success(t('vocabulary.createVocabulary.createSuccess'));
+            toast.success(t("vocabulary.createVocabulary.createSuccess"));
         },
         onError: (error: any) => {
             setIsSubmitting(false);
-            console.error('Error creating Vocabulary:', error);
-            console.error('Error response:', error.response?.data?.message);
+            console.error("Error creating Vocabulary:", error);
+            console.error("Error response:", error.response?.data?.message);
 
-            toast.error(getApiErrorMessage(error, t('vocabulary.createVocabulary.generalError')));
-        }
+            toast.error(getApiErrorMessage(error, t("vocabulary.createVocabulary.generalError")));
+        },
     });
 
     const onSubmit = async (data: ICreateVocabularyFullMultipartType) => {
@@ -110,15 +117,15 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
             const submitPayload: any = {
                 ...data,
             };
-            const imageFile: File | undefined = (watch('imageFile') as any) as File | undefined;
-            const audioFile: File | undefined = (watch('audioFile') as any) as File | undefined;
+            const imageFile: File | undefined = watch("imageFile") as any as File | undefined;
+            const audioFile: File | undefined = watch("audioFile") as any as File | undefined;
             if (imageFile) submitPayload.imageFile = imageFile;
             if (audioFile) submitPayload.audioFile = audioFile;
             createVocabularyMutation.mutate(submitPayload as ICreateVocabularyFullMultipartType);
         } catch (error: any) {
             setIsSubmitting(false);
-            console.error('Unexpected error:', error);
-            toast.error(error.response?.data?.message || t('vocabulary.createVocabulary.generalError'));
+            console.error("Unexpected error:", error);
+            toast.error(error.response?.data?.message || t("vocabulary.createVocabulary.generalError"));
         }
     };
 
@@ -126,10 +133,16 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
         <>
             <DialogContent className="bg-white border-border max-w-4xl">
                 <DialogHeader>
-                    <DialogTitle className="text-foreground text-2xl">{t("vocabulary.createVocabulary.title")}</DialogTitle>
+                    <DialogTitle className="text-foreground text-2xl">
+                        {t("vocabulary.createVocabulary.title")}
+                    </DialogTitle>
                 </DialogHeader>
 
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 mt-4 max-h-[70vh] overflow-y-auto pr-2 md:pr-6" noValidate>
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="space-y-6 mt-4 max-h-[70vh] overflow-y-auto pr-2 md:pr-6"
+                    noValidate
+                >
                     {/* Creation Mode Toggle */}
                     <div className="flex items-center justify-center mb-2">
                         <div className="flex items-center gap-1 rounded-lg bg-muted p-1">
@@ -139,9 +152,11 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                 size="sm"
                                 className={cn(
                                     "px-6 py-2 rounded-md transition-all duration-200",
-                                    creationMode === 'manual' ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                                    creationMode === "manual"
+                                        ? "bg-white text-foreground shadow-sm"
+                                        : "text-muted-foreground hover:text-foreground",
                                 )}
-                                onClick={() => setCreationMode('manual')}
+                                onClick={() => setCreationMode("manual")}
                             >
                                 <Plus className="h-4 w-4 mr-2" /> {t("vocabulary.createVocabulary.modes.manual")}
                             </Button>
@@ -151,35 +166,51 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                 size="sm"
                                 className={cn(
                                     "px-6 py-2 rounded-md transition-all duration-200",
-                                    creationMode === 'import' ? "bg-white text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
+                                    creationMode === "import"
+                                        ? "bg-white text-foreground shadow-sm"
+                                        : "text-muted-foreground hover:text-foreground",
                                 )}
-                                onClick={() => setCreationMode('import')}
+                                onClick={() => setCreationMode("import")}
                             >
                                 <UploadCloud className="h-4 w-4 mr-2" /> {t("vocabulary.createVocabulary.modes.import")}
                             </Button>
                         </div>
                     </div>
 
-                    {creationMode === 'import' && (
+                    {creationMode === "import" && (
                         <div className="space-y-6">
                             <div className="text-center mb-2">
-                                <h3 className="text-lg font-semibold text-foreground mb-1">{t("vocabulary.createVocabulary.import.title")}</h3>
-                                <p className="text-sm text-muted-foreground">{t("vocabulary.createVocabulary.import.description")}</p>
+                                <h3 className="text-lg font-semibold text-foreground mb-1">
+                                    {t("vocabulary.createVocabulary.import.title")}
+                                </h3>
+                                <p className="text-sm text-muted-foreground">
+                                    {t("vocabulary.createVocabulary.import.description")}
+                                </p>
                             </div>
 
                             <div className="border-2 border-dashed border-muted-foreground/25 rounded-lg p-8 bg-muted/20">
-                                <label htmlFor="vocab-file-upload" className="flex flex-col items-center justify-center cursor-pointer group">
+                                <label
+                                    htmlFor="vocab-file-upload"
+                                    className="flex flex-col items-center justify-center cursor-pointer group"
+                                >
                                     <div className="flex flex-col items-center justify-center">
                                         <div className="p-4 rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors mb-4">
                                             <UploadCloud className="w-12 h-12 text-primary" />
                                         </div>
-                                        <h4 className="text-lg font-semibold text-foreground mb-2">{t("vocabulary.createVocabulary.import.selectFile")}</h4>
+                                        <h4 className="text-lg font-semibold text-foreground mb-2">
+                                            {t("vocabulary.createVocabulary.import.selectFile")}
+                                        </h4>
                                         <p className="text-sm text-muted-foreground mb-4">
-                                            <span className="font-medium">{t("vocabulary.createVocabulary.import.clickToSelect")}</span> {t("vocabulary.createVocabulary.import.dragAndDrop")}
+                                            <span className="font-medium">
+                                                {t("vocabulary.createVocabulary.import.clickToSelect")}
+                                            </span>{" "}
+                                            {t("vocabulary.createVocabulary.import.dragAndDrop")}
                                         </p>
                                         <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
                                             <span className="px-2 py-1 bg-muted rounded">JSON</span>
-                                            <span className="px-2 py-1 bg-muted rounded">{t("vocabulary.createVocabulary.import.maxSize")}</span>
+                                            <span className="px-2 py-1 bg-muted rounded">
+                                                {t("vocabulary.createVocabulary.import.maxSize")}
+                                            </span>
                                         </div>
                                     </div>
                                     <Input
@@ -202,7 +233,9 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                             </div>
                                             <div className="flex-1">
                                                 <p className="font-medium text-green-800">{selectedImportFile.name}</p>
-                                                <p className="text-sm text-green-600">{(selectedImportFile.size / 1024 / 1024).toFixed(2)} MB</p>
+                                                <p className="text-sm text-green-600">
+                                                    {(selectedImportFile.size / 1024 / 1024).toFixed(2)} MB
+                                                </p>
                                             </div>
                                             <Button
                                                 type="button"
@@ -220,11 +253,13 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                         </div>
                     )}
 
-                    {creationMode === 'manual' && (
+                    {creationMode === "manual" && (
                         <>
                             <Card>
                                 <CardHeader className="pb-3">
-                                    <CardTitle className="text-base">{t("vocabulary.createVocabulary.basicInfo.title")}</CardTitle>
+                                    <CardTitle className="text-base">
+                                        {t("vocabulary.createVocabulary.basicInfo.title")}
+                                    </CardTitle>
                                 </CardHeader>
                                 <CardContent className="pt-0">
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
@@ -234,7 +269,14 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                 name="word_jp"
                                                 control={control}
                                                 render={({ field }) => (
-                                                    <Input label={t("vocabulary.createVocabulary.basicInfo.wordJp")} placeholder={t("vocabulary.createVocabulary.basicInfo.wordJpPlaceholder")} error={errors.word_jp?.message as string} {...field} />
+                                                    <Input
+                                                        label={t("vocabulary.createVocabulary.basicInfo.wordJp")}
+                                                        placeholder={t(
+                                                            "vocabulary.createVocabulary.basicInfo.wordJpPlaceholder",
+                                                        )}
+                                                        error={errors.word_jp?.message as string}
+                                                        {...field}
+                                                    />
                                                 )}
                                             />
 
@@ -242,7 +284,14 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                 name="reading"
                                                 control={control}
                                                 render={({ field }) => (
-                                                    <Input label={t("vocabulary.createVocabulary.basicInfo.reading")} placeholder={t("vocabulary.createVocabulary.basicInfo.readingPlaceholder")} error={errors.reading?.message as string} {...field} />
+                                                    <Input
+                                                        label={t("vocabulary.createVocabulary.basicInfo.reading")}
+                                                        placeholder={t(
+                                                            "vocabulary.createVocabulary.basicInfo.readingPlaceholder",
+                                                        )}
+                                                        error={errors.reading?.message as string}
+                                                        {...field}
+                                                    />
                                                 )}
                                             />
                                         </div>
@@ -254,10 +303,19 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                 control={control}
                                                 render={({ field }) => (
                                                     <div className="flex flex-col gap-2">
-                                                        <label htmlFor="level_n">{t("vocabulary.createVocabulary.basicInfo.jlptLevel")}</label>
-                                                        <Select onValueChange={field.onChange} value={String(field.value)}>
+                                                        <label htmlFor="level_n">
+                                                            {t("vocabulary.createVocabulary.basicInfo.jlptLevel")}
+                                                        </label>
+                                                        <Select
+                                                            onValueChange={field.onChange}
+                                                            value={String(field.value)}
+                                                        >
                                                             <SelectTrigger>
-                                                                <SelectValue placeholder={t("vocabulary.createVocabulary.basicInfo.jlptLevelPlaceholder")} />
+                                                                <SelectValue
+                                                                    placeholder={t(
+                                                                        "vocabulary.createVocabulary.basicInfo.jlptLevelPlaceholder",
+                                                                    )}
+                                                                />
                                                             </SelectTrigger>
                                                             <SelectContent>
                                                                 <SelectItem value="5">N5</SelectItem>
@@ -267,7 +325,11 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                                 <SelectItem value="1">N1</SelectItem>
                                                             </SelectContent>
                                                         </Select>
-                                                        {errors.level_n && <p className="text-xs text-destructive mt-1">{errors.level_n.message as string}</p>}
+                                                        {errors.level_n && (
+                                                            <p className="text-xs text-destructive mt-1">
+                                                                {errors.level_n.message as string}
+                                                            </p>
+                                                        )}
                                                     </div>
                                                 )}
                                             />
@@ -277,18 +339,33 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                 control={control}
                                                 render={({ field }) => (
                                                     <div className="flex flex-col gap-2">
-                                                        <label htmlFor="word_type_id">{t("vocabulary.createVocabulary.basicInfo.wordType")}</label>
-                                                        <Select onValueChange={field.onChange} value={String(field.value)}>
+                                                        <label htmlFor="word_type_id">
+                                                            {t("vocabulary.createVocabulary.basicInfo.wordType")}
+                                                        </label>
+                                                        <Select
+                                                            onValueChange={field.onChange}
+                                                            value={String(field.value)}
+                                                        >
                                                             <SelectTrigger>
-                                                                <SelectValue placeholder={t("vocabulary.createVocabulary.basicInfo.wordTypePlaceholder")} />
+                                                                <SelectValue
+                                                                    placeholder={t(
+                                                                        "vocabulary.createVocabulary.basicInfo.wordTypePlaceholder",
+                                                                    )}
+                                                                />
                                                             </SelectTrigger>
                                                             <SelectContent>
                                                                 {wordTypesData?.results?.map((t) => (
-                                                                    <SelectItem key={t.id} value={String(t.id)}>{t.name}</SelectItem>
+                                                                    <SelectItem key={t.id} value={String(t.id)}>
+                                                                        {t.name}
+                                                                    </SelectItem>
                                                                 ))}
                                                             </SelectContent>
                                                         </Select>
-                                                        {errors.word_type_id && <p className="text-xs text-destructive mt-1">{errors.word_type_id.message as string}</p>}
+                                                        {errors.word_type_id && (
+                                                            <p className="text-xs text-destructive mt-1">
+                                                                {errors.word_type_id.message as string}
+                                                            </p>
+                                                        )}
                                                     </div>
                                                 )}
                                             />
@@ -301,22 +378,32 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                             <Card>
                                 <CardHeader className="pb-3">
                                     <div className="flex items-center justify-between">
-                                        <CardTitle className="text-base">{t("vocabulary.createVocabulary.translations.title")}</CardTitle>
+                                        <CardTitle className="text-base">
+                                            {t("vocabulary.createVocabulary.translations.title")}
+                                        </CardTitle>
                                         <div className="flex items-center gap-2">
                                             <Select
                                                 onValueChange={(val) => {
                                                     if (!Object.keys(meaningsByLang).includes(val)) {
-                                                        setMeaningsByLang((prev) => ({ ...prev, [val]: [''] }));
+                                                        setMeaningsByLang((prev) => ({ ...prev, [val]: [""] }));
                                                     }
                                                     setSelectedMeaningLang(val);
                                                 }}
                                             >
                                                 <SelectTrigger className="w-52">
-                                                    <SelectValue placeholder={t("vocabulary.createVocabulary.translations.addLanguage")} />
+                                                    <SelectValue
+                                                        placeholder={t(
+                                                            "vocabulary.createVocabulary.translations.addLanguage",
+                                                        )}
+                                                    />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                    {LANGUAGE_OPTIONS.filter((opt) => !Object.keys(meaningsByLang).includes(opt.code)).map((opt) => (
-                                                        <SelectItem key={opt.code} value={opt.code}>{opt.label}</SelectItem>
+                                                    {LANGUAGE_OPTIONS.filter(
+                                                        (opt) => !Object.keys(meaningsByLang).includes(opt.code),
+                                                    ).map((opt) => (
+                                                        <SelectItem key={opt.code} value={opt.code}>
+                                                            {opt.label}
+                                                        </SelectItem>
                                                     ))}
                                                 </SelectContent>
                                             </Select>
@@ -324,7 +411,6 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                     </div>
                                 </CardHeader>
                                 <CardContent className="pt-0 space-y-5">
-
                                     {/* Language chips */}
                                     <div className="flex flex-wrap gap-2">
                                         {Object.keys(meaningsByLang).map((lang) => (
@@ -335,12 +421,14 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                     "inline-flex items-center cursor-pointer select-none px-3 py-1.5 rounded-xl text-[12px] font-medium transition-colors",
                                                     selectedMeaningLang === lang
                                                         ? "bg-primary text-white shadow-sm"
-                                                        : "bg-background border border-border text-foreground hover:bg-muted"
+                                                        : "bg-background border border-border text-foreground hover:bg-muted",
                                                 )}
                                             >
                                                 <Languages className="h-3.5 w-3.5 mr-1.5" />
                                                 {LANGUAGE_OPTIONS.find((l) => l.code === lang)?.label || lang}
-                                                <span className="ml-2 text-[10px] opacity-80">{meaningsByLang[lang].length}</span>
+                                                <span className="ml-2 text-[10px] opacity-80">
+                                                    {meaningsByLang[lang].length}
+                                                </span>
                                             </span>
                                         ))}
                                     </div>
@@ -348,14 +436,22 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                     {/* Meaning lines for selected language */}
                                     <div className="space-y-3">
                                         {(meaningsByLang[selectedMeaningLang] || []).map((val, idx) => {
-                                            const totalLines = Object.values(meaningsByLang).reduce((acc, arr) => acc + arr.length, 0);
+                                            const totalLines = Object.values(meaningsByLang).reduce(
+                                                (acc, arr) => acc + arr.length,
+                                                0,
+                                            );
                                             const canRemove = totalLines > 1;
                                             return (
-                                                <div key={`${selectedMeaningLang}-${idx}`} className="grid grid-cols-1 md:grid-cols-6 gap-3 items-end">
+                                                <div
+                                                    key={`${selectedMeaningLang}-${idx}`}
+                                                    className="grid grid-cols-1 md:grid-cols-6 gap-3 items-end"
+                                                >
                                                     <div className="md:col-span-5">
                                                         <Input
                                                             label={`${t("vocabulary.createVocabulary.translations.meaning")} (${selectedMeaningLang})`}
-                                                            placeholder={t("vocabulary.createVocabulary.translations.meaningPlaceholder")}
+                                                            placeholder={t(
+                                                                "vocabulary.createVocabulary.translations.meaningPlaceholder",
+                                                            )}
                                                             value={val}
                                                             onChange={(e) => {
                                                                 const newVal = e.target.value;
@@ -383,9 +479,11 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                                         delete next[selectedMeaningLang];
                                                                         const remaining = Object.keys(next);
                                                                         if (remaining.length === 0) {
-                                                                            next['vi'] = [''];
-                                                                            setSelectedMeaningLang('vi');
-                                                                        } else if (!remaining.includes(selectedMeaningLang)) {
+                                                                            next["vi"] = [""];
+                                                                            setSelectedMeaningLang("vi");
+                                                                        } else if (
+                                                                            !remaining.includes(selectedMeaningLang)
+                                                                        ) {
                                                                             setSelectedMeaningLang(remaining[0]);
                                                                         }
                                                                     } else {
@@ -404,12 +502,15 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                         <Button
                                             type="button"
                                             variant="outline"
-                                            onClick={() => setMeaningsByLang((prev) => ({
-                                                ...prev,
-                                                [selectedMeaningLang]: [...(prev[selectedMeaningLang] || []), '']
-                                            }))}
+                                            onClick={() =>
+                                                setMeaningsByLang((prev) => ({
+                                                    ...prev,
+                                                    [selectedMeaningLang]: [...(prev[selectedMeaningLang] || []), ""],
+                                                }))
+                                            }
                                         >
-                                            <Plus className="h-4 w-4 mr-1" /> {t("vocabulary.createVocabulary.translations.addMeaningLine")}
+                                            <Plus className="h-4 w-4 mr-1" />{" "}
+                                            {t("vocabulary.createVocabulary.translations.addMeaningLine")}
                                         </Button>
                                     </div>
                                 </CardContent>
@@ -418,31 +519,55 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                             <Card>
                                 <CardHeader className="pb-3">
                                     <div className="flex items-center justify-between">
-                                        <CardTitle className="text-base">{t("vocabulary.createVocabulary.examples.title")}</CardTitle>
+                                        <CardTitle className="text-base">
+                                            {t("vocabulary.createVocabulary.examples.title")}
+                                        </CardTitle>
                                     </div>
                                 </CardHeader>
                                 <CardContent className="pt-0 space-y-4">
                                     {examples.length === 0 ? (
                                         <div className="text-center py-8 text-muted-foreground">
-                                            <p className="text-sm">{t("vocabulary.createVocabulary.examples.noExamples")}</p>
+                                            <p className="text-sm">
+                                                {t("vocabulary.createVocabulary.examples.noExamples")}
+                                            </p>
                                         </div>
                                     ) : (
                                         examples.map((ex, idx) => (
-                                            <div key={idx} className="border border-border rounded-lg p-4 space-y-3 bg-muted/30">
+                                            <div
+                                                key={idx}
+                                                className="border border-border rounded-lg p-4 space-y-3 bg-muted/30"
+                                            >
                                                 <div className="flex items-start gap-3">
                                                     <div className="flex-1">
                                                         <Input
-                                                            label={t("vocabulary.createVocabulary.examples.originalSentence")}
-                                                            placeholder={t("vocabulary.createVocabulary.examples.originalSentencePlaceholder")}
+                                                            label={t(
+                                                                "vocabulary.createVocabulary.examples.originalSentence",
+                                                            )}
+                                                            placeholder={t(
+                                                                "vocabulary.createVocabulary.examples.originalSentencePlaceholder",
+                                                            )}
                                                             value={ex.original_sentence}
-                                                            onChange={(e) => setExamples((prev) => prev.map((it, i) => i === idx ? { ...it, original_sentence: e.target.value } : it))}
+                                                            onChange={(e) =>
+                                                                setExamples((prev) =>
+                                                                    prev.map((it, i) =>
+                                                                        i === idx
+                                                                            ? {
+                                                                                  ...it,
+                                                                                  original_sentence: e.target.value,
+                                                                              }
+                                                                            : it,
+                                                                    ),
+                                                                )
+                                                            }
                                                         />
                                                     </div>
                                                     <Button
                                                         type="button"
                                                         variant="outline"
                                                         size="sm"
-                                                        onClick={() => setExamples((prev) => prev.filter((_, i) => i !== idx))}
+                                                        onClick={() =>
+                                                            setExamples((prev) => prev.filter((_, i) => i !== idx))
+                                                        }
                                                         className="mt-7"
                                                     >
                                                         <Trash2 className="h-4 w-4" />
@@ -458,7 +583,24 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                             type="button"
                                                             variant="ghost"
                                                             size="sm"
-                                                            onClick={() => setExamples((prev) => prev.map((it, i) => i === idx ? { ...it, translations: [...it.translations, { language_code: 'vi', sentence: '' }] } : it))}
+                                                            onClick={() =>
+                                                                setExamples((prev) =>
+                                                                    prev.map((it, i) =>
+                                                                        i === idx
+                                                                            ? {
+                                                                                  ...it,
+                                                                                  translations: [
+                                                                                      ...it.translations,
+                                                                                      {
+                                                                                          language_code: "vi",
+                                                                                          sentence: "",
+                                                                                      },
+                                                                                  ],
+                                                                              }
+                                                                            : it,
+                                                                    ),
+                                                                )
+                                                            }
                                                             className="h-7 text-xs"
                                                         >
                                                             <Plus className="h-3 w-3 mr-1" />
@@ -469,7 +611,28 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                         <div key={transIdx} className="flex items-center gap-2">
                                                             <div className="w-24 flex-shrink-0">
                                                                 <Select
-                                                                    onValueChange={(val) => setExamples((prev) => prev.map((it, i) => i === idx ? { ...it, translations: it.translations.map((t, ti) => ti === transIdx ? { ...t, language_code: val } : t) } : it))}
+                                                                    onValueChange={(val) =>
+                                                                        setExamples((prev) =>
+                                                                            prev.map((it, i) =>
+                                                                                i === idx
+                                                                                    ? {
+                                                                                          ...it,
+                                                                                          translations:
+                                                                                              it.translations.map(
+                                                                                                  (t, ti) =>
+                                                                                                      ti === transIdx
+                                                                                                          ? {
+                                                                                                                ...t,
+                                                                                                                language_code:
+                                                                                                                    val,
+                                                                                                            }
+                                                                                                          : t,
+                                                                                              ),
+                                                                                      }
+                                                                                    : it,
+                                                                            ),
+                                                                        )
+                                                                    }
                                                                     value={trans.language_code}
                                                                 >
                                                                     <SelectTrigger className="h-9 text-xs">
@@ -477,16 +640,43 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                                     </SelectTrigger>
                                                                     <SelectContent>
                                                                         {LANGUAGE_OPTIONS.map((opt) => (
-                                                                            <SelectItem key={opt.code} value={opt.code}>{opt.label}</SelectItem>
+                                                                            <SelectItem key={opt.code} value={opt.code}>
+                                                                                {opt.label}
+                                                                            </SelectItem>
                                                                         ))}
                                                                     </SelectContent>
                                                                 </Select>
                                                             </div>
                                                             <div className="flex-1">
                                                                 <Input
-                                                                    placeholder={t("vocabulary.createVocabulary.examples.translationPlaceholder")}
+                                                                    placeholder={t(
+                                                                        "vocabulary.createVocabulary.examples.translationPlaceholder",
+                                                                    )}
                                                                     value={trans.sentence}
-                                                                    onChange={(e) => setExamples((prev) => prev.map((it, i) => i === idx ? { ...it, translations: it.translations.map((t, ti) => ti === transIdx ? { ...t, sentence: e.target.value } : t) } : it))}
+                                                                    onChange={(e) =>
+                                                                        setExamples((prev) =>
+                                                                            prev.map((it, i) =>
+                                                                                i === idx
+                                                                                    ? {
+                                                                                          ...it,
+                                                                                          translations:
+                                                                                              it.translations.map(
+                                                                                                  (t, ti) =>
+                                                                                                      ti === transIdx
+                                                                                                          ? {
+                                                                                                                ...t,
+                                                                                                                sentence:
+                                                                                                                    e
+                                                                                                                        .target
+                                                                                                                        .value,
+                                                                                                            }
+                                                                                                          : t,
+                                                                                              ),
+                                                                                      }
+                                                                                    : it,
+                                                                            ),
+                                                                        )
+                                                                    }
                                                                     className="h-9"
                                                                 />
                                                             </div>
@@ -494,7 +684,22 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                                 type="button"
                                                                 variant="ghost"
                                                                 size="sm"
-                                                                onClick={() => setExamples((prev) => prev.map((it, i) => i === idx ? { ...it, translations: it.translations.filter((_, ti) => ti !== transIdx) } : it))}
+                                                                onClick={() =>
+                                                                    setExamples((prev) =>
+                                                                        prev.map((it, i) =>
+                                                                            i === idx
+                                                                                ? {
+                                                                                      ...it,
+                                                                                      translations:
+                                                                                          it.translations.filter(
+                                                                                              (_, ti) =>
+                                                                                                  ti !== transIdx,
+                                                                                          ),
+                                                                                  }
+                                                                                : it,
+                                                                        ),
+                                                                    )
+                                                                }
                                                                 disabled={ex.translations.length === 1}
                                                                 className="h-9 w-9 p-0 flex-shrink-0"
                                                             >
@@ -510,7 +715,15 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                     <Button
                                         type="button"
                                         variant="outline"
-                                        onClick={() => setExamples((prev) => [...prev, { original_sentence: '', translations: [{ language_code: 'vi', sentence: '' }] }])}
+                                        onClick={() =>
+                                            setExamples((prev) => [
+                                                ...prev,
+                                                {
+                                                    original_sentence: "",
+                                                    translations: [{ language_code: "vi", sentence: "" }],
+                                                },
+                                            ])
+                                        }
                                         className="w-full"
                                     >
                                         <Plus className="h-4 w-4 mr-2" />
@@ -523,9 +736,7 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                             <Controller
                                 name="translations"
                                 control={control}
-                                render={({ field }) => (
-                                    <Textarea {...field as any} className="hidden" />
-                                )}
+                                render={({ field }) => <Textarea {...(field as any)} className="hidden" />}
                             />
                             {errors.translations && (
                                 <p className="text-xs text-destructive mt-1">{(errors.translations as any)?.message}</p>
@@ -534,46 +745,62 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                             {/* Media upload */}
                             <Card>
                                 <CardHeader className="pb-3">
-                                    <CardTitle className="text-base">{t("vocabulary.createVocabulary.attachments.title")}</CardTitle>
+                                    <CardTitle className="text-base">
+                                        {t("vocabulary.createVocabulary.attachments.title")}
+                                    </CardTitle>
                                 </CardHeader>
                                 <CardContent className="pt-0 grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <Controller
                                         name="imageFile"
                                         control={control}
                                         render={({ field: { onChange, value } }) => (
-                                            <ImageDropzone value={value} onChange={(file) => {
-                                                if (imagePreview) URL.revokeObjectURL(imagePreview);
-                                                setImagePreview(file ? URL.createObjectURL(file) : null);
-                                                onChange(file);
-                                            }} />
+                                            <ImageDropzone
+                                                value={value}
+                                                onChange={(file) => {
+                                                    if (imagePreview) URL.revokeObjectURL(imagePreview);
+                                                    setImagePreview(file ? URL.createObjectURL(file) : null);
+                                                    onChange(file);
+                                                }}
+                                            />
                                         )}
                                     />
                                     <Controller
                                         name="audioFile"
                                         control={control}
                                         render={({ field: { onChange, value } }) => (
-                                            <AudioDropzone value={value as File | undefined} onChange={(file) => {
-                                                if (audioPreview) URL.revokeObjectURL(audioPreview);
-                                                const url = file ? URL.createObjectURL(file) : null;
-                                                setAudioPreview(url);
-                                                onChange(file);
-                                            }} />
+                                            <AudioDropzone
+                                                value={value as File | undefined}
+                                                onChange={(file) => {
+                                                    if (audioPreview) URL.revokeObjectURL(audioPreview);
+                                                    const url = file ? URL.createObjectURL(file) : null;
+                                                    setAudioPreview(url);
+                                                    onChange(file);
+                                                }}
+                                            />
                                         )}
                                     />
                                 </CardContent>
                             </Card>
-
                         </>
                     )}
 
                     <DialogFooter className="pt-4">
-                        <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} disabled={isSubmitting}>{t("vocabulary.createVocabulary.cancel")}</Button>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => setIsAddDialogOpen(false)}
+                            disabled={isSubmitting}
+                        >
+                            {t("vocabulary.createVocabulary.cancel")}
+                        </Button>
                         <Button type="submit" className="bg-primary text-primary-foreground" disabled={isSubmitting}>
-                            {isSubmitting ? t("vocabulary.createVocabulary.creating") : t("vocabulary.createVocabulary.create")}
+                            {isSubmitting
+                                ? t("vocabulary.createVocabulary.creating")
+                                : t("vocabulary.createVocabulary.create")}
                         </Button>
                     </DialogFooter>
                 </form>
-            </DialogContent >
+            </DialogContent>
         </>
     );
 };

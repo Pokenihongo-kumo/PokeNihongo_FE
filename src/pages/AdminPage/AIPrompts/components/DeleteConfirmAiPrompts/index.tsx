@@ -1,7 +1,16 @@
 import { useDeleteConfigCustomPrompts } from "@hooks/useAI";
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, } from "@ui/AlertDialog"
-import { Loader2 } from "lucide-react"
-import { useTranslation } from "react-i18next"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@ui/AlertDialog";
+import { Loader2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 interface IDeleteConfirmAiPromptsProps {
     promptIdToDelete: number | null;
@@ -14,19 +23,18 @@ const DeleteConfirmAiPrompts = ({ promptIdToDelete, setPromptIdToDelete }: IDele
     /**
      * Handle Delete Prompt
      */
-    const deleteMutation = useDeleteConfigCustomPrompts()
-
+    const deleteMutation = useDeleteConfigCustomPrompts();
 
     const handleDeleteConfirm = async () => {
-        if (promptIdToDelete === null) return
+        if (promptIdToDelete === null) return;
 
         try {
-            await deleteMutation.mutateAsync(promptIdToDelete)
-            setPromptIdToDelete(null)
+            await deleteMutation.mutateAsync(promptIdToDelete);
+            setPromptIdToDelete(null);
         } catch (error) {
-            console.error('Error deleting prompt:', error)
+            console.error("Error deleting prompt:", error);
         }
-    }
+    };
     //------------------------End------------------------//
 
     return (
@@ -34,17 +42,17 @@ const DeleteConfirmAiPrompts = ({ promptIdToDelete, setPromptIdToDelete }: IDele
             <AlertDialogContent className="bg-white border-border">
                 <AlertDialogHeader>
                     <AlertDialogTitle className="text-foreground">
-                        {t('aiPrompts.deleteDialog.title', { defaultValue: 'Xác nhận xóa' })}
+                        {t("aiPrompts.deleteDialog.title", { defaultValue: "Xác nhận xóa" })}
                     </AlertDialogTitle>
                     <AlertDialogDescription className="text-muted-foreground">
-                        {t('aiPrompts.deleteDialog.message', {
-                            defaultValue: 'Bạn có chắc chắn muốn xóa prompt này? Hành động này không thể hoàn tác.'
+                        {t("aiPrompts.deleteDialog.message", {
+                            defaultValue: "Bạn có chắc chắn muốn xóa prompt này? Hành động này không thể hoàn tác.",
                         })}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel className="border-border text-foreground hover:bg-muted cursor-pointer">
-                        {t('aiCommon.cancel', { defaultValue: 'Hủy' })}
+                        {t("aiCommon.cancel", { defaultValue: "Hủy" })}
                     </AlertDialogCancel>
                     <AlertDialogAction
                         onClick={handleDeleteConfirm}
@@ -54,16 +62,16 @@ const DeleteConfirmAiPrompts = ({ promptIdToDelete, setPromptIdToDelete }: IDele
                         {deleteMutation.isPending ? (
                             <>
                                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                {t('aiPrompts.deleteDialog.deleting', { defaultValue: 'Đang xóa...' })}
+                                {t("aiPrompts.deleteDialog.deleting", { defaultValue: "Đang xóa..." })}
                             </>
                         ) : (
-                            t('aiPrompts.deleteDialog.deleteButton', { defaultValue: 'Xóa' })
+                            t("aiPrompts.deleteDialog.deleteButton", { defaultValue: "Xóa" })
                         )}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-    )
-}
+    );
+};
 
-export default DeleteConfirmAiPrompts
+export default DeleteConfirmAiPrompts;

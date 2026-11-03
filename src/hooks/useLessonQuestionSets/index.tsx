@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
 interface QuestionSetItem {
     id: number;
@@ -17,24 +17,24 @@ interface QuestionSetItem {
 }
 
 export const useLessonQuestionSets = (lessonId: number | null) => {
-    const [questionSets, setQuestionSets] = useState<QuestionSetItem[]>([])
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState<string | null>(null)
+    const [questionSets, setQuestionSets] = useState<QuestionSetItem[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (!lessonId) {
-            setQuestionSets([])
-            return
+            setQuestionSets([]);
+            return;
         }
 
         const fetchQuestionSets = async () => {
-            setIsLoading(true)
-            setError(null)
-            
+            setIsLoading(true);
+            setError(null);
+
             try {
                 // TODO: Replace with actual API call
                 // const response = await lessonQuestionSetsApi.getByLessonId(lessonId)
-                
+
                 // Mock data for now
                 const mockQuestionSets: QuestionSetItem[] = [
                     {
@@ -49,8 +49,8 @@ export const useLessonQuestionSets = (lessonId: number | null) => {
                         questionCount: 10,
                         timeLimit: 15,
                         isActive: true,
-                        createdAt: '2024-01-15',
-                        description: 'First set of Hiragana recognition questions'
+                        createdAt: "2024-01-15",
+                        description: "First set of Hiragana recognition questions",
                     },
                     {
                         id: 2,
@@ -64,8 +64,8 @@ export const useLessonQuestionSets = (lessonId: number | null) => {
                         questionCount: 15,
                         timeLimit: 20,
                         isActive: true,
-                        createdAt: '2024-01-16',
-                        description: 'Advanced Hiragana recognition questions'
+                        createdAt: "2024-01-16",
+                        description: "Advanced Hiragana recognition questions",
                     },
                     {
                         id: 3,
@@ -79,57 +79,59 @@ export const useLessonQuestionSets = (lessonId: number | null) => {
                         questionCount: 20,
                         timeLimit: 25,
                         isActive: false,
-                        createdAt: '2024-01-17',
-                        description: 'Practice writing Hiragana characters'
-                    }
-                ]
-                
-                setQuestionSets(mockQuestionSets)
+                        createdAt: "2024-01-17",
+                        description: "Practice writing Hiragana characters",
+                    },
+                ];
+
+                setQuestionSets(mockQuestionSets);
             } catch (err) {
-                setError('Failed to fetch lesson question sets')
-                console.error('Error fetching lesson question sets:', err)
+                setError("Failed to fetch lesson question sets");
+                console.error("Error fetching lesson question sets:", err);
             } finally {
-                setIsLoading(false)
+                setIsLoading(false);
             }
-        }
+        };
 
-        fetchQuestionSets()
-    }, [lessonId])
+        fetchQuestionSets();
+    }, [lessonId]);
 
-    const createQuestionSet = async (questionSetData: Omit<QuestionSetItem, 'id' | 'createdAt'>) => {
+    const createQuestionSet = async (questionSetData: Omit<QuestionSetItem, "id" | "createdAt">) => {
         try {
             // TODO: Implement API call
             const newQuestionSet: QuestionSetItem = {
                 ...questionSetData,
                 id: Date.now(), // Temporary ID
-                createdAt: new Date().toISOString().split('T')[0]
-            }
-            setQuestionSets(prev => [...prev, newQuestionSet])
-            return newQuestionSet
+                createdAt: new Date().toISOString().split("T")[0],
+            };
+            setQuestionSets((prev) => [...prev, newQuestionSet]);
+            return newQuestionSet;
         } catch (error) {
-            throw new Error('Failed to create question set')
+            throw new Error("Failed to create question set");
         }
-    }
+    };
 
     const updateQuestionSet = async (id: number, questionSetData: Partial<QuestionSetItem>) => {
         try {
             // TODO: Implement API call
-            setQuestionSets(prev => prev.map(questionSet => 
-                questionSet.id === id ? { ...questionSet, ...questionSetData } : questionSet
-            ))
+            setQuestionSets((prev) =>
+                prev.map((questionSet) =>
+                    questionSet.id === id ? { ...questionSet, ...questionSetData } : questionSet,
+                ),
+            );
         } catch (error) {
-            throw new Error('Failed to update question set')
+            throw new Error("Failed to update question set");
         }
-    }
+    };
 
     const deleteQuestionSet = async (id: number) => {
         try {
             // TODO: Implement API call
-            setQuestionSets(prev => prev.filter(questionSet => questionSet.id !== id))
+            setQuestionSets((prev) => prev.filter((questionSet) => questionSet.id !== id));
         } catch (error) {
-            throw new Error('Failed to delete question set')
+            throw new Error("Failed to delete question set");
         }
-    }
+    };
 
     return {
         questionSets,
@@ -137,6 +139,6 @@ export const useLessonQuestionSets = (lessonId: number | null) => {
         error,
         createQuestionSet,
         updateQuestionSet,
-        deleteQuestionSet
-    }
-}
+        deleteQuestionSet,
+    };
+};

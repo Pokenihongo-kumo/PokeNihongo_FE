@@ -1,4 +1,4 @@
-import Cookies from "js-cookie"
+import Cookies from "js-cookie";
 
 export const CookiesService = {
     get: (key: string) => {
@@ -13,15 +13,14 @@ export const CookiesService = {
         }
     },
     set: (key: string, value: any) => {
-        if (typeof value === 'string') {
+        if (typeof value === "string") {
             Cookies.set(key, value, { expires: 1 });
-        }
-        else {
+        } else {
             const dataJson = JSON.stringify(value);
             Cookies.set(key, dataJson, { expires: 1 });
         }
     },
     remove: (key: string) => {
         Cookies.remove(key);
-    }
-}
+    },
+};

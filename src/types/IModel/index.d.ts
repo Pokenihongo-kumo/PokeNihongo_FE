@@ -1,7 +1,5 @@
 declare namespace MODELS {
-    export interface IUser {
-
-    }
+    export interface IUser {}
 
     export interface VocabularyForUpdate {
         id: number;

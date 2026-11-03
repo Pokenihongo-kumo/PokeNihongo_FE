@@ -9,23 +9,23 @@ import { getApiErrorMessage } from "@utils/api-error";
  * @returns mutation object with updateAnswer function
  */
 export const useUpdateAnswer = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const updateAnswerMutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: Partial<ICreateAnswerRequest> }) =>
-      answerService.updateAnswer(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["question-bank-list"] });
-      queryClient.invalidateQueries({ queryKey: ["answer-list"] });
-      toast.success("Cập nhật đáp án thành công!");
-    },
-    onError: (error: unknown) => {
-      console.error("Error updating answer:", error);
-      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật đáp án"));
-    },
-  });
+    const updateAnswerMutation = useMutation({
+        mutationFn: ({ id, data }: { id: number; data: Partial<ICreateAnswerRequest> }) =>
+            answerService.updateAnswer(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["question-bank-list"] });
+            queryClient.invalidateQueries({ queryKey: ["answer-list"] });
+            toast.success("Cập nhật đáp án thành công!");
+        },
+        onError: (error: unknown) => {
+            console.error("Error updating answer:", error);
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật đáp án"));
+        },
+    });
 
-  return updateAnswerMutation;
+    return updateAnswerMutation;
 };
 
 /**
@@ -33,23 +33,23 @@ export const useUpdateAnswer = () => {
  * @returns mutation object with createAnswer function
  */
 export const useCreateAnswer = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const createAnswerMutation = useMutation({
-    mutationFn: ({ questionBankId, answer }: { questionBankId: number; answer: ICreateAnswerRequest }) =>
-      answerService.createMultipleAnswers({ questionBankId, answers: [answer] }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["question-bank-list"] });
-      queryClient.invalidateQueries({ queryKey: ["answer-list"] });
-      toast.success("Tạo đáp án thành công!");
-    },
-    onError: (error: unknown) => {
-      console.error("Error creating answer:", error);
-      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo đáp án"));
-    },
-  });
+    const createAnswerMutation = useMutation({
+        mutationFn: ({ questionBankId, answer }: { questionBankId: number; answer: ICreateAnswerRequest }) =>
+            answerService.createMultipleAnswers({ questionBankId, answers: [answer] }),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["question-bank-list"] });
+            queryClient.invalidateQueries({ queryKey: ["answer-list"] });
+            toast.success("Tạo đáp án thành công!");
+        },
+        onError: (error: unknown) => {
+            console.error("Error creating answer:", error);
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo đáp án"));
+        },
+    });
 
-  return createAnswerMutation;
+    return createAnswerMutation;
 };
 
 /**
@@ -57,20 +57,20 @@ export const useCreateAnswer = () => {
  * @returns mutation object with deleteAnswer function
  */
 export const useDeleteAnswer = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const deleteAnswerMutation = useMutation({
-    mutationFn: (id: number) => answerService.deleteAnswer(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["question-bank-list"] });
-      queryClient.invalidateQueries({ queryKey: ["answer-list"] });
-      toast.success("Xóa đáp án thành công!");
-    },
-    onError: (error: unknown) => {
-      console.error("Error deleting answer:", error);
-      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi xóa đáp án"));
-    },
-  });
+    const deleteAnswerMutation = useMutation({
+        mutationFn: (id: number) => answerService.deleteAnswer(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["question-bank-list"] });
+            queryClient.invalidateQueries({ queryKey: ["answer-list"] });
+            toast.success("Xóa đáp án thành công!");
+        },
+        onError: (error: unknown) => {
+            console.error("Error deleting answer:", error);
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi xóa đáp án"));
+        },
+    });
 
-  return deleteAnswerMutation;
+    return deleteAnswerMutation;
 };

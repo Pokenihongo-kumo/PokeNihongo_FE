@@ -1,9 +1,9 @@
-import { RarityPokemon } from "@constants/pokemon"
-import { cn } from "@utils/CN"
+import { RarityPokemon } from "@constants/pokemon";
+import { cn } from "@utils/CN";
 
 interface RarityBadgeProps {
-    level: keyof typeof RarityPokemon,
-    className?: string
+    level: keyof typeof RarityPokemon;
+    className?: string;
 }
 
 const rarityConfig = {
@@ -44,20 +44,20 @@ const rarityConfig = {
         hasEffect: true,
         effectClass: "legendary-glow",
     },
-}
+};
 
 export function RarityBadge({ level, className }: RarityBadgeProps) {
     const getConfig = () => {
         switch (level) {
-            case 'COMMON':
+            case "COMMON":
                 return rarityConfig.common;
-            case 'UNCOMMON':
+            case "UNCOMMON":
                 return rarityConfig.uncommon;
-            case 'RARE':
+            case "RARE":
                 return rarityConfig.rare;
-            case 'EPIC':
+            case "EPIC":
                 return rarityConfig.epic;
-            case 'LEGENDARY':
+            case "LEGENDARY":
                 return rarityConfig.legendary;
             default:
                 return rarityConfig.common;
@@ -79,5 +79,5 @@ export function RarityBadge({ level, className }: RarityBadgeProps) {
         >
             <span>{config.label}</span>
         </div>
-    )
+    );
 }

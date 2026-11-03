@@ -26,15 +26,23 @@ const UpdateKanjiDialog = ({ kanjiToEdit, onClose }: UpdateKanjiDialogProps) => 
         const readings: { readingType: string; reading: string }[] = [];
 
         if (kanjiToEdit.onyomi) {
-            kanjiToEdit.onyomi.split(/[,;]+/).map((r) => r.trim()).filter(Boolean).forEach((r) => {
-                readings.push({ readingType: "onyomi", reading: r });
-            });
+            kanjiToEdit.onyomi
+                .split(/[,;]+/)
+                .map((r) => r.trim())
+                .filter(Boolean)
+                .forEach((r) => {
+                    readings.push({ readingType: "onyomi", reading: r });
+                });
         }
 
         if (kanjiToEdit.kunyomi) {
-            kanjiToEdit.kunyomi.split(/[,;]+/).map((r) => r.trim()).filter(Boolean).forEach((r) => {
-                readings.push({ readingType: "kunyomi", reading: r });
-            });
+            kanjiToEdit.kunyomi
+                .split(/[,;]+/)
+                .map((r) => r.trim())
+                .filter(Boolean)
+                .forEach((r) => {
+                    readings.push({ readingType: "kunyomi", reading: r });
+                });
         }
 
         if (readings.length === 0) {
@@ -61,8 +69,16 @@ const UpdateKanjiDialog = ({ kanjiToEdit, onClose }: UpdateKanjiDialogProps) => 
         },
     });
 
-    const { fields: readingsFields, append: appendReading, remove: removeReading } = useFieldArray({ control, name: "readings" });
-    const { fields: meaningFields, append: appendMeaning, remove: removeMeaning } = useFieldArray({ control, name: "meanings" });
+    const {
+        fields: readingsFields,
+        append: appendReading,
+        remove: removeReading,
+    } = useFieldArray({ control, name: "readings" });
+    const {
+        fields: meaningFields,
+        append: appendMeaning,
+        remove: removeMeaning,
+    } = useFieldArray({ control, name: "meanings" });
 
     const updateMutation = useUpdateKanjiWithMeaning();
 
@@ -99,29 +115,49 @@ const UpdateKanjiDialog = ({ kanjiToEdit, onClose }: UpdateKanjiDialogProps) => 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 max-h-[72vh] overflow-y-auto pr-1">
                     <section className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <p className="text-sm font-semibold text-foreground">{t("vocabulary.kanji.createKanji.tabs.info", "Thông tin cơ bản")}</p>
+                            <p className="text-sm font-semibold text-foreground">
+                                {t("vocabulary.kanji.createKanji.tabs.info", "Thông tin cơ bản")}
+                            </p>
                             <p className="text-xs text-muted-foreground">
-                                {t("vocabulary.kanji.updateDialog.helper.basic", "Chỉnh sửa nhanh các thuộc tính chính")}
+                                {t(
+                                    "vocabulary.kanji.updateDialog.helper.basic",
+                                    "Chỉnh sửa nhanh các thuộc tính chính",
+                                )}
                             </p>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <p className="text-sm font-medium text-muted-foreground">{t("vocabulary.kanji.createKanji.character")}</p>
+                                <p className="text-sm font-medium text-muted-foreground">
+                                    {t("vocabulary.kanji.createKanji.character")}
+                                </p>
                                 <Input {...register("character")} disabled className="bg-muted/40" />
                             </div>
                             <div className="space-y-1.5">
-                                <p className="text-sm font-medium text-muted-foreground">{t("vocabulary.kanji.createKanji.strokeCount")}</p>
-                                <Input type="number" {...register("strokeCount", { valueAsNumber: true })} placeholder="12" />
+                                <p className="text-sm font-medium text-muted-foreground">
+                                    {t("vocabulary.kanji.createKanji.strokeCount")}
+                                </p>
+                                <Input
+                                    type="number"
+                                    {...register("strokeCount", { valueAsNumber: true })}
+                                    placeholder="12"
+                                />
                             </div>
                             <div className="space-y-1.5">
-                                <p className="text-sm font-medium text-muted-foreground">{t("vocabulary.kanji.createKanji.jlptLevel")}</p>
+                                <p className="text-sm font-medium text-muted-foreground">
+                                    {t("vocabulary.kanji.createKanji.jlptLevel")}
+                                </p>
                                 <Controller
                                     control={control}
                                     name="jlptLevel"
                                     render={({ field }) => (
-                                        <Select value={String(field.value)} onValueChange={(v) => field.onChange(Number(v))}>
+                                        <Select
+                                            value={String(field.value)}
+                                            onValueChange={(v) => field.onChange(Number(v))}
+                                        >
                                             <SelectTrigger>
-                                                <SelectValue placeholder={t("vocabulary.kanji.createKanji.selectLevel")} />
+                                                <SelectValue
+                                                    placeholder={t("vocabulary.kanji.createKanji.selectLevel")}
+                                                />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value="5">N5</SelectItem>
@@ -139,9 +175,14 @@ const UpdateKanjiDialog = ({ kanjiToEdit, onClose }: UpdateKanjiDialogProps) => 
 
                     <section className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <p className="text-sm font-semibold text-foreground">{t("vocabulary.kanji.createKanji.tabs.readings")}</p>
+                            <p className="text-sm font-semibold text-foreground">
+                                {t("vocabulary.kanji.createKanji.tabs.readings")}
+                            </p>
                             <p className="text-xs text-muted-foreground">
-                                {t("vocabulary.kanji.updateDialog.helper.readings", "Tách mỗi cách đọc bằng dòng riêng")}
+                                {t(
+                                    "vocabulary.kanji.updateDialog.helper.readings",
+                                    "Tách mỗi cách đọc bằng dòng riêng",
+                                )}
                             </p>
                         </div>
                         <div className="space-y-2">
@@ -156,11 +197,17 @@ const UpdateKanjiDialog = ({ kanjiToEdit, onClose }: UpdateKanjiDialogProps) => 
                                             onValueChange={(value) => setValue(`readings.${index}.readingType`, value)}
                                         >
                                             <SelectTrigger>
-                                                <SelectValue placeholder={t("vocabulary.kanji.createKanji.readingType")} />
+                                                <SelectValue
+                                                    placeholder={t("vocabulary.kanji.createKanji.readingType")}
+                                                />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                <SelectItem value="onyomi">{t("vocabulary.kanji.createKanji.readingTypes.onyomi")}</SelectItem>
-                                                <SelectItem value="kunyomi">{t("vocabulary.kanji.createKanji.readingTypes.kunyomi")}</SelectItem>
+                                                <SelectItem value="onyomi">
+                                                    {t("vocabulary.kanji.createKanji.readingTypes.onyomi")}
+                                                </SelectItem>
+                                                <SelectItem value="kunyomi">
+                                                    {t("vocabulary.kanji.createKanji.readingTypes.kunyomi")}
+                                                </SelectItem>
                                             </SelectContent>
                                         </Select>
                                     </div>
@@ -172,16 +219,29 @@ const UpdateKanjiDialog = ({ kanjiToEdit, onClose }: UpdateKanjiDialogProps) => 
                                             className="bg-white"
                                         />
                                     </div>
-                                    <input type="hidden" {...register(`readings.${index}.readingType` as const)} defaultValue={field.readingType} />
+                                    <input
+                                        type="hidden"
+                                        {...register(`readings.${index}.readingType` as const)}
+                                        defaultValue={field.readingType}
+                                    />
                                     <div className="flex justify-end md:w-auto">
-                                        <Button type="button" variant="ghost" size="icon" onClick={() => removeReading(index)}>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => removeReading(index)}
+                                        >
                                             <Trash2 className="w-4 h-4 text-red-500" />
                                         </Button>
                                     </div>
                                 </div>
                             ))}
                             <div className="flex justify-start">
-                                <Button type="button" variant="secondary" onClick={() => appendReading({ readingType: "onyomi", reading: "" })}>
+                                <Button
+                                    type="button"
+                                    variant="secondary"
+                                    onClick={() => appendReading({ readingType: "onyomi", reading: "" })}
+                                >
                                     <Plus className="h-4 w-4 mr-2" /> {t("vocabulary.kanji.createKanji.addReading")}
                                 </Button>
                             </div>
@@ -190,24 +250,46 @@ const UpdateKanjiDialog = ({ kanjiToEdit, onClose }: UpdateKanjiDialogProps) => 
 
                     <section className="space-y-3">
                         <div className="flex items-center justify-between">
-                            <p className="text-sm font-semibold text-foreground">{t("vocabulary.kanji.createKanji.tabs.meanings")}</p>
+                            <p className="text-sm font-semibold text-foreground">
+                                {t("vocabulary.kanji.createKanji.tabs.meanings")}
+                            </p>
                             <p className="text-xs text-muted-foreground">
-                                {t("vocabulary.kanji.updateDialog.helper.meanings", "Nhập song song nghĩa VI/EN cho từng dòng")}
+                                {t(
+                                    "vocabulary.kanji.updateDialog.helper.meanings",
+                                    "Nhập song song nghĩa VI/EN cho từng dòng",
+                                )}
                             </p>
                         </div>
                         <div className="space-y-2">
                             {meaningFields.map((field, index) => (
                                 <div key={field.id} className="p-4 border rounded-lg bg-gray-50 space-y-3 relative">
                                     <div className="space-y-1.5">
-                                        <p className="text-sm text-muted-foreground">{t("vocabulary.kanji.createKanji.vietnamese")}</p>
-                                        <Input {...register(`meanings.${index}.translations.vi` as const)} defaultValue={field.translations?.vi} placeholder="nghĩa tiếng Việt" />
+                                        <p className="text-sm text-muted-foreground">
+                                            {t("vocabulary.kanji.createKanji.vietnamese")}
+                                        </p>
+                                        <Input
+                                            {...register(`meanings.${index}.translations.vi` as const)}
+                                            defaultValue={field.translations?.vi}
+                                            placeholder="nghĩa tiếng Việt"
+                                        />
                                     </div>
                                     <div className="space-y-1.5">
-                                        <p className="text-sm text-muted-foreground">{t("vocabulary.kanji.createKanji.english")}</p>
-                                        <Input {...register(`meanings.${index}.translations.en` as const)} defaultValue={field.translations?.en} placeholder="English meaning" />
+                                        <p className="text-sm text-muted-foreground">
+                                            {t("vocabulary.kanji.createKanji.english")}
+                                        </p>
+                                        <Input
+                                            {...register(`meanings.${index}.translations.en` as const)}
+                                            defaultValue={field.translations?.en}
+                                            placeholder="English meaning"
+                                        />
                                     </div>
                                     <div className="flex justify-end">
-                                        <Button type="button" variant="ghost" size="icon" onClick={() => removeMeaning(index)}>
+                                        <Button
+                                            type="button"
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => removeMeaning(index)}
+                                        >
                                             <Trash2 className="w-4 h-4 text-red-500" />
                                         </Button>
                                     </div>
@@ -229,7 +311,11 @@ const UpdateKanjiDialog = ({ kanjiToEdit, onClose }: UpdateKanjiDialogProps) => 
                         <Button type="button" variant="outline" onClick={onClose} disabled={updateMutation.isPending}>
                             {t("common.cancel")}
                         </Button>
-                        <Button type="submit" className="bg-primary text-primary-foreground" disabled={updateMutation.isPending}>
+                        <Button
+                            type="submit"
+                            className="bg-primary text-primary-foreground"
+                            disabled={updateMutation.isPending}
+                        >
                             {updateMutation.isPending ? (
                                 <>
                                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -247,4 +333,3 @@ const UpdateKanjiDialog = ({ kanjiToEdit, onClose }: UpdateKanjiDialogProps) => 
 };
 
 export default UpdateKanjiDialog;
-

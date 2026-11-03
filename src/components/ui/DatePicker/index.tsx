@@ -1,11 +1,11 @@
-'';
+"";
 
-import { Calendar } from 'lucide-react';
-import React, { useEffect, useState, useRef } from 'react';
-import { DayPicker, type DayPickerProps } from 'react-day-picker';
-import { motion, AnimatePresence } from 'framer-motion';
-import 'react-day-picker/dist/style.css';
-import { cn } from '@utils/CN';
+import { Calendar } from "lucide-react";
+import React, { useEffect, useState, useRef } from "react";
+import { DayPicker, type DayPickerProps } from "react-day-picker";
+import { motion, AnimatePresence } from "framer-motion";
+import "react-day-picker/dist/style.css";
+import { cn } from "@utils/CN";
 
 // Custom styles for the calendar
 const calendarStyles = `
@@ -77,7 +77,7 @@ interface CustomDatePickerProps {
 export default function CustomDatePicker({
     value,
     onChange,
-    placeholder = 'Chọn ngày',
+    placeholder = "Chọn ngày",
     className,
     containerClassName,
     popupClassName,
@@ -86,7 +86,7 @@ export default function CustomDatePicker({
 }: CustomDatePickerProps) {
     const [open, setOpen] = useState(false);
     const [today, setToday] = useState<Date | null>(null);
-    const [popupPosition, setPopupPosition] = useState<'left' | 'right'>('right');
+    const [popupPosition, setPopupPosition] = useState<"left" | "right">("right");
     const containerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -102,20 +102,20 @@ export default function CustomDatePicker({
         };
 
         if (open) {
-            document.addEventListener('mousedown', handleClickOutside);
+            document.addEventListener("mousedown", handleClickOutside);
         }
 
         return () => {
-            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener("mousedown", handleClickOutside);
         };
     }, [open]);
 
     // Handlers for each mode
-    const handleSingleSelect: import('react-day-picker').OnSelectHandler<Date | undefined> = (date) => {
+    const handleSingleSelect: import("react-day-picker").OnSelectHandler<Date | undefined> = (date) => {
         onChange(date || null);
         setOpen(false);
     };
-    const handleMultipleSelect: import('react-day-picker').OnSelectHandler<Date[] | undefined> = (dates) => {
+    const handleMultipleSelect: import("react-day-picker").OnSelectHandler<Date[] | undefined> = (dates) => {
         // For multiple, you may want to pass the last selected date or the array
         // Here, we pass the last date or null
         if (Array.isArray(dates) && dates.length > 0) {
@@ -125,7 +125,9 @@ export default function CustomDatePicker({
         }
         setOpen(false);
     };
-    const handleRangeSelect: import('react-day-picker').OnSelectHandler<import('react-day-picker').DateRange | undefined> = (range) => {
+    const handleRangeSelect: import("react-day-picker").OnSelectHandler<
+        import("react-day-picker").DateRange | undefined
+    > = (range) => {
         // For range, you may want to pass the 'to' date or the full range
         // Here, we pass the 'to' date if exists, else 'from', else null
         if (range && range.to) {
@@ -139,45 +141,45 @@ export default function CustomDatePicker({
     };
 
     const formatDate = (date: Date | null) => {
-        return date ? date.toLocaleDateString('vi-VN') : '';
+        return date ? date.toLocaleDateString("vi-VN") : "";
     };
 
     // Default values for other props
-    const defaultCaptionLayout = 'dropdown' as const;
+    const defaultCaptionLayout = "dropdown" as const;
     const currentYear = today ? today.getFullYear() : new Date().getFullYear();
     const defaultDayPickerProps = {
         captionLayout: defaultCaptionLayout,
         startMonth: new Date(currentYear, 0), // Tháng 1 của năm hiện tại
         fromYear: currentYear, // Năm bắt đầu (năm hiện tại)
-        toYear: currentYear + 10, 
+        toYear: currentYear + 10,
         classNames: {
-            selected: 'selected',
-            chevron: '',
+            selected: "selected",
+            chevron: "",
         },
         modifiersStyles: {
             selected: {
-                backgroundColor: 'var(--color-primary)',
-                color: 'white',
-                borderRadius: '100%',
+                backgroundColor: "var(--color-primary)",
+                color: "white",
+                borderRadius: "100%",
             },
             today: {
-                color: 'var(--color-primary)',
-                borderRadius: '100%',
-                backgroundColor: 'rgba(173, 219, 93, 0.2)',
+                color: "var(--color-primary)",
+                borderRadius: "100%",
+                backgroundColor: "rgba(173, 219, 93, 0.2)",
             },
         },
     };
 
     // Determine mode and render DayPicker with correct props
-    const mode = dayPickerProps?.mode ?? 'single';
+    const mode = dayPickerProps?.mode ?? "single";
     // Check if disabled prop was explicitly passed
-    const hasDisabledProp = dayPickerProps && 'disabled' in dayPickerProps;
+    const hasDisabledProp = dayPickerProps && "disabled" in dayPickerProps;
     // Only apply default disabled (before today) if disabled prop wasn't explicitly passed
-    const finalDisabled = hasDisabledProp ? dayPickerProps.disabled : (today ? { before: today } : undefined);
+    const finalDisabled = hasDisabledProp ? dayPickerProps.disabled : today ? { before: today } : undefined;
 
     let dayPickerNode: React.ReactNode = null;
-    if (mode === 'single') {
-        const singleProps = dayPickerProps as Partial<import('react-day-picker').PropsSingle>;
+    if (mode === "single") {
+        const singleProps = dayPickerProps as Partial<import("react-day-picker").PropsSingle>;
         const { selected, ...restDayPickerProps } = singleProps;
         const selectedDate = selected ?? (value instanceof Date ? value : undefined);
         dayPickerNode = (
@@ -186,13 +188,13 @@ export default function CustomDatePicker({
                 selected={selectedDate}
                 onSelect={handleSingleSelect}
                 disabled={finalDisabled}
-                defaultMonth={dayPickerProps?.defaultMonth ?? (value instanceof Date ? value : today ?? undefined)}
+                defaultMonth={dayPickerProps?.defaultMonth ?? (value instanceof Date ? value : (today ?? undefined))}
                 {...defaultDayPickerProps}
                 {...restDayPickerProps}
             />
         );
-    } else if (mode === 'multiple') {
-        const multiProps = dayPickerProps as Partial<import('react-day-picker').PropsMulti>;
+    } else if (mode === "multiple") {
+        const multiProps = dayPickerProps as Partial<import("react-day-picker").PropsMulti>;
         const { selected, ...restDayPickerProps } = multiProps;
         dayPickerNode = (
             <DayPicker
@@ -200,13 +202,13 @@ export default function CustomDatePicker({
                 selected={selected}
                 onSelect={handleMultipleSelect}
                 disabled={finalDisabled}
-                defaultMonth={dayPickerProps?.defaultMonth ?? (today ?? undefined)}
+                defaultMonth={dayPickerProps?.defaultMonth ?? today ?? undefined}
                 {...defaultDayPickerProps}
                 {...restDayPickerProps}
             />
         );
-    } else if (mode === 'range') {
-        const rangeProps = dayPickerProps as Partial<import('react-day-picker').PropsRange>;
+    } else if (mode === "range") {
+        const rangeProps = dayPickerProps as Partial<import("react-day-picker").PropsRange>;
         const { selected, ...restDayPickerProps } = rangeProps;
         dayPickerNode = (
             <DayPicker
@@ -214,7 +216,7 @@ export default function CustomDatePicker({
                 selected={selected}
                 onSelect={handleRangeSelect}
                 disabled={finalDisabled}
-                defaultMonth={dayPickerProps?.defaultMonth ?? (today ?? undefined)}
+                defaultMonth={dayPickerProps?.defaultMonth ?? today ?? undefined}
                 {...defaultDayPickerProps}
                 {...restDayPickerProps}
             />
@@ -225,9 +227,9 @@ export default function CustomDatePicker({
         if (containerRef.current) {
             const rect = containerRef.current.getBoundingClientRect();
             if (rect.left < window.innerWidth / 2) {
-                setPopupPosition('left');
+                setPopupPosition("left");
             } else {
-                setPopupPosition('right');
+                setPopupPosition("right");
             }
         }
         setOpen(true);
@@ -243,14 +245,17 @@ export default function CustomDatePicker({
                     className={cn(
                         "w-full px-4 py-2 border rounded-lg cursor-pointer text-black placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200",
                         hasError ? "border-red-500 focus:ring-red-500" : "border-gray-600",
-                        className
+                        className,
                     )}
                     placeholder={placeholder}
                     value={formatDate(value)}
                     onClick={handleOpen}
                 />
-                <span className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-gray-700 transition-colors" onClick={handleOpen}>
-                    <Calendar className='w-5 h-5' />
+                <span
+                    className="absolute right-4 top-1/2 transform -translate-y-1/2 cursor-pointer text-black hover:text-gray-700 transition-colors"
+                    onClick={handleOpen}
+                >
+                    <Calendar className="w-5 h-5" />
                 </span>
                 <AnimatePresence>
                     {open && today && (
@@ -275,14 +280,12 @@ export default function CustomDatePicker({
                                 ease: "easeOut",
                             }}
                             className={cn(
-                                `absolute z-50 mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl ring-1 ring-black ring-opacity-5 max-w-xs w-[320px] ${popupPosition === 'right' ? 'right-0 left-auto' : 'left-0 right-auto'}`,
-                                popupClassName
+                                `absolute z-50 mt-2 bg-white border border-gray-200 rounded-xl shadow-2xl ring-1 ring-black ring-opacity-5 max-w-xs w-[320px] ${popupPosition === "right" ? "right-0 left-auto" : "left-0 right-auto"}`,
+                                popupClassName,
                             )}
                             style={{ minWidth: 280 }}
                         >
-                            <div className="p-4">
-                                {dayPickerNode}
-                            </div>
+                            <div className="p-4">{dayPickerNode}</div>
                             <div className="px-4 pb-4">
                                 <button
                                     type="button"

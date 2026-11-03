@@ -1,3 +1,3 @@
 export interface LanguageState {
-    currentLanguage: 'vi' | 'en' | 'ja';
+    currentLanguage: "vi" | "en" | "ja";
 }

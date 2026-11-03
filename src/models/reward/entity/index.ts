@@ -13,11 +13,10 @@ export const RewardEntitySchema = z.object({
     nameTranslation: z.string().optional(),
     ...byUser,
     ...at,
-})
+});
 
 export type IRewardEntityType = z.infer<typeof RewardEntitySchema>;
 //------------------End------------------//
-
 
 /**
  * Reward By Id Entity Schema
@@ -31,5 +30,5 @@ export const RewardByIdEntitySchema = z.object({
     nameTranslations: TranslationInputSchema,
     ...byUser,
     ...at,
-})
+});
 //------------------End------------------//

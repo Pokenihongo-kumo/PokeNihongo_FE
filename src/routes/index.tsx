@@ -1,43 +1,43 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom"
-import { ROUTES } from "@constants/route"
-import PrivateRoute from "@layouts/PrivateProute"
-import { ROLE } from "@constants/common"
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { ROUTES } from "@constants/route";
+import PrivateRoute from "@layouts/PrivateProute";
+import { ROLE } from "@constants/common";
 // import PersistToken from "../layouts/PersistToken"
-import LoginPage from "@pages/AuthPage/LoginPage"
-import AuthLayout from "@layouts/Auth"
-import AdminLayout from "@layouts/Admin"
-import ManagerLayout from "@layouts/Manager"
-import { lazy } from "react"
-import ConfigShop from "@pages/AdminPage/ConfigShop"
-import ShopBannerDetail from "@pages/AdminPage/ConfigShop/components/ShopBannerDetail"
-import ConfigGacha from "@pages/AdminPage/ConfigGacha"
-import GachaBannerDetail from "@pages/AdminPage/ConfigGacha/components/GachaBannerDetail"
-import PersistToken from "@layouts/PersistToken"
-import NotFoundPage from "@pages/NotFoundPage"
-import PaymentFailed from "@pages/PaymentPage/PaymentFailed"
-import PaymentSuccess from "@pages/PaymentPage/PaymentSuccess"
-import LeaderboardDetail from "@pages/AdminPage/Tournaments/components/LeaderboardDetail"
+import LoginPage from "@pages/AuthPage/LoginPage";
+import AuthLayout from "@layouts/Auth";
+import AdminLayout from "@layouts/Admin";
+import ManagerLayout from "@layouts/Manager";
+import { lazy } from "react";
+import ConfigShop from "@pages/AdminPage/ConfigShop";
+import ShopBannerDetail from "@pages/AdminPage/ConfigShop/components/ShopBannerDetail";
+import ConfigGacha from "@pages/AdminPage/ConfigGacha";
+import GachaBannerDetail from "@pages/AdminPage/ConfigGacha/components/GachaBannerDetail";
+import PersistToken from "@layouts/PersistToken";
+import NotFoundPage from "@pages/NotFoundPage";
+import PaymentFailed from "@pages/PaymentPage/PaymentFailed";
+import PaymentSuccess from "@pages/PaymentPage/PaymentSuccess";
+import LeaderboardDetail from "@pages/AdminPage/Tournaments/components/LeaderboardDetail";
 
-const AdminDashboard = lazy(() => import("@pages/AdminPage/Dashboard"))
-const PermissionManagement = lazy(() => import("@pages/AdminPage/Permission"))
-const UsersManagement = lazy(() => import("@pages/AdminPage/Users"))
-const LessonsManagement = lazy(() => import("@pages/AdminPage/Lesson/Management"))
-const VocabularyManagement = lazy(() => import("@pages/AdminPage/Vocabulary"))
-const AnalyticsDashboard = lazy(() => import("@pages/AdminPage/Analytics"))
-const PackageManagement = lazy(() => import("@pages/AdminPage/PackageManagement"))
-const PokemonManagement = lazy(() => import("@pages/AdminPage/Pokemon"))
-const TournamentManagement = lazy(() => import("@pages/AdminPage/Tournaments"))
-const AIPromptManagement = lazy(() => import("@pages/AdminPage/AIPrompts"))
-const CustomAIManagement = lazy(() => import("@pages/AdminPage/AICustom"))
-const CustomAIDetail = lazy(() => import("@pages/AdminPage/AICustom/components/CustomAIDetail"))
-const AIServiceManagement = lazy(() => import("@pages/AdminPage/AIService"))
-const DailyQuestManagement = lazy(() => import("@pages/AdminPage/DailyQuest"))
-const RewardManagement = lazy(() => import("@pages/AdminPage/Reward"))
-const QuestionBankManagement = lazy(() => import("@pages/AdminPage/QuestionBank"))
-const TestSetManagement = lazy(() => import("@pages/AdminPage/TestSetManagement"))
-const SpeakingTestSetManagement = lazy(() => import("@pages/AdminPage/SpeakingTestSetPage"))
-const TestManagement = lazy(() => import("@pages/AdminPage/TestManagement"))
-const GrammarManagement = lazy(() => import("@pages/ManagerPage/Grammar"))
+const AdminDashboard = lazy(() => import("@pages/AdminPage/Dashboard"));
+const PermissionManagement = lazy(() => import("@pages/AdminPage/Permission"));
+const UsersManagement = lazy(() => import("@pages/AdminPage/Users"));
+const LessonsManagement = lazy(() => import("@pages/AdminPage/Lesson/Management"));
+const VocabularyManagement = lazy(() => import("@pages/AdminPage/Vocabulary"));
+const AnalyticsDashboard = lazy(() => import("@pages/AdminPage/Analytics"));
+const PackageManagement = lazy(() => import("@pages/AdminPage/PackageManagement"));
+const PokemonManagement = lazy(() => import("@pages/AdminPage/Pokemon"));
+const TournamentManagement = lazy(() => import("@pages/AdminPage/Tournaments"));
+const AIPromptManagement = lazy(() => import("@pages/AdminPage/AIPrompts"));
+const CustomAIManagement = lazy(() => import("@pages/AdminPage/AICustom"));
+const CustomAIDetail = lazy(() => import("@pages/AdminPage/AICustom/components/CustomAIDetail"));
+const AIServiceManagement = lazy(() => import("@pages/AdminPage/AIService"));
+const DailyQuestManagement = lazy(() => import("@pages/AdminPage/DailyQuest"));
+const RewardManagement = lazy(() => import("@pages/AdminPage/Reward"));
+const QuestionBankManagement = lazy(() => import("@pages/AdminPage/QuestionBank"));
+const TestSetManagement = lazy(() => import("@pages/AdminPage/TestSetManagement"));
+const SpeakingTestSetManagement = lazy(() => import("@pages/AdminPage/SpeakingTestSetPage"));
+const TestManagement = lazy(() => import("@pages/AdminPage/TestManagement"));
+const GrammarManagement = lazy(() => import("@pages/ManagerPage/Grammar"));
 const RouterComponent = () => {
     const router = createBrowserRouter([
         //#region Auth routes
@@ -64,7 +64,10 @@ const RouterComponent = () => {
                                 { path: ROUTES.ADMIN.PACKAGE_MANAGEMENT, element: <PackageManagement /> },
                                 { path: ROUTES.ADMIN.POKEMON_MANAGEMENT, element: <PokemonManagement /> },
                                 { path: ROUTES.ADMIN.TOURNAMENT_MANAGEMENT, element: <TournamentManagement /> },
-                                { path: `${ROUTES.ADMIN.TOURNAMENT_MANAGEMENT}/:tournamentId`, element: <LeaderboardDetail /> },
+                                {
+                                    path: `${ROUTES.ADMIN.TOURNAMENT_MANAGEMENT}/:tournamentId`,
+                                    element: <LeaderboardDetail />,
+                                },
                                 { path: ROUTES.ADMIN.AI_PROMPTS_MANAGEMENT, element: <AIPromptManagement /> },
                                 { path: ROUTES.ADMIN.CUSTOM_AI_MANAGEMENT, element: <CustomAIManagement /> },
                                 { path: `${ROUTES.ADMIN.CUSTOM_AI_MANAGEMENT}/:configId`, element: <CustomAIDetail /> },
@@ -92,8 +95,14 @@ const RouterComponent = () => {
                                 { path: ROUTES.MANAGER.GRAMMAR_MANAGEMENT, element: <GrammarManagement /> },
                                 { path: ROUTES.MANAGER.QUESTION_BANK, element: <QuestionBankManagement /> },
                                 { path: ROUTES.MANAGER.TESTSET_MANAGEMENT, element: <TestSetManagement /> },
-                                { path: ROUTES.MANAGER.TESTSET_SPEAKING_MANAGEMENT, element: <SpeakingTestSetManagement /> },
-                                { path: ROUTES.MANAGER.TESTSET_SPEAKING_MANAGEMENT_EDIT, element: <SpeakingTestSetManagement /> },
+                                {
+                                    path: ROUTES.MANAGER.TESTSET_SPEAKING_MANAGEMENT,
+                                    element: <SpeakingTestSetManagement />,
+                                },
+                                {
+                                    path: ROUTES.MANAGER.TESTSET_SPEAKING_MANAGEMENT_EDIT,
+                                    element: <SpeakingTestSetManagement />,
+                                },
                                 { path: ROUTES.MANAGER.TEST_MANAGEMENT, element: <TestManagement /> },
                             ],
                         },
@@ -116,13 +125,13 @@ const RouterComponent = () => {
 
         //#region 404 route
         {
-            path: '*',
+            path: "*",
             element: <NotFoundPage />,
         },
         //#endregion
-    ])
+    ]);
 
-    return <RouterProvider router={router} />
-}
+    return <RouterProvider router={router} />;
+};
 
-export default RouterComponent
+export default RouterComponent;

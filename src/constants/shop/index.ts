@@ -7,6 +7,6 @@ const ShopBannerStatus = {
 
 export const SHOP = {
     ShopBannerStatus,
-}
+};
 
-export type ShopBannerStatus = typeof ShopBannerStatus[keyof typeof ShopBannerStatus];
+export type ShopBannerStatus = (typeof ShopBannerStatus)[keyof typeof ShopBannerStatus];

@@ -6,10 +6,7 @@ interface IDeleteConfirmShopItemProps {
     setItemIdToDelete: (itemId: number | null) => void;
 }
 
-const DeleteConfirmShopItem = ({
-    itemIdToDelete,
-    setItemIdToDelete,
-}: IDeleteConfirmShopItemProps) => {
+const DeleteConfirmShopItem = ({ itemIdToDelete, setItemIdToDelete }: IDeleteConfirmShopItemProps) => {
     /**
      * Handle Delete Shop Item
      */
@@ -24,7 +21,7 @@ const DeleteConfirmShopItem = ({
             },
             onError: () => {
                 setItemIdToDelete(null);
-            }
+            },
         });
     };
     //------------------------End------------------------//

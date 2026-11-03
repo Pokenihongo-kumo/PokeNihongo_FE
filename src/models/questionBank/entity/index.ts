@@ -10,31 +10,41 @@ export const QuestionEntitySchema = z.object({
     pronunciation: z.string().optional(),
     levelN: z.number(),
     meaning: z.string().optional(), // Keep for backward compatibility
-    meanings: z.array(z.union([
-        // New API format
-        z.object({
-            language: z.string(),
-            value: z.string(),
-        }),
-        // Old format for backward compatibility
-        z.object({
-            translations: z.object({
-                vi: z.string(),
-                en: z.string(),
+    meanings: z
+        .array(
+            z.union([
+                // New API format
+                z.object({
+                    language: z.string(),
+                    value: z.string(),
+                }),
+                // Old format for backward compatibility
+                z.object({
+                    translations: z.object({
+                        vi: z.string(),
+                        en: z.string(),
+                    }),
+                }),
+            ]),
+        )
+        .optional(),
+    answers: z
+        .array(
+            z.object({
+                id: z.number(),
+                answerJp: z.string(),
+                isCorrect: z.boolean(),
+                translations: z.object({
+                    meaning: z.array(
+                        z.object({
+                            language_code: z.string(),
+                            value: z.string(),
+                        }),
+                    ),
+                }),
             }),
-        })
-    ])).optional(),
-    answers: z.array(z.object({
-        id: z.number(),
-        answerJp: z.string(),
-        isCorrect: z.boolean(),
-        translations: z.object({
-            meaning: z.array(z.object({
-                language_code: z.string(),
-                value: z.string(),
-            })),
-        }),
-    })).optional(),
+        )
+        .optional(),
     ...byUser,
     ...at,
 });

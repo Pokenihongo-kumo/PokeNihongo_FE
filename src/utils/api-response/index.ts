@@ -1,6 +1,6 @@
-import type { AxiosResponse } from 'axios';
-import { z } from 'zod';
-import { PaginationMetaSchema } from '@models/common/response';
+import type { AxiosResponse } from "axios";
+import { z } from "zod";
+import { PaginationMetaSchema } from "@models/common/response";
 
 /**
  * Success result returned by API services, following the backend response
@@ -38,7 +38,7 @@ export const toApiResult = <T extends z.ZodType>(
     const body = EnvelopeSchema.parse(response.data);
     return {
         statusCode: response.status,
-        message: body.message ?? '',
+        message: body.message ?? "",
         data: dataSchema.parse(body.data),
     };
 };

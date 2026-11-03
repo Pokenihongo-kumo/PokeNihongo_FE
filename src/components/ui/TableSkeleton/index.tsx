@@ -7,11 +7,7 @@ interface TableSkeletonProps {
     showHeader?: boolean;
 }
 
-const TableSkeleton = ({
-    rows = 5,
-    columns = 6,
-    showHeader = true
-}: TableSkeletonProps) => {
+const TableSkeleton = ({ rows = 5, columns = 6, showHeader = true }: TableSkeletonProps) => {
     return (
         <Table>
             {showHeader && (

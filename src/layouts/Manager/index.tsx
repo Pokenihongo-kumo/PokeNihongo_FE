@@ -58,23 +58,18 @@ const ManagerLayout = () => {
     const handleLogout = useLogout();
     //-----------------------End--------------------//
 
-
     return (
         <div className="flex h-screen">
             {/* Sidebar */}
             <aside
                 className={cn(
                     "flex flex-col border-r border-border bg-sidebar transition-all duration-300 fixed h-full z-10",
-                    isSidebarOpen ? "w-64" : "w-20"
+                    isSidebarOpen ? "w-64" : "w-20",
                 )}
             >
                 {/* Logo */}
                 <div className="flex h-16 items-center justify-between px-4 border-b border-border flex-shrink-0">
-                    {isSidebarOpen && (
-                        <h1 className="text-xl font-bold text-sidebar-foreground">
-                            PokeNihongo
-                        </h1>
-                    )}
+                    {isSidebarOpen && <h1 className="text-xl font-bold text-sidebar-foreground">PokeNihongo</h1>}
                     <Button
                         variant="ghost"
                         size="icon"
@@ -98,7 +93,7 @@ const ManagerLayout = () => {
                                     "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
                                     isActive
                                         ? "bg-sidebar-primary text-sidebar-primary-foreground"
-                                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                                        : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
                                 )}
                             >
                                 <item.icon className="h-5 w-5 flex-shrink-0" />
@@ -117,7 +112,10 @@ const ManagerLayout = () => {
                         </div>
                     )}
 
-                    <button onClick={handleLogout} className="cursor-pointer flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors">
+                    <button
+                        onClick={handleLogout}
+                        className="cursor-pointer flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground transition-colors"
+                    >
                         <LogOut className="h-5 w-5 flex-shrink-0" />
                         {isSidebarOpen && <span>{t("common.logout")}</span>}
                     </button>
@@ -125,12 +123,7 @@ const ManagerLayout = () => {
             </aside>
 
             {/* Main Content */}
-            <main
-                className={cn(
-                    "flex-1 transition-all duration-300",
-                    isSidebarOpen ? "ml-64" : "ml-20"
-                )}
-            >
+            <main className={cn("flex-1 transition-all duration-300", isSidebarOpen ? "ml-64" : "ml-20")}>
                 <Outlet />
             </main>
         </div>
@@ -138,4 +131,3 @@ const ManagerLayout = () => {
 };
 
 export default ManagerLayout;
-

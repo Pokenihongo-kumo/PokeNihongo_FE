@@ -5,8 +5,8 @@ import { PokemonEntityType } from "@models/pokemon/entity";
 
 /**
  * hanlde Pokemon List
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export const usePokemonList = (params: IQueryRequest) => {
     const { page, limit, type, search, rarity } = params;
@@ -22,8 +22,8 @@ export const usePokemonList = (params: IQueryRequest) => {
 
 /**
  * Handle Get Pokemon By ID
- * @param id 
- * @returns 
+ * @param id
+ * @returns
  */
 export const usePokemonById = (id: number) => {
     return useQuery<{ data: PokemonEntityType }>({

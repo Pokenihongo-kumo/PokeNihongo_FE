@@ -1,16 +1,16 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { Button } from '@ui/Button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@ui/Dialog';
-import { Input } from '@ui/Input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui/Select';
-import { Skeleton } from '@ui/Skeleton';
-import { useCreateShopItems, useShopBannerById, useShopBannerAllPokemonByShopBannerId } from '@hooks/useShop';
-import { useElementalTypeList } from '@hooks/useElemental';
-import { useDebounce } from '@hooks/useDebounce';
-import { IShopBannerAllPokemonResponseSchema } from '@models/shop/response';
-import { cn } from '@utils/CN';
+import { Button } from "@ui/Button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@ui/Dialog";
+import { Input } from "@ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import { Skeleton } from "@ui/Skeleton";
+import { useCreateShopItems, useShopBannerById, useShopBannerAllPokemonByShopBannerId } from "@hooks/useShop";
+import { useElementalTypeList } from "@hooks/useElemental";
+import { useDebounce } from "@hooks/useDebounce";
+import { IShopBannerAllPokemonResponseSchema } from "@models/shop/response";
+import { cn } from "@utils/CN";
 import { Loader2, Plus, Search, Filter } from "lucide-react";
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
 import { RarityPokemon } from "@constants/pokemon";
 import { RarityBadge } from "@atoms/BadgeRarity";
 
@@ -57,7 +57,6 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
     );
     //------------------------End------------------------//
 
-
     const { data: bannerDetail } = useShopBannerById(bannerId);
     const { data: typesData } = useElementalTypeList({ page: 1, limit: 100 });
 
@@ -74,8 +73,8 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
         page: currentPage,
         limit: 15,
         search: debouncedSearchQuery || undefined,
-        rarity: selectedRarity !== 'all' ? selectedRarity : undefined,
-        types: selectedType !== 'all' ? selectedType : undefined,
+        rarity: selectedRarity !== "all" ? selectedRarity : undefined,
+        types: selectedType !== "all" ? selectedType : undefined,
     });
 
     useEffect(() => {
@@ -83,9 +82,9 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
             if (currentPage === 1) {
                 setAccumulatedResults(pokemonData.data.results);
             } else {
-                setAccumulatedResults(prev => {
-                    const existingIds = new Set(prev.map(p => p.id));
-                    const newResults = pokemonData.data.results.filter(p => !existingIds.has(p.id));
+                setAccumulatedResults((prev) => {
+                    const existingIds = new Set(prev.map((p) => p.id));
+                    const newResults = pokemonData.data.results.filter((p) => !existingIds.has(p.id));
                     return [...prev, ...newResults];
                 });
             }
@@ -93,19 +92,24 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
         }
     }, [pokemonData, currentPage, isPokemonLoading]);
 
-    const lastPokemonElementRef = useCallback((node: HTMLDivElement | null) => {
-        if (observerRef.current) observerRef.current.disconnect();
-        observerRef.current = new IntersectionObserver(entries => {
-            if (entries[0].isIntersecting &&
-                pokemonData?.data?.pagination?.current &&
-                pokemonData?.data?.pagination?.totalPage &&
-                pokemonData?.data?.pagination?.current < pokemonData?.data?.pagination?.totalPage &&
-                !isPokemonLoading) {
-                setCurrentPage(prev => prev + 1);
-            }
-        });
-        if (node) observerRef.current.observe(node);
-    }, [pokemonData?.data?.pagination, isPokemonLoading]);
+    const lastPokemonElementRef = useCallback(
+        (node: HTMLDivElement | null) => {
+            if (observerRef.current) observerRef.current.disconnect();
+            observerRef.current = new IntersectionObserver((entries) => {
+                if (
+                    entries[0].isIntersecting &&
+                    pokemonData?.data?.pagination?.current &&
+                    pokemonData?.data?.pagination?.totalPage &&
+                    pokemonData?.data?.pagination?.current < pokemonData?.data?.pagination?.totalPage &&
+                    !isPokemonLoading
+                ) {
+                    setCurrentPage((prev) => prev + 1);
+                }
+            });
+            if (node) observerRef.current.observe(node);
+        },
+        [pokemonData?.data?.pagination, isPokemonLoading],
+    );
 
     useEffect(() => {
         setCurrentPage(1);
@@ -138,7 +142,7 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
     const handlePokemonToggle = (pokemon: IShopBannerAllPokemonResponseSchema) => {
         if (pokemon.isExist) return;
 
-        setSelectedPokemon(prev => {
+        setSelectedPokemon((prev) => {
             const newMap = new Map(prev);
             if (newMap.has(pokemon.id)) {
                 newMap.delete(pokemon.id);
@@ -149,8 +153,6 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
         });
     };
     //------------------------End------------------------//
-
-
 
     /**
      * Handle Create Shop Items
@@ -173,18 +175,21 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
             setSelectedPokemon(new Map());
             onClose();
         } catch (error: any) {
-            console.error('Error creating shop items:', error);
+            console.error("Error creating shop items:", error);
         }
     };
     //------------------------End------------------------//
 
     return (
-        <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+        <Dialog
+            open={isOpen}
+            onOpenChange={(open) => {
+                if (!open) onClose();
+            }}
+        >
             <DialogContent className="bg-white border-border max-w-5xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle className="text-foreground">
-                        {t('configShop.addPokemonNotRandom')}
-                    </DialogTitle>
+                    <DialogTitle className="text-foreground">{t("configShop.addPokemonNotRandom")}</DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-4 py-4">
@@ -194,7 +199,7 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
                             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                             <Input
                                 type="text"
-                                placeholder={t('common.search')}
+                                placeholder={t("common.search")}
                                 value={searchQuery}
                                 onChange={handleSearchChange}
                                 className="bg-background border-input pl-10"
@@ -211,7 +216,10 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
                                 {typesData?.results?.map((type: any) => (
                                     <SelectItem key={type.id} value={type.id}>
                                         <div className="flex items-center gap-2">
-                                            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: type.color_hex }} />
+                                            <div
+                                                className="w-2 h-2 rounded-full"
+                                                style={{ backgroundColor: type.color_hex }}
+                                            />
                                             {type.display_name.vi}
                                         </div>
                                     </SelectItem>
@@ -227,7 +235,9 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
                             <SelectContent className="bg-card border-border">
                                 <SelectItem value="all">All Rarities</SelectItem>
                                 {Object.entries(RarityPokemon).map(([key, value]) => (
-                                    <SelectItem key={key} value={value}>{value}</SelectItem>
+                                    <SelectItem key={key} value={value}>
+                                        {value}
+                                    </SelectItem>
                                 ))}
                             </SelectContent>
                         </Select>
@@ -250,62 +260,68 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
                                 </h3>
                             </div>
                             <div className="grid gap-3 md:grid-cols-2 max-h-[450px] overflow-y-auto p-2 pb-16">
-                                {accumulatedResults.map((pokemon: IShopBannerAllPokemonResponseSchema, index: number) => {
-                                    const isSelected = selectedPokemon.has(pokemon.id);
-                                    const isDisabled = pokemon.isExist;
+                                {accumulatedResults.map(
+                                    (pokemon: IShopBannerAllPokemonResponseSchema, index: number) => {
+                                        const isSelected = selectedPokemon.has(pokemon.id);
+                                        const isDisabled = pokemon.isExist;
 
-                                    return (
-                                        <div
-                                            key={pokemon.id}
-                                            ref={index === accumulatedResults.length - 1 ? lastPokemonElementRef : null}
-                                            onClick={() => handlePokemonToggle(pokemon)}
-                                            className={cn(
-                                                "border rounded-lg p-4 transition-colors cursor-pointer relative",
-                                                isSelected && "border-primary bg-primary/5",
-                                                isDisabled && "opacity-50 cursor-not-allowed bg-gray-100",
-                                                !isDisabled && "hover:border-primary/50 bg-muted/30"
-                                            )}
-                                        >
-                                            {isDisabled && (
-                                                <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
-                                                    {t('configShop.alreadyExist')}
-                                                </div>
-                                            )}
-
-                                            <div className="flex items-start gap-3">
-                                                <img
-                                                    src={pokemon.imageUrl}
-                                                    alt={pokemon.nameTranslations.en}
-                                                    className="w-20 h-20 rounded-lg bg-gray-200 object-contain"
-                                                />
-                                                <div className="flex-1 min-w-0">
-                                                    <div className="flex items-center gap-2 mb-1">
-                                                        <p className="font-semibold text-foreground truncate">
-                                                            {pokemon.nameTranslations.en}
-                                                        </p>
-                                                        {isSelected && (
-                                                            <Plus className="h-4 w-4 text-primary flex-shrink-0" />
-                                                        )}
+                                        return (
+                                            <div
+                                                key={pokemon.id}
+                                                ref={
+                                                    index === accumulatedResults.length - 1
+                                                        ? lastPokemonElementRef
+                                                        : null
+                                                }
+                                                onClick={() => handlePokemonToggle(pokemon)}
+                                                className={cn(
+                                                    "border rounded-lg p-4 transition-colors cursor-pointer relative",
+                                                    isSelected && "border-primary bg-primary/5",
+                                                    isDisabled && "opacity-50 cursor-not-allowed bg-gray-100",
+                                                    !isDisabled && "hover:border-primary/50 bg-muted/30",
+                                                )}
+                                            >
+                                                {isDisabled && (
+                                                    <div className="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded">
+                                                        {t("configShop.alreadyExist")}
                                                     </div>
-                                                    <p className="text-sm text-muted-foreground mb-2">
-                                                        {pokemon.nameJp}
-                                                    </p>
-                                                    <div className="flex items-center gap-2">
-                                                        <RarityBadge level={pokemon.rarity as any} />
-                                                        <p className="text-xs text-muted-foreground">
-                                                            #{pokemon.pokedex_number}
+                                                )}
+
+                                                <div className="flex items-start gap-3">
+                                                    <img
+                                                        src={pokemon.imageUrl}
+                                                        alt={pokemon.nameTranslations.en}
+                                                        className="w-20 h-20 rounded-lg bg-gray-200 object-contain"
+                                                    />
+                                                    <div className="flex-1 min-w-0">
+                                                        <div className="flex items-center gap-2 mb-1">
+                                                            <p className="font-semibold text-foreground truncate">
+                                                                {pokemon.nameTranslations.en}
+                                                            </p>
+                                                            {isSelected && (
+                                                                <Plus className="h-4 w-4 text-primary flex-shrink-0" />
+                                                            )}
+                                                        </div>
+                                                        <p className="text-sm text-muted-foreground mb-2">
+                                                            {pokemon.nameJp}
                                                         </p>
+                                                        <div className="flex items-center gap-2">
+                                                            <RarityBadge level={pokemon.rarity as any} />
+                                                            <p className="text-xs text-muted-foreground">
+                                                                #{pokemon.pokedex_number}
+                                                            </p>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    );
-                                })}
+                                        );
+                                    },
+                                )}
                                 {/* Loading indicator when loading more pages */}
                                 {isPokemonLoading && currentPage > 1 && (
                                     <div className="col-span-2 flex items-center justify-center py-4">
                                         <Loader2 className="h-5 w-5 animate-spin text-muted-foreground mr-2" />
-                                        <span className="text-sm text-muted-foreground">{t('common.loading')}</span>
+                                        <span className="text-sm text-muted-foreground">{t("common.loading")}</span>
                                     </div>
                                 )}
                             </div>
@@ -313,9 +329,7 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
                     )}
 
                     {!isPokemonLoading && accumulatedResults.length === 0 && (
-                        <div className="text-center text-muted-foreground py-12">
-                            {t('configShop.noPokemonFound')}
-                        </div>
+                        <div className="text-center text-muted-foreground py-12">{t("configShop.noPokemonFound")}</div>
                     )}
                 </div>
 
@@ -323,7 +337,7 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
                     <div className="flex justify-between items-center w-full gap-4">
                         <div className="flex items-center gap-3 min-w-0 flex-1">
                             <div className="text-sm text-muted-foreground whitespace-nowrap">
-                                {selectedPokemon.size} {t('configShop.pokemonSelected')}
+                                {selectedPokemon.size} {t("configShop.pokemonSelected")}
                             </div>
                             <div className="flex-1 overflow-x-auto">
                                 <div className="flex items-center gap-2 pr-2">
@@ -353,7 +367,7 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
                         </div>
                         <div className="flex justify-end space-x-2">
                             <Button type="button" variant="outline" onClick={onClose}>
-                                {t('common.cancel')}
+                                {t("common.cancel")}
                             </Button>
                             <Button
                                 type="button"
@@ -364,12 +378,12 @@ const AddHandmadePokemonDialog = ({ isOpen, onClose, bannerId }: AddHandmadePoke
                                 {createShopItemsMutation.isPending ? (
                                     <>
                                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                        {t('configShop.adding')}
+                                        {t("configShop.adding")}
                                     </>
                                 ) : (
                                     <>
                                         <Plus className="h-4 w-4 mr-2" />
-                                        {t('configShop.addToShop')}
+                                        {t("configShop.addToShop")}
                                     </>
                                 )}
                             </Button>

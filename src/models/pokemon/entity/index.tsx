@@ -22,7 +22,6 @@ export const PokemonEntitySchema = z.object({
 export type PokemonEntityType = z.infer<typeof PokemonEntitySchema>;
 //------------------------End------------------------//
 
-
 /**
  * Pokemon omit
  */
@@ -35,7 +34,6 @@ export const PokemonOmitEntitySchema = PokemonEntitySchema.omit({
 
 export type IPokemonOmitEntity = z.infer<typeof PokemonOmitEntitySchema>;
 //------------------------End------------------------//
-
 
 /**
  * Pokemon Lite Entity Schema

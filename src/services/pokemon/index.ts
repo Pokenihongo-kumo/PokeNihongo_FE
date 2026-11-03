@@ -7,13 +7,13 @@ const pokemonService = {
         const queryParams = new URLSearchParams();
         const filters: string[] = [];
 
-        if (params.page) queryParams.append('currentPage', params.page.toString());
-        if (params.limit) queryParams.append('pageSize', params.limit.toString());
+        if (params.page) queryParams.append("currentPage", params.page.toString());
+        if (params.limit) queryParams.append("pageSize", params.limit.toString());
 
-        if (params.type && params.type !== 'all') {
+        if (params.type && params.type !== "all") {
             filters.push(`types=${params.type}`);
         }
-        if (params.rarity && params.rarity !== 'all') {
+        if (params.rarity && params.rarity !== "all") {
             filters.push(`rarity=${params.rarity}`);
         }
         if (params.search) {
@@ -21,8 +21,8 @@ const pokemonService = {
         }
 
         if (filters.length > 0) {
-            const qsValue = filters.join(',');
-            queryParams.append('qs', qsValue);
+            const qsValue = filters.join(",");
+            queryParams.append("qs", qsValue);
         }
 
         const queryString = queryParams.toString();
@@ -33,7 +33,7 @@ const pokemonService = {
         return axiosPrivate.get(`/pokemon/${id}`);
     },
     createPokemon: async (data: ICreatePokemonRequest) => {
-        return axiosPrivate.post('/pokemon', data);
+        return axiosPrivate.post("/pokemon", data);
     },
 };
 

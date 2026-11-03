@@ -1,26 +1,17 @@
-import { DialogContent, DialogHeader, DialogTitle } from '@ui/Dialog';
-import { Input } from '@ui/Input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui/Select';
-import { Button } from '@ui/Button';
-import { Switch } from '@ui/Switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@ui/Card';
-import { Badge } from '@ui/Badge';
-import { Separator } from '@ui/Separator';
-import { Textarea } from '@ui/Textarea';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-import { validateCreateExercise, useFormValidation, commonValidationRules } from '@utils/validation';
-import {
-    Target,
-    Clock,
-    Hash,
-    Save,
-    Send,
-    X,
-    BookOpen,
-    BarChart3
-} from 'lucide-react';
+import { DialogContent, DialogHeader, DialogTitle } from "@ui/Dialog";
+import { Input } from "@ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import { Button } from "@ui/Button";
+import { Switch } from "@ui/Switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card";
+import { Badge } from "@ui/Badge";
+import { Separator } from "@ui/Separator";
+import { Textarea } from "@ui/Textarea";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import { validateCreateExercise, useFormValidation, commonValidationRules } from "@utils/validation";
+import { Target, Clock, Hash, Save, Send, X, BookOpen, BarChart3 } from "lucide-react";
 
 interface CreateExerciseDialogProps {
     setIsAddDialogOpen: (value: boolean) => void;
@@ -34,27 +25,35 @@ interface CreateExerciseDialogProps {
     }>;
 }
 
-const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, availableLessons = [] }: CreateExerciseDialogProps) => {
+const CreateExerciseDialog = ({
+    setIsAddDialogOpen,
+    lessonId,
+    lessonTitle,
+    availableLessons = [],
+}: CreateExerciseDialogProps) => {
     const { t } = useTranslation();
 
     // Mock lessons data - replace with actual API call
-    const lessons = availableLessons.length > 0 ? availableLessons : [
-        { id: 1, title: "Basic Hiragana", level: 5, slug: "basic-hiragana" },
-        { id: 2, title: "Basic Kanji", level: 4, slug: "basic-kanji" },
-        { id: 3, title: "Greetings", level: 5, slug: "greetings" },
-        { id: 4, title: "Numbers", level: 5, slug: "numbers" },
-        { id: 5, title: "Family", level: 4, slug: "family" }
-    ];
+    const lessons =
+        availableLessons.length > 0
+            ? availableLessons
+            : [
+                  { id: 1, title: "Basic Hiragana", level: 5, slug: "basic-hiragana" },
+                  { id: 2, title: "Basic Kanji", level: 4, slug: "basic-kanji" },
+                  { id: 3, title: "Greetings", level: 5, slug: "greetings" },
+                  { id: 4, title: "Numbers", level: 5, slug: "numbers" },
+                  { id: 5, title: "Family", level: 4, slug: "family" },
+              ];
 
     const [formData, setFormData] = useState({
-        title: '',
-        type: 'multiple_choice' as 'multiple_choice' | 'fill_blank' | 'listening' | 'speaking',
-        difficulty: 'easy' as 'easy' | 'medium' | 'hard',
-        description: '',
+        title: "",
+        type: "multiple_choice" as "multiple_choice" | "fill_blank" | "listening" | "speaking",
+        difficulty: "easy" as "easy" | "medium" | "hard",
+        description: "",
         questionCount: 10,
         estimatedTime: 15,
         isActive: true,
-        lessonId: lessonId || lessons[0]?.id || 1
+        lessonId: lessonId || lessons[0]?.id || 1,
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -74,32 +73,32 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
     const { validate, validateField } = useFormValidation(validationRules);
 
     const handleInputChange = (field: string, value: any) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [field]: value
+            [field]: value,
         }));
-        
+
         // Mark field as touched
-        setTouched(prev => ({ ...prev, [field]: true }));
-        
+        setTouched((prev) => ({ ...prev, [field]: true }));
+
         // Clear error when user starts typing
         if (errors[field]) {
-            setErrors(prev => ({
+            setErrors((prev) => ({
                 ...prev,
-                [field]: ''
+                [field]: "",
             }));
         }
     };
 
     // Real-time validation on blur
     const handleBlur = (field: string) => {
-        setTouched(prev => ({ ...prev, [field]: true }));
-        
+        setTouched((prev) => ({ ...prev, [field]: true }));
+
         const error = validateField(field, formData[field]);
         if (error) {
-            setErrors(prev => ({ ...prev, [field]: error }));
+            setErrors((prev) => ({ ...prev, [field]: error }));
         } else {
-            setErrors(prev => {
+            setErrors((prev) => {
                 const newErrors = { ...prev };
                 delete newErrors[field];
                 return newErrors;
@@ -115,38 +114,38 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
 
     const handleSubmit = async (isPublish: boolean = false) => {
         if (!validateForm()) {
-            toast.error('Please check your information');
+            toast.error("Please check your information");
             return;
         }
 
         try {
             // TODO: Implement API call
-            console.log('Creating exercise:', { ...formData, isActive: isPublish });
-            toast.success(isPublish ? 'Exercise published successfully!' : 'Exercise saved as draft!');
+            console.log("Creating exercise:", { ...formData, isActive: isPublish });
+            toast.success(isPublish ? "Exercise published successfully!" : "Exercise saved as draft!");
             setIsAddDialogOpen(false);
         } catch (error) {
-            toast.error('Failed to create exercise');
+            toast.error("Failed to create exercise");
         }
     };
 
     const getTypeBadge = (type: string) => {
         const types = {
-            'multiple_choice': { label: 'Multiple Choice', color: 'bg-blue-500' },
-            'fill_blank': { label: 'Fill in Blank', color: 'bg-green-500' },
-            'listening': { label: 'Listening', color: 'bg-purple-500' },
-            'speaking': { label: 'Speaking', color: 'bg-orange-500' }
-        }
-        return types[type as keyof typeof types] || { label: type, color: 'bg-gray-500' }
-    }
+            multiple_choice: { label: "Multiple Choice", color: "bg-blue-500" },
+            fill_blank: { label: "Fill in Blank", color: "bg-green-500" },
+            listening: { label: "Listening", color: "bg-purple-500" },
+            speaking: { label: "Speaking", color: "bg-orange-500" },
+        };
+        return types[type as keyof typeof types] || { label: type, color: "bg-gray-500" };
+    };
 
     const getDifficultyBadge = (difficulty: string) => {
         const difficulties = {
-            'easy': { label: 'Easy', color: 'bg-green-500' },
-            'medium': { label: 'Medium', color: 'bg-yellow-500' },
-            'hard': { label: 'Hard', color: 'bg-red-500' }
-        }
-        return difficulties[difficulty as keyof typeof difficulties] || { label: difficulty, color: 'bg-gray-500' }
-    }
+            easy: { label: "Easy", color: "bg-green-500" },
+            medium: { label: "Medium", color: "bg-yellow-500" },
+            hard: { label: "Hard", color: "bg-red-500" },
+        };
+        return difficulties[difficulty as keyof typeof difficulties] || { label: difficulty, color: "bg-gray-500" };
+    };
 
     const typeInfo = getTypeBadge(formData.type);
     const difficultyInfo = getDifficultyBadge(formData.difficulty);
@@ -160,9 +159,7 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                             <Target className="h-6 w-6 text-primary" />
                         </div>
                         <div>
-                            <DialogTitle className="text-2xl font-bold text-foreground">
-                                Add Exercise
-                            </DialogTitle>
+                            <DialogTitle className="text-2xl font-bold text-foreground">Add Exercise</DialogTitle>
                             <p className="text-sm text-muted-foreground mt-1">
                                 {lessonTitle && `For lesson: ${lessonTitle}`}
                             </p>
@@ -183,20 +180,20 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                             <CardContent className="space-y-6">
                                 {/* Title */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-foreground">
-                                        Title *
-                                    </label>
+                                    <label className="text-sm font-semibold text-foreground">Title *</label>
                                     <Input
                                         placeholder="Enter exercise title"
                                         className="bg-background border-border text-foreground h-11 text-base"
                                         value={formData.title}
-                                        onChange={(e) => handleInputChange('title', e.target.value)}
-                                        onBlur={() => handleBlur('title')}
+                                        onChange={(e) => handleInputChange("title", e.target.value)}
+                                        onBlur={() => handleBlur("title")}
                                     />
-                                    {errors.title && <p className="text-sm text-red-500 flex items-center gap-1">
-                                        <X className="h-3 w-3" />
-                                        {errors.title}
-                                    </p>}
+                                    {errors.title && (
+                                        <p className="text-sm text-red-500 flex items-center gap-1">
+                                            <X className="h-3 w-3" />
+                                            {errors.title}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Lesson Selection */}
@@ -205,10 +202,13 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                         <BookOpen className="h-4 w-4 text-primary" />
                                         Select Lesson *
                                     </label>
-                                    <Select value={formData.lessonId.toString()} onValueChange={(value) => handleInputChange('lessonId', parseInt(value))}>
-                                        <SelectTrigger 
+                                    <Select
+                                        value={formData.lessonId.toString()}
+                                        onValueChange={(value) => handleInputChange("lessonId", parseInt(value))}
+                                    >
+                                        <SelectTrigger
                                             className="bg-background border-border text-foreground h-11"
-                                            onBlur={() => handleBlur('lessonId')}
+                                            onBlur={() => handleBlur("lessonId")}
                                         >
                                             <SelectValue placeholder="Select a lesson" />
                                         </SelectTrigger>
@@ -217,7 +217,9 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                                 <SelectItem key={lesson.id} value={lesson.id.toString()}>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-sm font-medium">{lesson.title}</span>
-                                                        <Badge className="bg-blue-100 text-blue-800 text-xs">JLPT N{lesson.level}</Badge>
+                                                        <Badge className="bg-blue-100 text-blue-800 text-xs">
+                                                            JLPT N{lesson.level}
+                                                        </Badge>
                                                     </div>
                                                 </SelectItem>
                                             ))}
@@ -227,32 +229,33 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
 
                                 {/* Description */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-foreground">
-                                        Description *
-                                    </label>
+                                    <label className="text-sm font-semibold text-foreground">Description *</label>
                                     <Textarea
                                         placeholder="Enter exercise description"
                                         className="bg-background border-border text-foreground min-h-[100px]"
                                         value={formData.description}
-                                        onChange={(e) => handleInputChange('description', e.target.value)}
-                                        onBlur={() => handleBlur('description')}
+                                        onChange={(e) => handleInputChange("description", e.target.value)}
+                                        onBlur={() => handleBlur("description")}
                                     />
-                                    {errors.description && <p className="text-sm text-red-500 flex items-center gap-1">
-                                        <X className="h-3 w-3" />
-                                        {errors.description}
-                                    </p>}
+                                    {errors.description && (
+                                        <p className="text-sm text-red-500 flex items-center gap-1">
+                                            <X className="h-3 w-3" />
+                                            {errors.description}
+                                        </p>
+                                    )}
                                 </div>
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     {/* Exercise Type */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-semibold text-foreground">
-                                            Exercise Type *
-                                        </label>
-                                        <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
-                                            <SelectTrigger 
+                                        <label className="text-sm font-semibold text-foreground">Exercise Type *</label>
+                                        <Select
+                                            value={formData.type}
+                                            onValueChange={(value) => handleInputChange("type", value)}
+                                        >
+                                            <SelectTrigger
                                                 className="bg-background border-border text-foreground h-11"
-                                                onBlur={() => handleBlur('type')}
+                                                onBlur={() => handleBlur("type")}
                                             >
                                                 <SelectValue placeholder="Select exercise type" />
                                             </SelectTrigger>
@@ -287,13 +290,14 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
 
                                     {/* Difficulty */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-semibold text-foreground">
-                                            Difficulty *
-                                        </label>
-                                        <Select value={formData.difficulty} onValueChange={(value) => handleInputChange('difficulty', value)}>
-                                            <SelectTrigger 
+                                        <label className="text-sm font-semibold text-foreground">Difficulty *</label>
+                                        <Select
+                                            value={formData.difficulty}
+                                            onValueChange={(value) => handleInputChange("difficulty", value)}
+                                        >
+                                            <SelectTrigger
                                                 className="bg-background border-border text-foreground h-11"
-                                                onBlur={() => handleBlur('difficulty')}
+                                                onBlur={() => handleBlur("difficulty")}
                                             >
                                                 <SelectValue placeholder="Select difficulty" />
                                             </SelectTrigger>
@@ -306,7 +310,9 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                                 </SelectItem>
                                                 <SelectItem value="medium">
                                                     <div className="flex items-center gap-2">
-                                                        <Badge className="bg-yellow-500 text-white text-xs">Medium</Badge>
+                                                        <Badge className="bg-yellow-500 text-white text-xs">
+                                                            Medium
+                                                        </Badge>
                                                         <span>Medium</span>
                                                     </div>
                                                 </SelectItem>
@@ -333,13 +339,17 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                             placeholder="10"
                                             className="bg-background border-border text-foreground h-11"
                                             value={formData.questionCount}
-                                            onChange={(e) => handleInputChange('questionCount', parseInt(e.target.value) || 0)}
-                                            onBlur={() => handleBlur('questionCount')}
+                                            onChange={(e) =>
+                                                handleInputChange("questionCount", parseInt(e.target.value) || 0)
+                                            }
+                                            onBlur={() => handleBlur("questionCount")}
                                         />
-                                        {errors.questionCount && <p className="text-sm text-red-500 flex items-center gap-1">
-                                            <X className="h-3 w-3" />
-                                            {errors.questionCount}
-                                        </p>}
+                                        {errors.questionCount && (
+                                            <p className="text-sm text-red-500 flex items-center gap-1">
+                                                <X className="h-3 w-3" />
+                                                {errors.questionCount}
+                                            </p>
+                                        )}
                                     </div>
 
                                     {/* Estimated Time */}
@@ -353,13 +363,17 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                             placeholder="15"
                                             className="bg-background border-border text-foreground h-11"
                                             value={formData.estimatedTime}
-                                            onChange={(e) => handleInputChange('estimatedTime', parseInt(e.target.value) || 0)}
-                                            onBlur={() => handleBlur('estimatedTime')}
+                                            onChange={(e) =>
+                                                handleInputChange("estimatedTime", parseInt(e.target.value) || 0)
+                                            }
+                                            onBlur={() => handleBlur("estimatedTime")}
                                         />
-                                        {errors.estimatedTime && <p className="text-sm text-red-500 flex items-center gap-1">
-                                            <X className="h-3 w-3" />
-                                            {errors.estimatedTime}
-                                        </p>}
+                                        {errors.estimatedTime && (
+                                            <p className="text-sm text-red-500 flex items-center gap-1">
+                                                <X className="h-3 w-3" />
+                                                {errors.estimatedTime}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             </CardContent>
@@ -374,7 +388,10 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                             <BarChart3 className="h-5 w-5 text-blue-600" />
                                         </div>
                                         <div>
-                                            <label htmlFor="isActive" className="text-sm font-semibold text-foreground cursor-pointer">
+                                            <label
+                                                htmlFor="isActive"
+                                                className="text-sm font-semibold text-foreground cursor-pointer"
+                                            >
                                                 Activate Exercise
                                             </label>
                                             <p className="text-xs text-muted-foreground">
@@ -385,7 +402,7 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                     <Switch
                                         id="isActive"
                                         checked={formData.isActive}
-                                        onCheckedChange={(checked) => handleInputChange('isActive', checked)}
+                                        onCheckedChange={(checked) => handleInputChange("isActive", checked)}
                                         className="data-[state=checked]:bg-blue-600"
                                     />
                                 </div>
@@ -397,9 +414,7 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                 <Separator className="my-4" />
 
                 <div className="flex justify-between items-center pt-4">
-                    <div className="text-xs text-muted-foreground">
-                        * Required fields
-                    </div>
+                    <div className="text-xs text-muted-foreground">* Required fields</div>
                     <div className="flex gap-3">
                         <Button
                             variant="outline"
@@ -428,7 +443,7 @@ const CreateExerciseDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                 </div>
             </DialogContent>
         </>
-    )
-}
+    );
+};
 
-export default CreateExerciseDialog
+export default CreateExerciseDialog;

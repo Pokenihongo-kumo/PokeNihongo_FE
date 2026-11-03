@@ -14,7 +14,7 @@ export default function ShopBannerDetail() {
 
     return (
         <>
-            <HeaderAdmin title={t('configShop.title')} description={t('configShop.description')} />
+            <HeaderAdmin title={t("configShop.title")} description={t("configShop.description")} />
             {isLoading ? (
                 <div className="p-8 mt-24">
                     <Card className="bg-card border-border">
@@ -31,7 +31,7 @@ export default function ShopBannerDetail() {
                     </Card>
                 </div>
             ) : (
-                <ShopBannerDetailView bannerDetail={bannerDetail?.data || {} as IShopBannerSchema} />
+                <ShopBannerDetailView bannerDetail={bannerDetail?.data || ({} as IShopBannerSchema)} />
             )}
         </>
     );

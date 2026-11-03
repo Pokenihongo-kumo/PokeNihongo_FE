@@ -1,21 +1,24 @@
-import { useEffect, useMemo, useState } from "react"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@ui/Dialog"
-import { Button } from "@ui/Button"
-import { Input } from "@ui/Input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select"
-import { Switch } from "@ui/Switch"
-import { useForm, useFieldArray, Controller } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useTranslation } from "react-i18next"
-import { BATTLE } from "@constants/battle"
-import { CreateBattleLeaderBoardSeasonRequestSchema, ICreateBattleLeaderBoardSeasonRequest } from "@models/battle/request"
-import { useCreateBattleLeaderBoardSeason } from "@hooks/useBattle"
-import MultilingualInput from "@ui/MultilingualInput"
-import CustomDatePicker from "@ui/DatePicker"
+import { useEffect, useMemo, useState } from "react";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@ui/Dialog";
+import { Button } from "@ui/Button";
+import { Input } from "@ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import { Switch } from "@ui/Switch";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
+import { BATTLE } from "@constants/battle";
+import {
+    CreateBattleLeaderBoardSeasonRequestSchema,
+    ICreateBattleLeaderBoardSeasonRequest,
+} from "@models/battle/request";
+import { useCreateBattleLeaderBoardSeason } from "@hooks/useBattle";
+import MultilingualInput from "@ui/MultilingualInput";
+import CustomDatePicker from "@ui/DatePicker";
 
 interface CreateSeasonProps {
-    isOpen: boolean
-    onClose: () => void
+    isOpen: boolean;
+    onClose: () => void;
 }
 
 const defaultValues: ICreateBattleLeaderBoardSeasonRequest = {
@@ -30,10 +33,10 @@ const defaultValues: ICreateBattleLeaderBoardSeasonRequest = {
         { key: "en", value: "" },
         { key: "ja", value: "" },
     ],
-}
+};
 
 const CreateSeason = ({ isOpen, onClose }: CreateSeasonProps) => {
-    const { t } = useTranslation()
+    const { t } = useTranslation();
 
     const {
         control,
@@ -50,26 +53,26 @@ const CreateSeason = ({ isOpen, onClose }: CreateSeasonProps) => {
         defaultValues,
         mode: "onTouched",
         reValidateMode: "onChange",
-    })
+    });
 
     const { fields: nameFields } = useFieldArray({
         control,
         name: "nameTranslations",
-    })
+    });
 
-    const createSeasonMutation = useCreateBattleLeaderBoardSeason()
+    const createSeasonMutation = useCreateBattleLeaderBoardSeason();
 
-    const isPrecreateEnabled = watch("enablePrecreate")
-    const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null)
-    const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null)
+    const isPrecreateEnabled = watch("enablePrecreate");
+    const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
+    const [selectedEndDate, setSelectedEndDate] = useState<Date | null>(null);
 
     useEffect(() => {
         if (isOpen) {
-            reset(defaultValues)
-            setSelectedStartDate(null)
-            setSelectedEndDate(null)
+            reset(defaultValues);
+            setSelectedStartDate(null);
+            setSelectedEndDate(null);
         }
-    }, [isOpen, reset])
+    }, [isOpen, reset]);
 
     const statusOptions = useMemo(
         () => [
@@ -91,26 +94,26 @@ const CreateSeason = ({ isOpen, onClose }: CreateSeasonProps) => {
             },
         ],
         [t],
-    )
+    );
 
-    const toIsoString = (date: Date | null) => (date ? new Date(date).toISOString() : "")
+    const toIsoString = (date: Date | null) => (date ? new Date(date).toISOString() : "");
 
     const onSubmit = async (data: ICreateBattleLeaderBoardSeasonRequest) => {
         try {
-            await createSeasonMutation.mutateAsync(data)
-            onClose()
+            await createSeasonMutation.mutateAsync(data);
+            onClose();
         } catch {
             // handled in mutation
         }
-    }
+    };
 
     const handleFormSubmit = handleSubmit(async (data) => {
         // Trigger validation for all fields before submit
-        const isValid = await trigger()
+        const isValid = await trigger();
         if (isValid) {
-            await onSubmit(data)
+            await onSubmit(data);
         }
-    })
+    });
 
     return (
         <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
@@ -153,27 +156,27 @@ const CreateSeason = ({ isOpen, onClose }: CreateSeasonProps) => {
                                 <CustomDatePicker
                                     value={selectedStartDate}
                                     onChange={(date) => {
-                                        setSelectedStartDate(date)
-                                        const iso = toIsoString(date)
-                                        setValue("startDate", iso, { shouldDirty: true })
-                                        clearErrors("startDate")
+                                        setSelectedStartDate(date);
+                                        const iso = toIsoString(date);
+                                        setValue("startDate", iso, { shouldDirty: true });
+                                        clearErrors("startDate");
                                         if (date && selectedEndDate && selectedEndDate < date) {
-                                            setSelectedEndDate(date)
-                                            setValue("endDate", iso, { shouldDirty: true })
-                                            clearErrors("endDate")
+                                            setSelectedEndDate(date);
+                                            setValue("endDate", iso, { shouldDirty: true });
+                                            clearErrors("endDate");
                                         }
                                     }}
-                                    placeholder={t("tournaments.createSeason.startDatePlaceholder", { defaultValue: "Chọn ngày bắt đầu" })}
+                                    placeholder={t("tournaments.createSeason.startDatePlaceholder", {
+                                        defaultValue: "Chọn ngày bắt đầu",
+                                    })}
                                     hasError={!!errors.startDate}
                                     dayPickerProps={{
-                                        disabled: { before: new Date() }
+                                        disabled: { before: new Date() },
                                     }}
                                 />
                                 <input type="hidden" {...register("startDate")} />
                                 {errors.startDate && (
-                                    <p className="text-xs text-error mt-1">
-                                        {t(errors.startDate.message as string)}
-                                    </p>
+                                    <p className="text-xs text-error mt-1">{t(errors.startDate.message as string)}</p>
                                 )}
                             </div>
                             <div className="space-y-1.5">
@@ -183,24 +186,24 @@ const CreateSeason = ({ isOpen, onClose }: CreateSeasonProps) => {
                                 <CustomDatePicker
                                     value={selectedEndDate}
                                     onChange={(date) => {
-                                        setSelectedEndDate(date)
-                                        const iso = toIsoString(date)
-                                        setValue("endDate", iso, { shouldDirty: true })
-                                        clearErrors("endDate")
+                                        setSelectedEndDate(date);
+                                        const iso = toIsoString(date);
+                                        setValue("endDate", iso, { shouldDirty: true });
+                                        clearErrors("endDate");
                                     }}
-                                    placeholder={t("tournaments.createSeason.endDatePlaceholder", { defaultValue: "Chọn ngày kết thúc" })}
+                                    placeholder={t("tournaments.createSeason.endDatePlaceholder", {
+                                        defaultValue: "Chọn ngày kết thúc",
+                                    })}
                                     hasError={!!errors.endDate}
                                     dayPickerProps={{
                                         disabled: selectedStartDate
                                             ? { before: selectedStartDate }
-                                            : { before: new Date() }
+                                            : { before: new Date() },
                                     }}
                                 />
                                 <input type="hidden" {...register("endDate")} />
                                 {errors.endDate && (
-                                    <p className="text-xs text-error mt-1">
-                                        {t(errors.endDate.message as string)}
-                                    </p>
+                                    <p className="text-xs text-error mt-1">{t(errors.endDate.message as string)}</p>
                                 )}
                             </div>
                         </div>
@@ -236,11 +239,14 @@ const CreateSeason = ({ isOpen, onClose }: CreateSeasonProps) => {
                         <div className="flex items-start justify-between gap-4">
                             <div>
                                 <h3 className="text-sm font-semibold text-foreground">
-                                    {t("tournaments.createSeason.autoCreateLabel", { defaultValue: "Tự động tạo mùa tiếp theo" })}
+                                    {t("tournaments.createSeason.autoCreateLabel", {
+                                        defaultValue: "Tự động tạo mùa tiếp theo",
+                                    })}
                                 </h3>
                                 <p className="text-xs text-muted-foreground">
                                     {t("tournaments.createSeason.autoCreateDescription", {
-                                        defaultValue: "Hệ thống sẽ tự động mở mùa giải mới trước khi mùa hiện tại kết thúc.",
+                                        defaultValue:
+                                            "Hệ thống sẽ tự động mở mùa giải mới trước khi mùa hiện tại kết thúc.",
                                     })}
                                 </p>
                             </div>
@@ -272,20 +278,23 @@ const CreateSeason = ({ isOpen, onClose }: CreateSeasonProps) => {
                                                     max={30}
                                                     value={field.value}
                                                     onChange={(event) => {
-                                                        const value = Number(event.target.value)
-                                                        field.onChange(Number.isNaN(value) ? 0 : value)
+                                                        const value = Number(event.target.value);
+                                                        field.onChange(Number.isNaN(value) ? 0 : value);
                                                     }}
                                                     className="bg-background border-border"
                                                     variant={errors.precreateBeforeEndDays ? "destructive" : "default"}
                                                 />
                                                 {errors.precreateBeforeEndDays && (
-                                                    <p className={`text-xs mt-1 ${errors.precreateBeforeEndDays ? 'text-error' : 'text-foreground'}`}>
+                                                    <p
+                                                        className={`text-xs mt-1 ${errors.precreateBeforeEndDays ? "text-error" : "text-foreground"}`}
+                                                    >
                                                         {errors.precreateBeforeEndDays.message as string}
                                                     </p>
                                                 )}
                                                 <p className="text-xs text-muted-foreground">
                                                     {t("tournaments.createSeason.precreateHint", {
-                                                        defaultValue: "Số ngày trước khi mùa giải kết thúc để mở mùa mới.",
+                                                        defaultValue:
+                                                            "Số ngày trước khi mùa giải kết thúc để mở mùa mới.",
                                                     })}
                                                 </p>
                                             </>
@@ -306,8 +315,12 @@ const CreateSeason = ({ isOpen, onClose }: CreateSeasonProps) => {
                                             <div className="flex h-11 items-center justify-between rounded-lg border border-border bg-background px-4">
                                                 <span className="text-sm text-muted-foreground">
                                                     {field.value
-                                                        ? t("tournaments.createSeason.randomItemAgainOn", { defaultValue: "Bật" })
-                                                        : t("tournaments.createSeason.randomItemAgainOff", { defaultValue: "Tắt" })}
+                                                        ? t("tournaments.createSeason.randomItemAgainOn", {
+                                                              defaultValue: "Bật",
+                                                          })
+                                                        : t("tournaments.createSeason.randomItemAgainOff", {
+                                                              defaultValue: "Tắt",
+                                                          })}
                                                 </span>
                                                 <Switch checked={field.value} onCheckedChange={field.onChange} />
                                             </div>
@@ -319,7 +332,12 @@ const CreateSeason = ({ isOpen, onClose }: CreateSeasonProps) => {
                     </section>
 
                     <DialogFooter className="pt-4">
-                        <Button type="button" variant="outline" onClick={onClose} disabled={createSeasonMutation.isPending}>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={onClose}
+                            disabled={createSeasonMutation.isPending}
+                        >
                             {t("common.cancel", { defaultValue: "Hủy" })}
                         </Button>
                         <Button
@@ -335,7 +353,7 @@ const CreateSeason = ({ isOpen, onClose }: CreateSeasonProps) => {
                 </form>
             </DialogContent>
         </Dialog>
-    )
-}
+    );
+};
 
-export default CreateSeason
+export default CreateSeason;

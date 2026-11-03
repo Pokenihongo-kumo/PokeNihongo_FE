@@ -1,7 +1,7 @@
-import createSagaMiddleware from '@redux-saga/core';
-import { configureStore } from '@reduxjs/toolkit';
-import rootSaga from './rootSaga';
-import rootReducers from './rootReducer';
+import createSagaMiddleware from "@redux-saga/core";
+import { configureStore } from "@reduxjs/toolkit";
+import rootSaga from "./rootSaga";
+import rootReducers from "./rootReducer";
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -9,7 +9,8 @@ const store = configureStore({
     reducer: rootReducers,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
-            thunk: false, serializableCheck: false
+            thunk: false,
+            serializableCheck: false,
         }).concat(sagaMiddleware),
 });
 

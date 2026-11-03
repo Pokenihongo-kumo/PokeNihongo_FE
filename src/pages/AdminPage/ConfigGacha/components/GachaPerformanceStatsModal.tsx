@@ -92,24 +92,16 @@ export default function GachaPerformanceStatsModal({
                                     cy="50%"
                                     outerRadius={90}
                                     labelLine={false}
-                                    label={({ name, percent }: any) =>
-                                        `${name}: ${(percent * 100).toFixed(1)}%`
-                                    }
+                                    label={({ name, percent }: any) => `${name}: ${(percent * 100).toFixed(1)}%`}
                                 >
                                     {statsDetail.starDistribution.map((stat, index) => (
-                                        <Cell
-                                            key={stat.star}
-                                            fill={colors[index % colors.length]}
-                                        />
+                                        <Cell key={stat.star} fill={colors[index % colors.length]} />
                                     ))}
                                 </Pie>
                                 <Tooltip
                                     formatter={(value: any, _name: any, props: any) => {
                                         const payload: any = props?.payload || {};
-                                        return [
-                                            `${value} (${payload.percentage}%)`,
-                                            t("dashboard.sparkles.userCount"),
-                                        ];
+                                        return [`${value} (${payload.percentage}%)`, t("dashboard.sparkles.userCount")];
                                     }}
                                 />
                                 <Legend />
@@ -121,5 +113,3 @@ export default function GachaPerformanceStatsModal({
         </Dialog>
     );
 }
-
-

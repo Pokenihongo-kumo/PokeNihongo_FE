@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-import { Button } from '@ui/Button';
-import { ROUTES } from '@constants/route';
-import { useTranslation } from 'react-i18next';
+import { useNavigate } from "react-router-dom";
+import { Button } from "@ui/Button";
+import { ROUTES } from "@constants/route";
+import { useTranslation } from "react-i18next";
 
 const NotFoundPage = () => {
     const navigate = useNavigate();
@@ -11,19 +11,13 @@ const NotFoundPage = () => {
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
             <div className="text-center px-4 py-16 max-w-md">
                 {/* 404 Text */}
-                <h1 className="text-9xl font-bold text-indigo-600 mb-4 animate-pulse">
-                    404
-                </h1>
+                <h1 className="text-9xl font-bold text-indigo-600 mb-4 animate-pulse">404</h1>
 
                 {/* Title */}
-                <h2 className="text-3xl font-bold text-gray-800 mb-4">
-                    {t('notFoundPage.title')}
-                </h2>
+                <h2 className="text-3xl font-bold text-gray-800 mb-4">{t("notFoundPage.title")}</h2>
 
                 {/* Description */}
-                <p className="text-gray-600 mb-8 text-lg">
-                    {t('notFoundPage.description')}
-                </p>
+                <p className="text-gray-600 mb-8 text-lg">{t("notFoundPage.description")}</p>
 
                 {/* Buttons */}
                 <div className="space-y-4">
@@ -31,13 +25,13 @@ const NotFoundPage = () => {
                         onClick={() => navigate(-1)}
                         className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-lg font-medium transition-colors"
                     >
-                        {t('notFoundPage.goBack')}
+                        {t("notFoundPage.goBack")}
                     </Button>
                     <Button
                         onClick={() => navigate(ROUTES.AUTH.LOGIN)}
                         className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 py-3 px-6 rounded-lg font-medium transition-colors"
                     >
-                        {t('notFoundPage.goToLogin')}
+                        {t("notFoundPage.goToLogin")}
                     </Button>
                 </div>
             </div>
@@ -46,4 +40,3 @@ const NotFoundPage = () => {
 };
 
 export default NotFoundPage;
-

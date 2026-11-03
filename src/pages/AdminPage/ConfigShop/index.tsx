@@ -25,7 +25,6 @@ export default function ConfigShop() {
     const navigate = useNavigate();
     //------------------------End------------------------//
 
-
     const [isCreateDialogOpen, setIsCreateDialogOpen] = useState<boolean>(false);
     const [isUpdateRarityPriceDialogOpen, setIsUpdateRarityPriceDialogOpen] = useState<boolean>(false);
 
@@ -39,11 +38,11 @@ export default function ConfigShop() {
     const formatDateForAPI = (date: Date | null) => {
         if (!date) return undefined;
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
         return `${year}-${month}-${day}`;
     };
-    const [filterStatus, setFilterStatus] = useState<string>("all")
+    const [filterStatus, setFilterStatus] = useState<string>("all");
     const [filterStartDate, setFilterStartDate] = useState<Date | null>(null);
     const [filterEndDate, setFilterEndDate] = useState<Date | null>(null);
     const { data: bannersData, isLoading: isBannersLoading } = useShopBannerList({
@@ -54,7 +53,6 @@ export default function ConfigShop() {
         status: filterStatus !== "all" ? [filterStatus] : undefined,
     });
     //------------------------End------------------------//
-
 
     /**
      * Handle Filters
@@ -69,17 +67,16 @@ export default function ConfigShop() {
     const hasActiveFilters = filterStartDate || filterEndDate || filterStatus !== "all";
     //------------------------End------------------------//
 
-
     const handleViewBanner = (id: number) => {
         navigate(`${ROUTES.ADMIN.CONFIG_SHOP}/${id}`);
     };
 
     const getStatusBadge = (status: string) => {
         const statusMap: Record<string, { label: string; variant: string }> = {
-            PREVIEW: { label: t('configShop.preview'), variant: "secondary" },
-            ACTIVE: { label: t('common.active'), variant: "default" },
-            INACTIVE: { label: t('common.inactive'), variant: "outline" },
-            EXPIRED: { label: t('configShop.expired'), variant: "destructive" },
+            PREVIEW: { label: t("configShop.preview"), variant: "secondary" },
+            ACTIVE: { label: t("common.active"), variant: "default" },
+            INACTIVE: { label: t("common.inactive"), variant: "outline" },
+            EXPIRED: { label: t("configShop.expired"), variant: "destructive" },
         };
 
         const statusInfo = statusMap[status] || { label: status, variant: "outline" };
@@ -97,7 +94,7 @@ export default function ConfigShop() {
 
     return (
         <>
-            <HeaderAdmin title={t('configShop.title')} description={t('configShop.description')} />
+            <HeaderAdmin title={t("configShop.title")} description={t("configShop.description")} />
 
             <div className="p-8 mt-24 space-y-8">
                 <Card className="bg-gradient-to-br from-card via-card to-card/95 border-border shadow-md">
@@ -107,7 +104,9 @@ export default function ConfigShop() {
                                 <div className="p-2 bg-primary/10 rounded-lg">
                                     <Store className="w-5 h-5 text-primary" />
                                 </div>
-                                <CardTitle className="text-xl font-bold text-foreground">{t('configShop.bannerList')}</CardTitle>
+                                <CardTitle className="text-xl font-bold text-foreground">
+                                    {t("configShop.bannerList")}
+                                </CardTitle>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Button
@@ -115,7 +114,7 @@ export default function ConfigShop() {
                                     onClick={() => setIsCreateDialogOpen(true)}
                                 >
                                     <Plus className="h-4 w-4 mr-2" />
-                                    {t('configShop.createBanner')}
+                                    {t("configShop.createBanner")}
                                 </Button>
                                 <Button
                                     className="group relative overflow-hidden bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover:scale-[1.02] shadow-lg"
@@ -124,7 +123,7 @@ export default function ConfigShop() {
                                     <span className="absolute inset-0 -translate-x-full bg-gradient-to-r from-white/20 via-transparent to-white/20 transition-transform duration-700 group-hover:translate-x-full" />
                                     <span className="relative z-10 inline-flex items-center">
                                         <Sparkles className="h-4 w-4 mr-2 animate-pulse" />
-                                        {t('configShop.updateRarityPrice')}
+                                        {t("configShop.updateRarityPrice")}
                                     </span>
                                 </Button>
                             </div>
@@ -133,44 +132,52 @@ export default function ConfigShop() {
                         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                             <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">
-                                    {t('configShop.filterStartDate')}
+                                    {t("configShop.filterStartDate")}
                                 </label>
                                 <CustomDatePicker
                                     value={filterStartDate}
                                     onChange={setFilterStartDate}
-                                    placeholder={t('configShop.selectStartDate')}
+                                    placeholder={t("configShop.selectStartDate")}
                                     dayPickerProps={{
-                                        disabled: false
+                                        disabled: false,
                                     }}
                                 />
                             </div>
                             <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">
-                                    {t('configShop.filterEndDate')}
+                                    {t("configShop.filterEndDate")}
                                 </label>
                                 <CustomDatePicker
                                     value={filterEndDate}
                                     onChange={setFilterEndDate}
-                                    placeholder={t('configShop.selectEndDate')}
+                                    placeholder={t("configShop.selectEndDate")}
                                     dayPickerProps={{
-                                        disabled: false
+                                        disabled: false,
                                     }}
                                 />
                             </div>
                             <div>
                                 <label className="text-sm font-medium text-foreground mb-2 block">
-                                    {t('configShop.filterStatus')}
+                                    {t("configShop.filterStatus")}
                                 </label>
                                 <Select value={filterStatus} onValueChange={setFilterStatus}>
                                     <SelectTrigger className="bg-background border-border text-foreground h-11 shadow-sm">
-                                        <SelectValue placeholder={t('configShop.selectStatus')} />
+                                        <SelectValue placeholder={t("configShop.selectStatus")} />
                                     </SelectTrigger>
                                     <SelectContent className="bg-card border-border">
-                                        <SelectItem value="all">{t('common.all')}</SelectItem>
-                                        <SelectItem value={SHOP.ShopBannerStatus.PREVIEW}>{t('configShop.preview')}</SelectItem>
-                                        <SelectItem value={SHOP.ShopBannerStatus.ACTIVE}>{t('common.active')}</SelectItem>
-                                        <SelectItem value={SHOP.ShopBannerStatus.INACTIVE}>{t('common.inactive')}</SelectItem>
-                                        <SelectItem value={SHOP.ShopBannerStatus.EXPIRED}>{t('configShop.expired')}</SelectItem>
+                                        <SelectItem value="all">{t("common.all")}</SelectItem>
+                                        <SelectItem value={SHOP.ShopBannerStatus.PREVIEW}>
+                                            {t("configShop.preview")}
+                                        </SelectItem>
+                                        <SelectItem value={SHOP.ShopBannerStatus.ACTIVE}>
+                                            {t("common.active")}
+                                        </SelectItem>
+                                        <SelectItem value={SHOP.ShopBannerStatus.INACTIVE}>
+                                            {t("common.inactive")}
+                                        </SelectItem>
+                                        <SelectItem value={SHOP.ShopBannerStatus.EXPIRED}>
+                                            {t("configShop.expired")}
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                             </div>
@@ -184,7 +191,7 @@ export default function ConfigShop() {
                                     className="border-border text-foreground hover:bg-muted/80 shadow-sm"
                                 >
                                     <X className="h-4 w-4 mr-1" />
-                                    {t('configShop.clearFilters')}
+                                    {t("configShop.clearFilters")}
                                 </Button>
                             </div>
                         )}
@@ -203,7 +210,7 @@ export default function ConfigShop() {
                                     >
                                         {/* Decorative gradient overlay */}
                                         <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-primary/5 via-transparent to-transparent rounded-full -mr-32 -mt-32 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                                        
+
                                         <CardHeader className="relative">
                                             <div className="flex items-start justify-between">
                                                 <div className="flex-1">
@@ -249,7 +256,7 @@ export default function ConfigShop() {
                                     <Store className="w-8 h-8 text-muted-foreground" />
                                 </div>
                                 <p className="text-muted-foreground font-medium text-lg">
-                                    {t('configShop.noBannersFound')}
+                                    {t("configShop.noBannersFound")}
                                 </p>
                             </div>
                         )}
@@ -269,10 +276,7 @@ export default function ConfigShop() {
                 </Card>
             </div>
 
-            <CreateShopBannerDialog
-                isOpen={isCreateDialogOpen}
-                onClose={() => setIsCreateDialogOpen(false)}
-            />
+            <CreateShopBannerDialog isOpen={isCreateDialogOpen} onClose={() => setIsCreateDialogOpen(false)} />
             <UpdateRarityPriceDialog
                 isOpen={isUpdateRarityPriceDialogOpen}
                 onClose={() => setIsUpdateRarityPriceDialogOpen(false)}
@@ -285,7 +289,10 @@ function BannersSkeleton() {
     return (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
-                <Card key={`skeleton-${index}`} className="bg-gradient-to-br from-card via-card to-card/95 border-border shadow-md">
+                <Card
+                    key={`skeleton-${index}`}
+                    className="bg-gradient-to-br from-card via-card to-card/95 border-border shadow-md"
+                >
                     <CardHeader>
                         <div className="flex items-center gap-2 mb-3">
                             <Skeleton className="h-8 w-8 rounded-lg" />

@@ -1,37 +1,63 @@
 import z from "zod";
 
 export const TestListRequestSchema = z.object({
-  currentPage: z.number().optional(),
-  pageSize: z.number().optional(),
-  search: z.string().optional(),
-  levelN: z.number().optional(),
-  testType: z.enum(['PLACEMENT_TEST_DONE', 'MATCH_TEST', 'QUIZ_TEST', 'REVIEW_TEST', 'PRACTICE_TEST','READING_TEST', 'LISTENING_TEST', 'SPEAKING_TEST', 'LESSON_REVIEW']).optional(),
-  status: z.enum(['DRAFT', 'ACTIVE', 'INACTIVE']).optional(),
+    currentPage: z.number().optional(),
+    pageSize: z.number().optional(),
+    search: z.string().optional(),
+    levelN: z.number().optional(),
+    testType: z
+        .enum([
+            "PLACEMENT_TEST_DONE",
+            "MATCH_TEST",
+            "QUIZ_TEST",
+            "REVIEW_TEST",
+            "PRACTICE_TEST",
+            "READING_TEST",
+            "LISTENING_TEST",
+            "SPEAKING_TEST",
+            "LESSON_REVIEW",
+        ])
+        .optional(),
+    status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]).optional(),
 });
 
 export type TestListRequest = z.infer<typeof TestListRequestSchema>;
 
 export const TestCreateRequestSchema = z.object({
-  meanings: z.array(z.object({
-    field: z.string(),
-    translations: z.object({
-      vi: z.string().optional(),
-      en: z.string().optional(),
-      ja: z.string().optional(),
-    })
-  })).optional(),
-  price: z.number().optional(),
-  levelN: z.number().optional(),
-  limit: z.number().optional(),
-  testType: z.enum(['PLACEMENT_TEST_DONE', 'MATCH_TEST', 'QUIZ_TEST', 'REVIEW_TEST', 'PRACTICE_TEST','READING_TEST', 'LISTENING_TEST', 'SPEAKING_TEST', 'LESSON_REVIEW']),
-  status: z.enum(['DRAFT', 'ACTIVE', 'INACTIVE'])
+    meanings: z
+        .array(
+            z.object({
+                field: z.string(),
+                translations: z.object({
+                    vi: z.string().optional(),
+                    en: z.string().optional(),
+                    ja: z.string().optional(),
+                }),
+            }),
+        )
+        .optional(),
+    price: z.number().optional(),
+    levelN: z.number().optional(),
+    limit: z.number().optional(),
+    testType: z.enum([
+        "PLACEMENT_TEST_DONE",
+        "MATCH_TEST",
+        "QUIZ_TEST",
+        "REVIEW_TEST",
+        "PRACTICE_TEST",
+        "READING_TEST",
+        "LISTENING_TEST",
+        "SPEAKING_TEST",
+        "LESSON_REVIEW",
+    ]),
+    status: z.enum(["DRAFT", "ACTIVE", "INACTIVE"]),
 });
 
 export type TestCreateRequest = z.infer<typeof TestCreateRequestSchema>;
 
 // Link multiple QuestionBanks to a Test
 export const TestTestSetLinkMultipleSchema = z.object({
-  testSetIds: z.array(z.number()).min(1),
+    testSetIds: z.array(z.number()).min(1),
 });
 
 export type TestTestSetLinkMultipleRequest = z.infer<typeof TestTestSetLinkMultipleSchema>;

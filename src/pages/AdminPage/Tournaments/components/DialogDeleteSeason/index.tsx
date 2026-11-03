@@ -1,42 +1,41 @@
 import { useDeleteBattleLeaderBoardSeason } from "@hooks/useBattle";
-import { Button } from "@ui/Button"
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@ui/Dialog"
-import { useTranslation } from "react-i18next"
+import { Button } from "@ui/Button";
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@ui/Dialog";
+import { useTranslation } from "react-i18next";
 
 interface DialogDeleteSeasonProps {
-    candidate: { id: number; name: string } | null
-    isOpen: boolean
-    onCancel: () => void
+    candidate: { id: number; name: string } | null;
+    isOpen: boolean;
+    onCancel: () => void;
 }
 
-export default function DialogDeleteSeason({
-    candidate,
-    isOpen,
-    onCancel,
-}: DialogDeleteSeasonProps) {
-    const { t } = useTranslation()
+export default function DialogDeleteSeason({ candidate, isOpen, onCancel }: DialogDeleteSeasonProps) {
+    const { t } = useTranslation();
 
     /**
      * Handle Delete Battle Leader Board Season
      */
-    const deleteSeasonMutation = useDeleteBattleLeaderBoardSeason()
+    const deleteSeasonMutation = useDeleteBattleLeaderBoardSeason();
     const handleConfirmDelete = async () => {
-        if (!candidate) return
+        if (!candidate) return;
         try {
-            await deleteSeasonMutation.mutateAsync(candidate.id)
-            onCancel()
+            await deleteSeasonMutation.mutateAsync(candidate.id);
+            onCancel();
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
     //------------------------End------------------------//
 
     return (
-        <Dialog open={isOpen} onOpenChange={(open) => {
-            if (!open) {
-                onCancel()
-            }
-        }}>
+        <Dialog
+            open={isOpen}
+            onOpenChange={(open) => {
+                if (!open) {
+                    onCancel();
+                }
+            }}
+        >
             <DialogContent className="bg-white border-border max-w-md">
                 <DialogHeader>
                     <DialogTitle className="text-foreground text-lg font-semibold">
@@ -49,11 +48,7 @@ export default function DialogDeleteSeason({
                             defaultValue: "Bạn có chắc chắn muốn xoá mùa giải này không?",
                         })}
                     </p>
-                    {candidate?.name && (
-                        <p className="text-foreground font-medium">
-                            {candidate.name}
-                        </p>
-                    )}
+                    {candidate?.name && <p className="text-foreground font-medium">{candidate.name}</p>}
                     <p className="text-xs italic text-error">
                         {t("tournaments.delete.note", {
                             defaultValue: "Hành động này không thể hoàn tác.",
@@ -81,5 +76,5 @@ export default function DialogDeleteSeason({
                 </DialogFooter>
             </DialogContent>
         </Dialog>
-    )
+    );
 }

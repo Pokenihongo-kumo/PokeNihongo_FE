@@ -66,26 +66,24 @@ const DialogReward = ({
                 <DialogHeader className="flex-shrink-0">
                     <DialogTitle>
                         {order === null
-                            ? t('tournaments.detail.rewards.dialog.selectCommonRewardsTitle', {
-                                defaultValue: 'Chọn rewards chung',
-                                rankName
-                            })
-                            : t('tournaments.detail.rewards.dialog.selectRewardsTitle', {
-                                defaultValue: 'Chọn rewards',
-                                rankName,
-                                order
-                            })
-                        }
+                            ? t("tournaments.detail.rewards.dialog.selectCommonRewardsTitle", {
+                                  defaultValue: "Chọn rewards chung",
+                                  rankName,
+                              })
+                            : t("tournaments.detail.rewards.dialog.selectRewardsTitle", {
+                                  defaultValue: "Chọn rewards",
+                                  rankName,
+                                  order,
+                              })}
                     </DialogTitle>
                     <DialogDescription>
                         {order === null
-                            ? t('tournaments.detail.rewards.dialog.selectCommonRewardsDescription', {
-                                defaultValue: 'Tìm kiếm và chọn rewards chung áp dụng cho toàn bộ rank này'
-                            })
-                            : t('tournaments.detail.rewards.dialog.selectRewardsDescription', {
-                                defaultValue: 'Tìm kiếm và chọn rewards cho vị trí này'
-                            })
-                        }
+                            ? t("tournaments.detail.rewards.dialog.selectCommonRewardsDescription", {
+                                  defaultValue: "Tìm kiếm và chọn rewards chung áp dụng cho toàn bộ rank này",
+                              })
+                            : t("tournaments.detail.rewards.dialog.selectRewardsDescription", {
+                                  defaultValue: "Tìm kiếm và chọn rewards cho vị trí này",
+                              })}
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col flex-1 min-h-0 space-y-4 overflow-hidden">
@@ -93,7 +91,12 @@ const DialogReward = ({
                         <Input
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            placeholder={searchPlaceholder || t('tournaments.detail.rewards.dialog.searchPlaceholder', { defaultValue: 'Tìm kiếm rewards...' })}
+                            placeholder={
+                                searchPlaceholder ||
+                                t("tournaments.detail.rewards.dialog.searchPlaceholder", {
+                                    defaultValue: "Tìm kiếm rewards...",
+                                })
+                            }
                             className="bg-background border-border"
                             disabled={isRewardListLoading}
                         />
@@ -102,18 +105,22 @@ const DialogReward = ({
                         {isRewardListLoading ? (
                             <div className="flex items-center justify-center gap-2 py-10 text-sm text-muted-foreground">
                                 <Loader2 className="h-4 w-4 animate-spin" />
-                                {loadingLabel || t('tournaments.detail.rewards.dialog.loading', { defaultValue: 'Đang tải...' })}
+                                {loadingLabel ||
+                                    t("tournaments.detail.rewards.dialog.loading", { defaultValue: "Đang tải..." })}
                             </div>
                         ) : filteredRewardOptions.length === 0 ? (
                             <p className="text-sm text-muted-foreground text-center py-10">
-                                {noResultsLabel || t('tournaments.detail.rewards.dialog.noResults', { defaultValue: 'Không tìm thấy kết quả' })}
+                                {noResultsLabel ||
+                                    t("tournaments.detail.rewards.dialog.noResults", {
+                                        defaultValue: "Không tìm thấy kết quả",
+                                    })}
                             </p>
                         ) : (
                             <div className="space-y-2 pr-4">
                                 {filteredRewardOptions.map((reward) => {
                                     const rewardId = reward.id;
                                     const checked = selectedRewardIds.includes(rewardId);
-                                    const checkboxId = `reward-select-${rankName}-${order ?? 'null'}-${rewardId}`;
+                                    const checkboxId = `reward-select-${rankName}-${order ?? "null"}-${rewardId}`;
                                     return (
                                         <div
                                             key={rewardId}
@@ -157,11 +164,8 @@ const DialogReward = ({
                     </ScrollArea>
                 </div>
                 <DialogFooter className="flex-shrink-0">
-                    <Button
-                        onClick={handleClose}
-                        disabled={isSavingRewards}
-                    >
-                        {t('common.close', { defaultValue: 'Đóng' })}
+                    <Button onClick={handleClose} disabled={isSavingRewards}>
+                        {t("common.close", { defaultValue: "Đóng" })}
                     </Button>
                 </DialogFooter>
             </DialogContent>
@@ -170,4 +174,3 @@ const DialogReward = ({
 };
 
 export default DialogReward;
-

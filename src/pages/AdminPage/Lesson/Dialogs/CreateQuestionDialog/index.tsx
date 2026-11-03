@@ -1,26 +1,16 @@
-import { DialogContent, DialogHeader, DialogTitle } from '@ui/Dialog';
-import { Input } from '@ui/Input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui/Select';
-import { Button } from '@ui/Button';
-import { Switch } from '@ui/Switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@ui/Card';
-import { Badge } from '@ui/Badge';
-import { Separator } from '@ui/Separator';
-import { Textarea } from '@ui/Textarea';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-import {
-    HelpCircle,
-    Hash,
-    Save,
-    Send,
-    X,
-    BookOpen,
-    BarChart3,
-    Plus,
-    Trash2
-} from 'lucide-react';
+import { DialogContent, DialogHeader, DialogTitle } from "@ui/Dialog";
+import { Input } from "@ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import { Button } from "@ui/Button";
+import { Switch } from "@ui/Switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card";
+import { Badge } from "@ui/Badge";
+import { Separator } from "@ui/Separator";
+import { Textarea } from "@ui/Textarea";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import { HelpCircle, Hash, Save, Send, X, BookOpen, BarChart3, Plus, Trash2 } from "lucide-react";
 
 interface CreateQuestionDialogProps {
     setIsAddDialogOpen: (value: boolean) => void;
@@ -33,41 +23,49 @@ interface CreateQuestionDialogProps {
     }>;
 }
 
-const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, availableQuestionSets = [] }: CreateQuestionDialogProps) => {
+const CreateQuestionDialog = ({
+    setIsAddDialogOpen,
+    lessonId,
+    lessonTitle,
+    availableQuestionSets = [],
+}: CreateQuestionDialogProps) => {
     const { t } = useTranslation();
 
     // Mock question sets data - replace with actual API call
-    const questionSets = availableQuestionSets.length > 0 ? availableQuestionSets : [
-        { id: 1, title: "Basic Hiragana Set 1", exerciseTitle: "Hiragana Recognition Quiz" },
-        { id: 2, title: "Basic Hiragana Set 2", exerciseTitle: "Hiragana Recognition Quiz" },
-        { id: 3, title: "Hiragana Writing Set 1", exerciseTitle: "Hiragana Writing Practice" }
-    ];
+    const questionSets =
+        availableQuestionSets.length > 0
+            ? availableQuestionSets
+            : [
+                  { id: 1, title: "Basic Hiragana Set 1", exerciseTitle: "Hiragana Recognition Quiz" },
+                  { id: 2, title: "Basic Hiragana Set 2", exerciseTitle: "Hiragana Recognition Quiz" },
+                  { id: 3, title: "Hiragana Writing Set 1", exerciseTitle: "Hiragana Writing Practice" },
+              ];
 
     const [formData, setFormData] = useState({
-        question: '',
+        question: "",
         questionSetId: questionSets[0]?.id || 1,
-        type: 'multiple_choice' as 'multiple_choice' | 'fill_blank' | 'listening' | 'speaking',
-        difficulty: 'easy' as 'easy' | 'medium' | 'hard',
+        type: "multiple_choice" as "multiple_choice" | "fill_blank" | "listening" | "speaking",
+        difficulty: "easy" as "easy" | "medium" | "hard",
         points: 10,
         isActive: true,
-        options: ['', '', '', ''],
-        correctAnswer: '',
-        explanation: '',
-        lessonId: lessonId || 1
+        options: ["", "", "", ""],
+        correctAnswer: "",
+        explanation: "",
+        lessonId: lessonId || 1,
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const handleInputChange = (field: string, value: any) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [field]: value
+            [field]: value,
         }));
         // Clear error when user starts typing
         if (errors[field]) {
-            setErrors(prev => ({
+            setErrors((prev) => ({
                 ...prev,
-                [field]: ''
+                [field]: "",
             }));
         }
     };
@@ -75,25 +73,25 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
     const handleOptionChange = (index: number, value: string) => {
         const newOptions = [...formData.options];
         newOptions[index] = value;
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            options: newOptions
+            options: newOptions,
         }));
     };
 
     const addOption = () => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            options: [...prev.options, '']
+            options: [...prev.options, ""],
         }));
     };
 
     const removeOption = (index: number) => {
         if (formData.options.length > 2) {
             const newOptions = formData.options.filter((_, i) => i !== index);
-            setFormData(prev => ({
+            setFormData((prev) => ({
                 ...prev,
-                options: newOptions
+                options: newOptions,
             }));
         }
     };
@@ -102,16 +100,16 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
         const newErrors: Record<string, string> = {};
 
         if (!formData.question.trim()) {
-            newErrors.question = 'Question is required';
+            newErrors.question = "Question is required";
         }
-        if (formData.type === 'multiple_choice' && formData.options.filter(opt => opt.trim()).length < 2) {
-            newErrors.options = 'At least 2 options are required for multiple choice';
+        if (formData.type === "multiple_choice" && formData.options.filter((opt) => opt.trim()).length < 2) {
+            newErrors.options = "At least 2 options are required for multiple choice";
         }
-        if (formData.type === 'multiple_choice' && !formData.correctAnswer.trim()) {
-            newErrors.correctAnswer = 'Correct answer is required';
+        if (formData.type === "multiple_choice" && !formData.correctAnswer.trim()) {
+            newErrors.correctAnswer = "Correct answer is required";
         }
         if (formData.points < 1) {
-            newErrors.points = 'Points must be at least 1';
+            newErrors.points = "Points must be at least 1";
         }
 
         setErrors(newErrors);
@@ -120,38 +118,38 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
 
     const handleSubmit = async (isPublish: boolean = false) => {
         if (!validateForm()) {
-            toast.error('Please check your information');
+            toast.error("Please check your information");
             return;
         }
 
         try {
             // TODO: Implement API call
-            console.log('Creating question:', { ...formData, isActive: isPublish });
-            toast.success(isPublish ? 'Question published successfully!' : 'Question saved as draft!');
+            console.log("Creating question:", { ...formData, isActive: isPublish });
+            toast.success(isPublish ? "Question published successfully!" : "Question saved as draft!");
             setIsAddDialogOpen(false);
         } catch (error) {
-            toast.error('Failed to create question');
+            toast.error("Failed to create question");
         }
     };
 
     const getTypeBadge = (type: string) => {
         const types = {
-            'multiple_choice': { label: 'MC', color: 'bg-blue-500' },
-            'fill_blank': { label: 'FB', color: 'bg-green-500' },
-            'listening': { label: 'L', color: 'bg-purple-500' },
-            'speaking': { label: 'S', color: 'bg-orange-500' }
-        }
-        return types[type as keyof typeof types] || { label: type, color: 'bg-gray-500' }
-    }
+            multiple_choice: { label: "MC", color: "bg-blue-500" },
+            fill_blank: { label: "FB", color: "bg-green-500" },
+            listening: { label: "L", color: "bg-purple-500" },
+            speaking: { label: "S", color: "bg-orange-500" },
+        };
+        return types[type as keyof typeof types] || { label: type, color: "bg-gray-500" };
+    };
 
     const getDifficultyBadge = (difficulty: string) => {
         const difficulties = {
-            'easy': { label: 'Easy', color: 'bg-green-500' },
-            'medium': { label: 'Medium', color: 'bg-yellow-500' },
-            'hard': { label: 'Hard', color: 'bg-red-500' }
-        }
-        return difficulties[difficulty as keyof typeof difficulties] || { label: difficulty, color: 'bg-gray-500' }
-    }
+            easy: { label: "Easy", color: "bg-green-500" },
+            medium: { label: "Medium", color: "bg-yellow-500" },
+            hard: { label: "Hard", color: "bg-red-500" },
+        };
+        return difficulties[difficulty as keyof typeof difficulties] || { label: difficulty, color: "bg-gray-500" };
+    };
 
     const typeInfo = getTypeBadge(formData.type);
     const difficultyInfo = getDifficultyBadge(formData.difficulty);
@@ -165,9 +163,7 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                             <HelpCircle className="h-6 w-6 text-primary" />
                         </div>
                         <div>
-                            <DialogTitle className="text-2xl font-bold text-foreground">
-                                Add Question
-                            </DialogTitle>
+                            <DialogTitle className="text-2xl font-bold text-foreground">Add Question</DialogTitle>
                             <p className="text-sm text-muted-foreground mt-1">
                                 {lessonTitle && `For lesson: ${lessonTitle}`}
                             </p>
@@ -188,19 +184,19 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                             <CardContent className="space-y-6">
                                 {/* Question */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-foreground">
-                                        Question *
-                                    </label>
+                                    <label className="text-sm font-semibold text-foreground">Question *</label>
                                     <Textarea
                                         placeholder="Enter your question here..."
                                         className="bg-background border-border text-foreground min-h-[100px]"
                                         value={formData.question}
-                                        onChange={(e) => handleInputChange('question', e.target.value)}
+                                        onChange={(e) => handleInputChange("question", e.target.value)}
                                     />
-                                    {errors.question && <p className="text-sm text-red-500 flex items-center gap-1">
-                                        <X className="h-3 w-3" />
-                                        {errors.question}
-                                    </p>}
+                                    {errors.question && (
+                                        <p className="text-sm text-red-500 flex items-center gap-1">
+                                            <X className="h-3 w-3" />
+                                            {errors.question}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Question Set Selection */}
@@ -209,7 +205,10 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                         <BookOpen className="h-4 w-4 text-primary" />
                                         Select Question Set *
                                     </label>
-                                    <Select value={formData.questionSetId.toString()} onValueChange={(value) => handleInputChange('questionSetId', parseInt(value))}>
+                                    <Select
+                                        value={formData.questionSetId.toString()}
+                                        onValueChange={(value) => handleInputChange("questionSetId", parseInt(value))}
+                                    >
                                         <SelectTrigger className="bg-background border-border text-foreground h-11">
                                             <SelectValue placeholder="Select a question set" />
                                         </SelectTrigger>
@@ -218,7 +217,9 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                                 <SelectItem key={questionSet.id} value={questionSet.id.toString()}>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-sm font-medium">{questionSet.title}</span>
-                                                        <Badge className="bg-blue-100 text-blue-800 text-xs">{questionSet.exerciseTitle}</Badge>
+                                                        <Badge className="bg-blue-100 text-blue-800 text-xs">
+                                                            {questionSet.exerciseTitle}
+                                                        </Badge>
                                                     </div>
                                                 </SelectItem>
                                             ))}
@@ -229,10 +230,11 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                                     {/* Question Type */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-semibold text-foreground">
-                                            Question Type *
-                                        </label>
-                                        <Select value={formData.type} onValueChange={(value) => handleInputChange('type', value)}>
+                                        <label className="text-sm font-semibold text-foreground">Question Type *</label>
+                                        <Select
+                                            value={formData.type}
+                                            onValueChange={(value) => handleInputChange("type", value)}
+                                        >
                                             <SelectTrigger className="bg-background border-border text-foreground h-11">
                                                 <SelectValue placeholder="Select question type" />
                                             </SelectTrigger>
@@ -267,10 +269,11 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
 
                                     {/* Difficulty */}
                                     <div className="space-y-2">
-                                        <label className="text-sm font-semibold text-foreground">
-                                            Difficulty *
-                                        </label>
-                                        <Select value={formData.difficulty} onValueChange={(value) => handleInputChange('difficulty', value)}>
+                                        <label className="text-sm font-semibold text-foreground">Difficulty *</label>
+                                        <Select
+                                            value={formData.difficulty}
+                                            onValueChange={(value) => handleInputChange("difficulty", value)}
+                                        >
                                             <SelectTrigger className="bg-background border-border text-foreground h-11">
                                                 <SelectValue placeholder="Select difficulty" />
                                             </SelectTrigger>
@@ -283,7 +286,9 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                                 </SelectItem>
                                                 <SelectItem value="medium">
                                                     <div className="flex items-center gap-2">
-                                                        <Badge className="bg-yellow-500 text-white text-xs">Medium</Badge>
+                                                        <Badge className="bg-yellow-500 text-white text-xs">
+                                                            Medium
+                                                        </Badge>
                                                         <span>Medium</span>
                                                     </div>
                                                 </SelectItem>
@@ -308,17 +313,19 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                             placeholder="10"
                                             className="bg-background border-border text-foreground h-11"
                                             value={formData.points}
-                                            onChange={(e) => handleInputChange('points', parseInt(e.target.value) || 0)}
+                                            onChange={(e) => handleInputChange("points", parseInt(e.target.value) || 0)}
                                         />
-                                        {errors.points && <p className="text-sm text-red-500 flex items-center gap-1">
-                                            <X className="h-3 w-3" />
-                                            {errors.points}
-                                        </p>}
+                                        {errors.points && (
+                                            <p className="text-sm text-red-500 flex items-center gap-1">
+                                                <X className="h-3 w-3" />
+                                                {errors.points}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
 
                                 {/* Multiple Choice Options */}
-                                {formData.type === 'multiple_choice' && (
+                                {formData.type === "multiple_choice" && (
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between">
                                             <label className="text-sm font-semibold text-foreground">
@@ -356,15 +363,17 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                                 )}
                                             </div>
                                         ))}
-                                        {errors.options && <p className="text-sm text-red-500 flex items-center gap-1">
-                                            <X className="h-3 w-3" />
-                                            {errors.options}
-                                        </p>}
+                                        {errors.options && (
+                                            <p className="text-sm text-red-500 flex items-center gap-1">
+                                                <X className="h-3 w-3" />
+                                                {errors.options}
+                                            </p>
+                                        )}
                                     </div>
                                 )}
 
                                 {/* Correct Answer */}
-                                {formData.type === 'multiple_choice' && (
+                                {formData.type === "multiple_choice" && (
                                     <div className="space-y-2">
                                         <label className="text-sm font-semibold text-foreground">
                                             Correct Answer *
@@ -373,25 +382,25 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                             placeholder="Enter correct answer"
                                             className="bg-background border-border text-foreground h-11"
                                             value={formData.correctAnswer}
-                                            onChange={(e) => handleInputChange('correctAnswer', e.target.value)}
+                                            onChange={(e) => handleInputChange("correctAnswer", e.target.value)}
                                         />
-                                        {errors.correctAnswer && <p className="text-sm text-red-500 flex items-center gap-1">
-                                            <X className="h-3 w-3" />
-                                            {errors.correctAnswer}
-                                        </p>}
+                                        {errors.correctAnswer && (
+                                            <p className="text-sm text-red-500 flex items-center gap-1">
+                                                <X className="h-3 w-3" />
+                                                {errors.correctAnswer}
+                                            </p>
+                                        )}
                                     </div>
                                 )}
 
                                 {/* Explanation */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-foreground">
-                                        Explanation
-                                    </label>
+                                    <label className="text-sm font-semibold text-foreground">Explanation</label>
                                     <Textarea
                                         placeholder="Enter explanation for the answer..."
                                         className="bg-background border-border text-foreground min-h-[80px]"
                                         value={formData.explanation}
-                                        onChange={(e) => handleInputChange('explanation', e.target.value)}
+                                        onChange={(e) => handleInputChange("explanation", e.target.value)}
                                     />
                                 </div>
                             </CardContent>
@@ -406,7 +415,10 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                             <BarChart3 className="h-5 w-5 text-blue-600" />
                                         </div>
                                         <div>
-                                            <label htmlFor="isActive" className="text-sm font-semibold text-foreground cursor-pointer">
+                                            <label
+                                                htmlFor="isActive"
+                                                className="text-sm font-semibold text-foreground cursor-pointer"
+                                            >
                                                 Activate Question
                                             </label>
                                             <p className="text-xs text-muted-foreground">
@@ -417,7 +429,7 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                                     <Switch
                                         id="isActive"
                                         checked={formData.isActive}
-                                        onCheckedChange={(checked) => handleInputChange('isActive', checked)}
+                                        onCheckedChange={(checked) => handleInputChange("isActive", checked)}
                                         className="data-[state=checked]:bg-blue-600"
                                     />
                                 </div>
@@ -429,9 +441,7 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                 <Separator className="my-4" />
 
                 <div className="flex justify-between items-center pt-4">
-                    <div className="text-xs text-muted-foreground">
-                        * Required fields
-                    </div>
+                    <div className="text-xs text-muted-foreground">* Required fields</div>
                     <div className="flex gap-3">
                         <Button
                             variant="outline"
@@ -460,7 +470,7 @@ const CreateQuestionDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, avail
                 </div>
             </DialogContent>
         </>
-    )
-}
+    );
+};
 
-export default CreateQuestionDialog
+export default CreateQuestionDialog;

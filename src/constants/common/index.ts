@@ -1,5 +1,5 @@
 const COOKIES = {
-    ACCESS_TOKEN: 'accessToken',
+    ACCESS_TOKEN: "accessToken",
 };
 
 const ROLE_ID = {
@@ -9,9 +9,9 @@ const ROLE_ID = {
 };
 
 const ROLE = {
-    ADMIN: 'ADMIN',
-    MANAGER: 'MANAGER',
-    LEANER: 'LEANER',
+    ADMIN: "ADMIN",
+    MANAGER: "MANAGER",
+    LEANER: "LEANER",
 };
 
 export { COOKIES, ROLE, ROLE_ID };

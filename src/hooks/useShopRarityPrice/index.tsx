@@ -6,17 +6,16 @@ import { useTranslation } from "react-i18next";
 
 /**
  * Handle Shop Rarity Price List
- * @returns 
+ * @returns
  */
 export const useShopRarityPrice = () => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['shop-rarity-price'],
+        queryKey: ["shop-rarity-price"],
         queryFn: () => shopRarityPriceService.getShopRarityPriceList(),
     });
     return { data: data?.data?.data, isLoading, error };
 };
 //----------------------End----------------------//
-
 
 /**
  * Handle Update Shop Rarity Price
@@ -32,11 +31,11 @@ export const useUpdateShopRarityPrice = () => {
             return response.data;
         },
         onSuccess: (data: any) => {
-            queryClient.invalidateQueries({ queryKey: ['shop-rarity-price'] });
-            toast.success(data?.message || t('configShop.updateRarityPriceSuccess'));
+            queryClient.invalidateQueries({ queryKey: ["shop-rarity-price"] });
+            toast.success(data?.message || t("configShop.updateRarityPriceSuccess"));
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message || t('configShop.updateRarityPriceError'));
+            toast.error(error.response?.data?.message || t("configShop.updateRarityPriceError"));
         },
     });
 };

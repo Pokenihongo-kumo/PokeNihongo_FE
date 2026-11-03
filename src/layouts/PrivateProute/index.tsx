@@ -1,12 +1,12 @@
-import { Navigate, Outlet } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { ROUTES } from '@constants/route';
-import { ROLE } from '@constants/common';
-import LoadingPage from '@pages/LoadingPage';
-import { RootState } from '@redux/store/store';
-import { useEffect, useState } from 'react';
-import { decodeJWT } from '@utils/token';
-import { setAuthState } from '@redux/features/auth/slice';
+import { Navigate, Outlet } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { ROUTES } from "@constants/route";
+import { ROLE } from "@constants/common";
+import LoadingPage from "@pages/LoadingPage";
+import { RootState } from "@redux/store/store";
+import { useEffect, useState } from "react";
+import { decodeJWT } from "@utils/token";
+import { setAuthState } from "@redux/features/auth/slice";
 
 interface PrivateRouteProps {
     allowedRoles: string[];
@@ -51,7 +51,7 @@ const PrivateRoute = ({ allowedRoles }: PrivateRouteProps) => {
         setHydrated(true);
     }, [dispatch, userId, userRole]);
 
-    const hasAccess = allowedRoles.includes(userRole ?? '');
+    const hasAccess = allowedRoles.includes(userRole ?? "");
 
     if (!hydrated) {
         return <LoadingPage />;
@@ -62,8 +62,8 @@ const PrivateRoute = ({ allowedRoles }: PrivateRouteProps) => {
             userRole === ROLE.ADMIN
                 ? ROUTES.ADMIN.ROOT
                 : userRole === ROLE.MANAGER
-                    ? ROUTES.MANAGER.ROOT
-                    : ROUTES.AUTH.UNAUTHORIZED;
+                  ? ROUTES.MANAGER.ROOT
+                  : ROUTES.AUTH.UNAUTHORIZED;
         return <Navigate to={fallbackRoute} replace />;
     }
 

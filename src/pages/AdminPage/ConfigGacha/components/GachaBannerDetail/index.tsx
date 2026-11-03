@@ -17,7 +17,7 @@ export default function GachaBannerDetail() {
 
     return (
         <>
-            <HeaderAdmin title={t('configGacha.title')} description={t('configGacha.description')} />
+            <HeaderAdmin title={t("configGacha.title")} description={t("configGacha.description")} />
             {isLoading ? (
                 <div className="p-8 mt-24">
                     <Card className="bg-card border-border">
@@ -35,11 +35,10 @@ export default function GachaBannerDetail() {
                 </div>
             ) : (
                 <GachaDetailView
-                    bannerDetail={bannerDetail?.data || {} as IGachaBannerEntity}
+                    bannerDetail={bannerDetail?.data || ({} as IGachaBannerEntity)}
                     statsDetail={statsDetail?.data}
                 />
             )}
         </>
     );
 }
-

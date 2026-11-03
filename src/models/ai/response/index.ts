@@ -2,7 +2,6 @@ import z from "zod";
 import { GeminiConfigModelsEntitySchema, GeminiConfigPromptsEntitySchema } from "../entity";
 import { BackendPaginationResponseModel, BackendResponseModel } from "@models/common/response";
 
-
 //----------------------Gemini Config Prompts Response----------------------//
 /**
  * Gemini Config Prompts Response Schema
@@ -11,10 +10,6 @@ export const GeminiConfigPromptsResponseSchema = BackendPaginationResponseModel(
 export type GeminiConfigPromptsResponse = z.infer<typeof GeminiConfigPromptsResponseSchema>;
 //-----------------------End--------------------//
 //--------------------------------------End--------------------------------------//
-
-
-
-
 
 //----------------------Gemini Config Models Response----------------------//
 /**

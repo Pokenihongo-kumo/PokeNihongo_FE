@@ -22,7 +22,7 @@ const PaginationControls = ({
     onPageChange,
     onItemsPerPageChange,
     itemsPerPageOptions = [15, 30, 45, 60],
-    isLoading = false
+    isLoading = false,
 }: PaginationControlsProps) => {
     const { t } = useTranslation();
     const handleItemsPerPageChange = (value: string) => {
@@ -38,8 +38,11 @@ const PaginationControls = ({
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent className="bg-card border-border">
-                        {itemsPerPageOptions.map(size => (
-                            <SelectItem key={size} value={String(size)}>{size}{t('common.perPage')}</SelectItem>
+                        {itemsPerPageOptions.map((size) => (
+                            <SelectItem key={size} value={String(size)}>
+                                {size}
+                                {t("common.perPage")}
+                            </SelectItem>
                         ))}
                     </SelectContent>
                 </Select>

@@ -40,20 +40,20 @@ const battleService = {
 
         // Add qs parameter if we have any filters
         if (qsParts.length > 0) {
-            queryParams.append('qs', qsParts.join(','));
+            queryParams.append("qs", qsParts.join(","));
         }
 
         // Pagination
         if (params?.currentPage) {
-            queryParams.append('currentPage', params.currentPage.toString());
+            queryParams.append("currentPage", params.currentPage.toString());
         }
 
         if (params?.pageSize) {
-            queryParams.append('pageSize', params.pageSize.toString());
+            queryParams.append("pageSize", params.pageSize.toString());
         }
 
         const queryString = queryParams.toString();
-        const response = await axiosPrivate.get(`/leaderboard-season${queryString ? `?${queryString}` : ''}`);
+        const response = await axiosPrivate.get(`/leaderboard-season${queryString ? `?${queryString}` : ""}`);
         return response.data;
     },
 
@@ -63,7 +63,7 @@ const battleService = {
     },
 
     createBattleLeaderBoardSeason: async (data: ICreateBattleLeaderBoardSeasonRequest) => {
-        return await axiosPrivate.post('/leaderboard-season', data);
+        return await axiosPrivate.post("/leaderboard-season", data);
     },
 
     updateSeasonRankReward: async (data: IUpdateSeasonRankRewardRequest) => {
@@ -73,6 +73,6 @@ const battleService = {
     deleteBattleLeaderBoardSeason: async (id: number) => {
         return await axiosPrivate.delete(`/leaderboard-season/${id}`);
     },
-}
+};
 
 export default battleService;

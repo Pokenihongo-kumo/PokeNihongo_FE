@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@ui/Button';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@ui/DropdownMenu';
-import { Globe } from 'lucide-react';
-import { setLanguage } from '@redux/features/language/slice';
-import { selectCurrentLanguage } from '@redux/features/language/selector';
-import { AppDispatch } from '@redux/store/store';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useTranslation } from "react-i18next";
+import { Button } from "@ui/Button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@ui/DropdownMenu";
+import { Globe } from "lucide-react";
+import { setLanguage } from "@redux/features/language/slice";
+import { selectCurrentLanguage } from "@redux/features/language/selector";
+import { AppDispatch } from "@redux/store/store";
 
 const LanguageSwitcher: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -18,17 +18,17 @@ const LanguageSwitcher: React.FC = () => {
         i18n.changeLanguage(currentLanguage);
     }, [currentLanguage, i18n]);
 
-    const handleLanguageChange = (language: 'vi' | 'en' | 'ja') => {
+    const handleLanguageChange = (language: "vi" | "en" | "ja") => {
         dispatch(setLanguage(language));
     };
 
     const languages = [
-        { code: 'vi' as const, name: t('language.vi'), flag: '🇻🇳' },
-        { code: 'en' as const, name: t('language.en'), flag: '🇺🇸' },
-        { code: 'ja' as const, name: t('language.ja'), flag: '🇯🇵' },
+        { code: "vi" as const, name: t("language.vi"), flag: "🇻🇳" },
+        { code: "en" as const, name: t("language.en"), flag: "🇺🇸" },
+        { code: "ja" as const, name: t("language.ja"), flag: "🇯🇵" },
     ];
 
-    const currentLang = languages.find(lang => lang.code === currentLanguage);
+    const currentLang = languages.find((lang) => lang.code === currentLanguage);
 
     return (
         <DropdownMenu>
@@ -43,8 +43,7 @@ const LanguageSwitcher: React.FC = () => {
                     <DropdownMenuItem
                         key={language.code}
                         onClick={() => handleLanguageChange(language.code)}
-                        className={`cursor-pointer ${currentLanguage === language.code ? 'bg-accent' : ''
-                            }`}
+                        className={`cursor-pointer ${currentLanguage === language.code ? "bg-accent" : ""}`}
                     >
                         <span className="mr-2">{language.flag}</span>
                         {language.name}

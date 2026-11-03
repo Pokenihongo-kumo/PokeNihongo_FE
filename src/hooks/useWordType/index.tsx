@@ -4,8 +4,8 @@ import wordTypeService from "@services/wordType";
 
 /**
  * hanlde Vocabulary List
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export const useWordTypeList = (params: IQueryRequest) => {
     const { page, limit, sortBy, sortOrder } = params;

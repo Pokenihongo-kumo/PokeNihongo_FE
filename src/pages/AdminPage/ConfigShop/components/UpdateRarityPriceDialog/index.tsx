@@ -1,17 +1,17 @@
 import { useEffect } from "react";
-import { useForm, Controller, useWatch } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@ui/Button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@ui/Dialog';
-import { Input } from '@ui/Input';
-import { Checkbox } from '@ui/Checkbox';
-import { Separator } from '@ui/Separator';
-import { Skeleton } from '@ui/Skeleton';
-import { useShopRarityPrice, useUpdateShopRarityPrice } from '@hooks/useShopRarityPrice';
-import { useTranslation } from 'react-i18next';
-import { IShopRarityPriceEntityType } from '@models/shopRarityPrice/entity';
-import { RarityBadge } from '@atoms/BadgeRarity';
-import { AlertCircle, Sparkles } from 'lucide-react';
+import { useForm, Controller, useWatch } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@ui/Button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@ui/Dialog";
+import { Input } from "@ui/Input";
+import { Checkbox } from "@ui/Checkbox";
+import { Separator } from "@ui/Separator";
+import { Skeleton } from "@ui/Skeleton";
+import { useShopRarityPrice, useUpdateShopRarityPrice } from "@hooks/useShopRarityPrice";
+import { useTranslation } from "react-i18next";
+import { IShopRarityPriceEntityType } from "@models/shopRarityPrice/entity";
+import { RarityBadge } from "@atoms/BadgeRarity";
+import { AlertCircle, Sparkles } from "lucide-react";
 import { IUpdateShopRarityPriceRequest, UpdateShopRarityPriceRequestSchema } from "@models/shopRarityPrice/request";
 
 interface UpdateRarityPriceDialogProps {
@@ -24,7 +24,6 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
     const { data: rarityPrices, isLoading } = useShopRarityPrice();
     const updateMutation = useUpdateShopRarityPrice();
 
-
     const {
         control,
         handleSubmit,
@@ -33,7 +32,7 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
     } = useForm<IUpdateShopRarityPriceRequest>({
         resolver: zodResolver(UpdateShopRarityPriceRequestSchema),
         defaultValues: {
-            rarity: 'COMMON',
+            rarity: "COMMON",
             price: 0,
             isChangeAllShopPreview: false,
         },
@@ -56,7 +55,7 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
 
     // Handle numeric input only
     const handleNumericChange = (onChange: any, value: string) => {
-        const numericValue = value === '' ? '' : value.replace(/[^\d]/g, '');
+        const numericValue = value === "" ? "" : value.replace(/[^\d]/g, "");
         onChange(numericValue);
     };
 
@@ -85,31 +84,34 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
             await Promise.all(updatePromises);
             onClose();
         } catch (error) {
-            console.error('Error updating rarity prices:', error);
+            console.error("Error updating rarity prices:", error);
         }
     };
 
-
     return (
-        <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+        <Dialog
+            open={isOpen}
+            onOpenChange={(open) => {
+                if (!open) onClose();
+            }}
+        >
             <DialogContent className="bg-white border-border max-w-3xl max-h-[90vh]">
                 <DialogHeader>
-                    <DialogTitle className="text-foreground">
-                        {t('configShop.updateRarityPriceTitle')}
-                    </DialogTitle>
+                    <DialogTitle className="text-foreground">{t("configShop.updateRarityPriceTitle")}</DialogTitle>
                 </DialogHeader>
 
                 <div className="space-y-6 py-4 overflow-y-auto h-[calc(100vh-200px)] pb-16">
                     <div>
-                        <p className="text-sm text-muted-foreground">
-                            {t('configShop.updateRarityPriceDescription')}
-                        </p>
+                        <p className="text-sm text-muted-foreground">{t("configShop.updateRarityPriceDescription")}</p>
                     </div>
 
                     {isLoading ? (
                         <div className="space-y-3">
                             {Array.from({ length: 5 }).map((_, index) => (
-                                <div key={`skeleton-${index}`} className="flex items-center justify-between p-4 border rounded-lg">
+                                <div
+                                    key={`skeleton-${index}`}
+                                    className="flex items-center justify-between p-4 border rounded-lg"
+                                >
                                     <div className="flex items-center gap-4 flex-1">
                                         <Skeleton className="h-8 w-32" />
                                         <Skeleton className="h-6 w-24" />
@@ -122,9 +124,9 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
                         <div className="border rounded-lg overflow-hidden">
                             {/* Header */}
                             <div className="bg-muted/50 grid grid-cols-12 gap-4 p-4 border-b font-semibold text-sm text-foreground">
-                                <div className="col-span-4">{t('configShop.rarity')}</div>
-                                <div className="col-span-4">{t('configShop.currentPrice')}</div>
-                                <div className="col-span-4">{t('configShop.newPrice')}</div>
+                                <div className="col-span-4">{t("configShop.rarity")}</div>
+                                <div className="col-span-4">{t("configShop.currentPrice")}</div>
+                                <div className="col-span-4">{t("configShop.newPrice")}</div>
                             </div>
 
                             {/* Rows */}
@@ -137,8 +139,9 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
                                     return (
                                         <div
                                             key={item.id}
-                                            className={`grid grid-cols-12 gap-4 p-4 hover:bg-muted/30 transition-colors ${hasChanged ? 'bg-primary/5 border-l-4 border-l-primary' : ''
-                                                }`}
+                                            className={`grid grid-cols-12 gap-4 p-4 hover:bg-muted/30 transition-colors ${
+                                                hasChanged ? "bg-primary/5 border-l-4 border-l-primary" : ""
+                                            }`}
                                         >
                                             <div className="col-span-4 flex items-center">
                                                 <RarityBadge level={item.rarity as any} />
@@ -159,12 +162,17 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
                                                                 type="text"
                                                                 inputMode="numeric"
                                                                 value={field.value as string}
-                                                                onChange={(e) => handleNumericChange(field.onChange, e.target.value)}
+                                                                onChange={(e) =>
+                                                                    handleNumericChange(field.onChange, e.target.value)
+                                                                }
                                                                 onBlur={field.onBlur}
                                                                 name={field.name}
                                                                 placeholder={item.price.toString()}
-                                                                className={`w-full ${error ? 'border-destructive focus:border-destructive' : ''
-                                                                    }`}
+                                                                className={`w-full ${
+                                                                    error
+                                                                        ? "border-destructive focus:border-destructive"
+                                                                        : ""
+                                                                }`}
                                                             />
                                                             {error && (
                                                                 <div className="absolute flex items-center gap-1 mt-1 text-xs text-destructive">
@@ -183,7 +191,7 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
                         </div>
                     ) : (
                         <div className="text-center text-muted-foreground py-12">
-                            {t('configShop.noRarityPricesFound')}
+                            {t("configShop.noRarityPricesFound")}
                         </div>
                     )}
 
@@ -192,8 +200,10 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
                         <div className="flex gap-2">
                             <AlertCircle className="h-5 w-5 text-blue-600 flex-shrink-0 mt-0.5" />
                             <div className="space-y-1 text-sm text-blue-900">
-                                <p className="font-medium">{t('configShop.priceValidationInfo')}</p>
-                                <p className="text-blue-700">{t('configShop.priceRangeInfo', { min: 1, max: 10000000 })}</p>
+                                <p className="font-medium">{t("configShop.priceValidationInfo")}</p>
+                                <p className="text-blue-700">
+                                    {t("configShop.priceRangeInfo", { min: 1, max: 10000000 })}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -216,10 +226,10 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
                                             htmlFor="changeAllShopPreview"
                                             className="text-sm font-medium text-foreground cursor-pointer"
                                         >
-                                            {t('configShop.changeAllShopPreview')}
+                                            {t("configShop.changeAllShopPreview")}
                                         </label>
                                         <p className="text-xs text-muted-foreground">
-                                            {t('configShop.changeAllShopPreviewDescription')}
+                                            {t("configShop.changeAllShopPreviewDescription")}
                                         </p>
                                     </div>
                                 </div>
@@ -229,7 +239,7 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
 
                     <DialogFooter className="fixed bottom-0 left-0 right-0 bg-white  p-4 border-t border-border">
                         <Button type="button" variant="outline" onClick={onClose}>
-                            {t('common.cancel')}
+                            {t("common.cancel")}
                         </Button>
                         <Button
                             type="button"
@@ -237,7 +247,7 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
                             disabled={updateMutation.isPending || !isDirty}
                             className="bg-primary text-primary-foreground hover:bg-primary/90"
                         >
-                            {updateMutation.isPending ? t('common.loading') : t('common.update')}
+                            {updateMutation.isPending ? t("common.loading") : t("common.update")}
                         </Button>
                     </DialogFooter>
                 </div>
@@ -247,4 +257,3 @@ const UpdateRarityPriceDialog = ({ isOpen, onClose }: UpdateRarityPriceDialogPro
 };
 
 export default UpdateRarityPriceDialog;
-

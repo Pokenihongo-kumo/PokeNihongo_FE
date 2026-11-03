@@ -16,7 +16,6 @@ export const RoleEntitySchema = z.object({
 export type IRoleEntity = z.infer<typeof RoleEntitySchema>;
 //----------------------End----------------------//
 
-
 /**
  * Permission Entity Schema
  */

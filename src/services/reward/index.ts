@@ -3,17 +3,19 @@ import { ICreateRewardRequest } from "@models/reward/request";
 import { IQueryRequest } from "@models/common/request";
 
 const rewardService = {
-    getRewardList: async (params?: IQueryRequest & {
-        name?: string;
-        rewardType?: string;
-        rewardTarget?: string;
-    }) => {
+    getRewardList: async (
+        params?: IQueryRequest & {
+            name?: string;
+            rewardType?: string;
+            rewardTarget?: string;
+        },
+    ) => {
         const queryParams = new URLSearchParams();
         const qsParts: string[] = [];
 
         // Sort
         if (params?.sortBy) {
-            const sortDirection = params.sort === 'desc' ? '-' : '';
+            const sortDirection = params.sort === "desc" ? "-" : "";
             qsParts.push(`sort:${sortDirection}${params.sortBy}`);
         }
 
@@ -32,37 +34,39 @@ const rewardService = {
 
         // Add qs parameter if we have any filters
         if (qsParts.length > 0) {
-            queryParams.append('qs', qsParts.join(','));
+            queryParams.append("qs", qsParts.join(","));
         }
 
         // Pagination
         if (params?.page) {
-            queryParams.append('currentPage', params.page.toString());
+            queryParams.append("currentPage", params.page.toString());
         }
 
         if (params?.limit) {
-            queryParams.append('pageSize', params.limit.toString());
+            queryParams.append("pageSize", params.limit.toString());
         }
 
         const queryString = queryParams.toString();
-        return axiosPrivate.get(`/reward${queryString ? `?${queryString}` : ''}`);
+        return axiosPrivate.get(`/reward${queryString ? `?${queryString}` : ""}`);
     },
 
-    getRewardListAdmin: async (params?: IQueryRequest & {
-        name?: string;
-        rewardType?: string;
-        rewardTarget?: string;
-    }) => {
+    getRewardListAdmin: async (
+        params?: IQueryRequest & {
+            name?: string;
+            rewardType?: string;
+            rewardTarget?: string;
+        },
+    ) => {
         const queryParams = new URLSearchParams();
         const qsParts: string[] = [];
 
         // Sort
         if (params?.sortBy) {
-            const sortDirection = params.sort === 'desc' ? '-' : '';
+            const sortDirection = params.sort === "desc" ? "-" : "";
             qsParts.push(`sort:${sortDirection}${params.sortBy}`);
         } else {
             // Default sort by id descending
-            qsParts.push('sort:-id');
+            qsParts.push("sort:-id");
         }
 
         // Filters
@@ -80,20 +84,20 @@ const rewardService = {
 
         // Add qs parameter if we have any filters
         if (qsParts.length > 0) {
-            queryParams.append('qs', qsParts.join(','));
+            queryParams.append("qs", qsParts.join(","));
         }
 
         // Pagination
         if (params?.page) {
-            queryParams.append('currentPage', params.page.toString());
+            queryParams.append("currentPage", params.page.toString());
         }
 
         if (params?.limit) {
-            queryParams.append('pageSize', params.limit.toString());
+            queryParams.append("pageSize", params.limit.toString());
         }
 
         const queryString = queryParams.toString();
-        return axiosPrivate.get(`/reward/admin${queryString ? `?${queryString}` : ''}`);
+        return axiosPrivate.get(`/reward/admin${queryString ? `?${queryString}` : ""}`);
     },
 
     getRewardById: async (rewardId: number) => {
@@ -101,7 +105,7 @@ const rewardService = {
     },
 
     createReward: async (data: ICreateRewardRequest) => {
-        return axiosPrivate.post('/reward', data);
+        return axiosPrivate.post("/reward", data);
     },
 
     //TODO: Update reward sau khi Pilu thêm cái get by reward id cho admin

@@ -13,10 +13,14 @@ import { RewardByIdEntitySchema } from "@models/reward/entity";
 export const useGetRewardList = (params?: IQueryRequest) => {
     const currentLanguage = useSelector(selectCurrentLanguage);
     const getRewardListQuery = useQuery({
-        queryKey: ['reward-list', params, currentLanguage],
+        queryKey: ["reward-list", params, currentLanguage],
         queryFn: () => rewardService.getRewardList(params),
     });
-    return { data: getRewardListQuery.data?.data?.data, isLoading: getRewardListQuery.isLoading, error: getRewardListQuery.error };
+    return {
+        data: getRewardListQuery.data?.data?.data,
+        isLoading: getRewardListQuery.isLoading,
+        error: getRewardListQuery.error,
+    };
 };
 //----------------------End----------------------//
 
@@ -24,28 +28,33 @@ export const useGetRewardList = (params?: IQueryRequest) => {
  * Handle Get Reward List Admin (with nameTranslations array)
  * @returns { getRewardListAdminQuery }
  */
-export const useGetRewardListAdmin = (params?: IQueryRequest & {
-    name?: string;
-    rewardType?: string;
-    rewardTarget?: string;
-}) => {
+export const useGetRewardListAdmin = (
+    params?: IQueryRequest & {
+        name?: string;
+        rewardType?: string;
+        rewardTarget?: string;
+    },
+) => {
     const getRewardListAdminQuery = useQuery({
-        queryKey: ['reward-list-admin', params],
+        queryKey: ["reward-list-admin", params],
         queryFn: () => rewardService.getRewardListAdmin(params),
     });
-    return { data: getRewardListAdminQuery.data?.data?.data, isLoading: getRewardListAdminQuery.isLoading, error: getRewardListAdminQuery.error };
+    return {
+        data: getRewardListAdminQuery.data?.data?.data,
+        isLoading: getRewardListAdminQuery.isLoading,
+        error: getRewardListAdminQuery.error,
+    };
 };
 //----------------------End----------------------//
 
-
 /**
  * Handle Get Reward By Id
- * @param id 
- * @returns 
+ * @param id
+ * @returns
  */
 export const useGetRewardById = (id?: number, options?: { enabled?: boolean }) => {
     const getRewardByIdQuery = useQuery({
-        queryKey: ['reward-by-id', id],
+        queryKey: ["reward-by-id", id],
         queryFn: async () => {
             const response = await rewardService.getRewardById(id!);
             return RewardByIdEntitySchema.parse(response.data?.data);
@@ -56,7 +65,6 @@ export const useGetRewardById = (id?: number, options?: { enabled?: boolean }) =
 };
 //----------------------End----------------------//
 
-
 /**
  * Handle Create Reward
  * @returns { createRewardMutation }
@@ -66,13 +74,12 @@ export const useCreateReward = () => {
     const createRewardMutation = useMutation({
         mutationFn: (data: ICreateRewardRequest) => rewardService.createReward(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reward-list'] });
+            queryClient.invalidateQueries({ queryKey: ["reward-list"] });
         },
     });
     return createRewardMutation;
 };
 //----------------------End----------------------//
-
 
 /**
  * Handle Update Reward
@@ -83,14 +90,13 @@ export const useUpdateReward = () => {
     const updateRewardMutation = useMutation({
         mutationFn: ({ id, data }: { id: number; data: ICreateRewardRequest }) => rewardService.updateReward(id, data),
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: ['reward-list'] });
-            queryClient.invalidateQueries({ queryKey: ['reward-by-id', variables.id] });
+            queryClient.invalidateQueries({ queryKey: ["reward-list"] });
+            queryClient.invalidateQueries({ queryKey: ["reward-by-id", variables.id] });
         },
     });
     return updateRewardMutation;
 };
 //----------------------End----------------------//
-
 
 /**
  * Handle Delete Reward
@@ -101,7 +107,7 @@ export const useDeleteReward = () => {
     const deleteRewardMutation = useMutation({
         mutationFn: (id: number) => rewardService.deleteReward(id),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['reward-list'] });
+            queryClient.invalidateQueries({ queryKey: ["reward-list"] });
         },
     });
     return deleteRewardMutation;

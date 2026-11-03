@@ -11,10 +11,16 @@ import { PaginationResponseType } from "@models/common/response";
 
 /**
  * Handle Shop Banner List
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
-export const useShopBannerList = (params: { page?: number; limit?: number; startDate?: string; endDate?: string; status?: string[] }) => {
+export const useShopBannerList = (params: {
+    page?: number;
+    limit?: number;
+    startDate?: string;
+    endDate?: string;
+    status?: string[];
+}) => {
     const currentLanguage = useSelector(selectCurrentLanguage);
     return useQuery<{ data: PaginationResponseType<IShopBannerSchema> }>({
         queryKey: ["shopBanners", params, currentLanguage],
@@ -26,12 +32,11 @@ export const useShopBannerList = (params: { page?: number; limit?: number; start
 };
 //------------------------End------------------------//
 
-
 /**
  * Handle Get Shop Item Random
- * @param shopBannerId 
- * @param amount 
- * @returns 
+ * @param shopBannerId
+ * @param amount
+ * @returns
  */
 export const useShopItemRandom = (shopBannerId: number, amount: number) => {
     return useQuery<{ data: IShopItemRandomSchema[] }>({
@@ -44,21 +49,23 @@ export const useShopItemRandom = (shopBannerId: number, amount: number) => {
 };
 //------------------------End------------------------//
 
-
 /**
  * Handle Get Shop Banner All Pokemon By Shop Banner ID
- * @param shopBannerId 
- * @param params 
- * @returns 
+ * @param shopBannerId
+ * @param params
+ * @returns
  */
-export const useShopBannerAllPokemonByShopBannerId = (shopBannerId: number, params?: {
-    page?: number;
-    limit?: number;
-    sort?: string;
-    search?: string;
-    rarity?: string;
-    types?: string | number;
-}) => {
+export const useShopBannerAllPokemonByShopBannerId = (
+    shopBannerId: number,
+    params?: {
+        page?: number;
+        limit?: number;
+        sort?: string;
+        search?: string;
+        rarity?: string;
+        types?: string | number;
+    },
+) => {
     return useQuery<{ data: PaginationResponseType<IShopBannerAllPokemonResponseSchema> }>({
         queryKey: ["shopBannerAllPokemon", shopBannerId, params],
         queryFn: async () => {
@@ -68,7 +75,6 @@ export const useShopBannerAllPokemonByShopBannerId = (shopBannerId: number, para
     });
 };
 //------------------------End------------------------//
-
 
 /**
  * Handle Create Shop Banner
@@ -85,20 +91,19 @@ export const useCreateShopBanner = () => {
         },
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["shopBanners"] });
-            toast.success(t('configShop.createSuccess'));
+            toast.success(t("configShop.createSuccess"));
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message || t('configShop.createError'));
+            toast.error(error.response?.data?.message || t("configShop.createError"));
         },
     });
 };
 //-------------------End-------------------//
 
-
 /**
  * Handle Get Shop Banner By ID
- * @param id 
- * @returns 
+ * @param id
+ * @returns
  */
 export const useShopBannerById = (id: number | null) => {
     return useQuery<{ data: IShopBannerSchema }>({
@@ -113,10 +118,9 @@ export const useShopBannerById = (id: number | null) => {
 };
 //------------------------End------------------------//
 
-
 /**
  * Handle Create Shop Items
- * @returns 
+ * @returns
  */
 export const useCreateShopItems = () => {
     const queryClient = useQueryClient();
@@ -130,15 +134,14 @@ export const useCreateShopItems = () => {
         onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["shopBannerAllPokemon"] });
             queryClient.invalidateQueries({ queryKey: ["shopBanner"] });
-            toast.success(data?.message || t('configShop.addPokemonSuccess'));
+            toast.success(data?.message || t("configShop.addPokemonSuccess"));
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message || t('configShop.addPokemonError'));
+            toast.error(error.response?.data?.message || t("configShop.addPokemonError"));
         },
     });
 };
 //-------------------End-------------------//
-
 
 /**
  * Handle Update Shop Item By Shop Item ID
@@ -156,15 +159,14 @@ export const useUpdateShopItemByShopItemId = () => {
         onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["shopBannerAllPokemon"] });
             queryClient.invalidateQueries({ queryKey: ["shopBanner"] });
-            toast.success(data?.message || t('configShop.updatePokemonSuccess'));
+            toast.success(data?.message || t("configShop.updatePokemonSuccess"));
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message || t('configShop.updatePokemonError'));
+            toast.error(error.response?.data?.message || t("configShop.updatePokemonError"));
         },
     });
 };
 //-------------------End-------------------//
-
 
 /**
  * Handle Update Shop Banner
@@ -182,16 +184,14 @@ export const useUpdateShopBanner = () => {
         onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["shopBanners"] });
             queryClient.invalidateQueries({ queryKey: ["shopBanner"] });
-            toast.success(data?.message || t('configShop.updateBannerSuccess'));
+            toast.success(data?.message || t("configShop.updateBannerSuccess"));
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message || t('configShop.updateBannerError'));
+            toast.error(error.response?.data?.message || t("configShop.updateBannerError"));
         },
     });
 };
 //-------------------End-------------------//
-
-
 
 /**
  * Handle Delete Shop Item
@@ -211,7 +211,7 @@ export const useDeleteShopItem = () => {
             // toast.success(data?.message || t('configShop.deletePokemonSuccess'));
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message || t('configShop.deletePokemonError'));
+            toast.error(error.response?.data?.message || t("configShop.deletePokemonError"));
         },
     });
 };

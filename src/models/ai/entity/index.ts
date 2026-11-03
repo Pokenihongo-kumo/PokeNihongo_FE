@@ -19,11 +19,6 @@ export type GeminiConfigPromptsEntity = z.infer<typeof GeminiConfigPromptsEntity
 //-----------------------End--------------------//
 //--------------------------------------End Gemini Config Prompts--------------------------------------//
 
-
-
-
-
-
 //----------------------Gemini Models Entity----------------------//
 /**
  * Gemini Models Entity Schema
@@ -42,10 +37,6 @@ export const GeminiModelsEntitySchema = z.object({
 export type IGeminiModelsEntity = z.infer<typeof GeminiModelsEntitySchema>;
 //-----------------------End--------------------//
 //--------------------------------------End Gemini Models--------------------------------------//
-
-
-
-
 
 //----------------------Config Presets Entity----------------------//
 /**
@@ -68,10 +59,6 @@ export type IConfigPresetsEntity = z.infer<typeof ConfigPresetsEntitySchema>;
 //-----------------------End--------------------//
 //--------------------------------------End Config Presets--------------------------------------//
 
-
-
-
-
 //----------------------Gemini Config Models Entity----------------------//
 /**
  * Gemini Config Models Entity Schema
@@ -85,16 +72,20 @@ export const GeminiConfigModelsEntitySchema = z.object({
     systemInstruction: z.string(),
     safetySettings: z.record(z.string(), z.string()),
     extraParams: z.object({
-        policy: z.object({
-            purpose: z.string(),
-            entities: z.array(z.object({
-                scope: z.enum(AI_POLICY_SCOPE),
-                entity: z.string(),
-                fields: z.array(z.string()),
-                limit: z.number().optional(),
-            })),
-            maskingRules: z.record(z.string(), z.string()).optional(),
-        }).optional(),
+        policy: z
+            .object({
+                purpose: z.string(),
+                entities: z.array(
+                    z.object({
+                        scope: z.enum(AI_POLICY_SCOPE),
+                        entity: z.string(),
+                        fields: z.array(z.string()),
+                        limit: z.number().optional(),
+                    }),
+                ),
+                maskingRules: z.record(z.string(), z.string()).optional(),
+            })
+            .optional(),
         responseMimeType: z.string(),
     }),
     presetId: z.number(),
@@ -119,11 +110,6 @@ export type GeminiConfigPromptsWithModelEntity = z.infer<typeof GeminiConfigProm
 //-----------------------End--------------------//
 //--------------------------------------End Gemini Config Models--------------------------------------//
 
-
-
-
-
-
 //----------------------Model Configs Policy Schema Entity----------------------//
 /**
  * Model Configs Policy Schema Entity Schema
@@ -132,7 +118,6 @@ export const ModelConfigsPolicySchemaEntitySchema = z.array(z.string());
 
 export type IModelConfigsPolicySchemaEntity = z.infer<typeof ModelConfigsPolicySchemaEntitySchema>;
 
-
 /**
  * Model Configs Policy Schema Fields Entity Schema
  */
@@ -140,12 +125,6 @@ export const ModelConfigsPolicySchemaFieldsEntitySchema = z.record(z.string(), z
 export type IModelConfigsPolicySchemaFieldsEntity = z.infer<typeof ModelConfigsPolicySchemaFieldsEntitySchema>;
 //-----------------------End--------------------//
 //--------------------------------------End Model Configs Policy Schema Fields--------------------------------------//
-
-
-
-
-
-
 
 //----------------------Service Configs Entity----------------------//
 /**

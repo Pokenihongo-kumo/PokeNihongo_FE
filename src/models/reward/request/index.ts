@@ -7,7 +7,7 @@ import { TranslationRequest } from "@models/common/request";
  */
 export const CreateRewardSchema = z.object({
     rewardType: z.nativeEnum(REWARD_TYPE).optional(),
-    rewardItem: z.number().min(1, 'validation.rewardItemRequired'),
+    rewardItem: z.number().min(1, "validation.rewardItemRequired"),
     rewardTarget: z.nativeEnum(REWARD_TARGET).optional(),
     nameTranslations: z.array(TranslationRequest),
 });
@@ -18,7 +18,7 @@ export interface IQueryRewardRequest {
     page?: number;
     limit?: number;
     sortBy?: string;
-    sort?: 'asc' | 'desc';
+    sort?: "asc" | "desc";
     name?: string;
     rewardType?: string;
     rewardTarget?: string;
