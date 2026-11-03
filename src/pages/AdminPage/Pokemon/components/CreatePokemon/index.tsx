@@ -10,6 +10,7 @@ import { Textarea } from '@ui/Textarea';
 import { Plus, UploadCloud, Trash2 } from 'lucide-react';
 import { ICreatePokemonFormData, CreatePokemonFormSchema, ICreatePokemonRequest } from '@models/pokemon/request';
 import { useState } from 'react';
+import { getApiErrorMessage } from '@utils/api-error';
 import { cn } from '@utils/CN';
 import { zodResolver } from '@hookform/resolvers/zod';
 import mediaService from '@services/media';
@@ -67,17 +68,7 @@ const CreatePokemon = ({ isAddDialogOpen, setIsAddDialogOpen, typesData }: Creat
             console.error('Error creating Pokemon:', error);
             console.error('Error response:', error.response?.data.message);
 
-            // Handle validation errors (422)
-            if (error.response?.status === 422) {
-                const messages = error.response?.data.message;
-                if (Array.isArray(messages)) {
-                    toast.error(`${t('createPokemon.validationErrors')}: ${messages.join(', ')}`);
-                } else {
-                    toast.error(messages || t('createPokemon.validationError'));
-                }
-            } else {
-                toast.error(error.response?.data?.message || t('createPokemon.generalError'));
-            }
+            toast.error(getApiErrorMessage(error, t('createPokemon.generalError')));
         }
     });
 

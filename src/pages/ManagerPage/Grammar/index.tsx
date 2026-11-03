@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, D
 import { BookOpenCheck, Pencil, Plus, RefreshCcw, Trash2 } from "lucide-react";
 import { useGrammarList, useUpdateGrammar, useDeleteGrammar } from "@hooks/useGrammar";
 import { useDebounce } from "@hooks/useDebounce";
+import { getApiErrorMessage } from "@utils/api-error";
 import { formatDateTime } from "@utils/date";
 import HeaderAdmin from "@organisms/Header/Admin";
 import SortableTableHeader from "@ui/SortableTableHeader";
@@ -40,15 +41,6 @@ interface PaginationMeta {
 interface GrammarListResponse {
     results?: GrammarItem[];
     pagination?: PaginationMeta;
-}
-
-interface ApiError {
-    message?: string;
-    response?: {
-        data?: {
-            message?: string;
-        };
-    };
 }
 
 const levelOptions: GrammarLevelValue[] = ["all", "N5", "N4", "N3", "N2", "N1"];
@@ -207,10 +199,7 @@ const GrammarManagementPage = () => {
     const getLevelClassName = (label: string) =>
         LEVEL_BADGE_STYLES[label] ?? "bg-muted text-muted-foreground border-border";
 
-    const errorMessage =
-        (error as ApiError | undefined)?.response?.data?.message ??
-        (error as ApiError | undefined)?.message ??
-        t("managerGrammar.fallbackError");
+    const errorMessage = getApiErrorMessage(error, t("managerGrammar.fallbackError"));
 
     const SkeletonRows = () => (
         <TableBody>
@@ -468,9 +457,10 @@ const GrammarManagementPage = () => {
                             <Alert variant="destructive">
                                 <AlertTitle>{t("common.error")}</AlertTitle>
                                 <AlertDescription>
-                                    {(updateGrammar.error as ApiError | undefined)?.response?.data?.message ||
-                                        (updateGrammar.error as ApiError | undefined)?.message ||
-                                        t("updateGrammar.error.general", { defaultValue: "Có lỗi xảy ra khi cập nhật" })}
+                                    {getApiErrorMessage(
+                                        updateGrammar.error,
+                                        t("updateGrammar.error.general", { defaultValue: "Có lỗi xảy ra khi cập nhật" })
+                                    )}
                                 </AlertDescription>
                             </Alert>
                         ) : null}

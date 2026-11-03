@@ -5,32 +5,8 @@ import testService from "@services/test";
 import { TestListRequest, TestCreateRequest, TestTestSetLinkMultipleRequest } from "@models/test/request";
 import { selectCurrentLanguage } from "@redux/features/language/selector";
 import { useSelector } from "react-redux";
-import { AxiosError } from "axios";
+import { getApiErrorMessage } from "@utils/api-error";
 
-interface ApiError {
-  response?: {
-    status?: number;
-    data?: {
-      message?: string | string[];
-    };
-  };
-}
-
-/**
- * Helper function to extract error message from axios error response
- */
-const getErrorMessage = (error: unknown, defaultMessage: string): string => {
-  if (error instanceof AxiosError) {
-    const message = error.response?.data?.message;
-    if (message) {
-      return Array.isArray(message) ? message.join(", ") : message;
-    }
-  }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return defaultMessage;
-};
 
 /**
  * Hook for managing Test list with filters and pagination
@@ -79,19 +55,7 @@ export const useCreateTest = () => {
     },
     onError: (error: unknown) => {
       console.error("Error creating test:", error);
-      const apiError = error as ApiError;
-      if (apiError?.response?.status === 422) {
-        const messages = apiError?.response?.data?.message;
-        if (Array.isArray(messages)) {
-          toast.error(`Lỗi validation: ${messages.join(", ")}`);
-        } else {
-          toast.error(messages || "Lỗi validation");
-        }
-      } else {
-        toast.error(
-          getErrorMessage(error, "Có lỗi xảy ra khi tạo test")
-        );
-      }
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo test"));
     },
   });
 
@@ -120,19 +84,7 @@ export const useUpdateTest = () => {
     },
     onError: (error: unknown) => {
       console.error("Error updating test:", error);
-      const apiError = error as ApiError;
-      if (apiError?.response?.status === 422) {
-        const messages = apiError?.response?.data?.message;
-        if (Array.isArray(messages)) {
-          toast.error(`Lỗi validation: ${messages.join(", ")}`);
-        } else {
-          toast.error(messages || "Lỗi validation");
-        }
-      } else {
-        toast.error(
-          getErrorMessage(error, "Có lỗi xảy ra khi cập nhật test")
-        );
-      }
+      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật test"));
     },
   });
 
@@ -187,7 +139,7 @@ export const useLinkTestSets = () => {
     onError: (error: unknown) => {
       console.error("Error linking test sets:", error);
       toast.error(
-        getErrorMessage(error, "Có lỗi xảy ra khi liên kết bộ đề")
+        getApiErrorMessage(error, "Có lỗi xảy ra khi liên kết bộ đề")
       );
     },
   });
@@ -214,7 +166,7 @@ export const useLinkFinalTestSets = () => {
     onError: (error: unknown) => {
       console.error("Error linking final test sets:", error);
       toast.error(
-        getErrorMessage(error, "Có lỗi xảy ra khi liên kết bộ đề vào Final Test")
+        getApiErrorMessage(error, "Có lỗi xảy ra khi liên kết bộ đề vào Final Test")
       );
     },
   });
@@ -251,7 +203,7 @@ export const useDeleteLinkedTestSets = () => {
     onError: (error: unknown) => {
       console.error("Error deleting linked test sets:", error);
       toast.error(
-        getErrorMessage(error, "Có lỗi xảy ra khi xóa bộ đề")
+        getApiErrorMessage(error, "Có lỗi xảy ra khi xóa bộ đề")
       );
     },
   });
@@ -277,7 +229,7 @@ export const useAutoAddFreeTestSets = () => {
     onError: (error: unknown) => {
       console.error("Error auto adding free test sets:", error);
       toast.error(
-        getErrorMessage(error, "Có lỗi xảy ra khi tự động thêm TestSet miễn phí")
+        getApiErrorMessage(error, "Có lỗi xảy ra khi tự động thêm TestSet miễn phí")
       );
     },
   });
