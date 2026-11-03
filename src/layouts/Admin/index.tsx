@@ -1,4 +1,5 @@
-import { Outlet, useLocation, NavLink, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, NavLink } from "react-router-dom";
+import { useLogout } from "@hooks/useLogout";
 import { LayoutDashboard, Users, LogOut, Menu, Trophy, Package, Brain, Gift, LucideIcon, Store, ShieldCheck } from "lucide-react";
 import { useMemo, useState } from "react";
 import { Button } from "@ui/Button";
@@ -25,7 +26,6 @@ interface NavigationItem {
 
 const AdminLayout = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const { t } = useTranslation();
 
@@ -98,10 +98,7 @@ const AdminLayout = () => {
   /**
    * Handle logout
    */
-  const handleLogout = () => {
-    CookiesService.remove(COOKIES.ACCESS_TOKEN);
-    navigate(ROUTES.AUTH.LOGIN, { replace: true });
-  }
+  const handleLogout = useLogout();
   //-----------------------End--------------------//
 
 

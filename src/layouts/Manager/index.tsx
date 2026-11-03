@@ -1,4 +1,5 @@
-import { Outlet, useLocation, NavLink, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, NavLink } from "react-router-dom";
+import { useLogout } from "@hooks/useLogout";
 import { BookOpen, Languages, LogOut, Menu, FileText, Layers, Book, Settings, BookOpenCheck } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@ui/Button";
@@ -6,8 +7,6 @@ import { cn } from "@utils/CN";
 import { ROUTES } from "@constants/route";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "../../components/Atoms/LanguageSwitcher";
-import { CookiesService } from "@utils/cookies";
-import { COOKIES } from "@constants/common";
 
 interface NavigationItem {
     name: string;
@@ -17,7 +16,6 @@ interface NavigationItem {
 
 const ManagerLayout = () => {
     const location = useLocation();
-    const navigate = useNavigate();
     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
     const { t } = useTranslation();
 
@@ -57,10 +55,7 @@ const ManagerLayout = () => {
     /**
      * Handle logout
      */
-    const handleLogout = () => {
-        CookiesService.remove(COOKIES.ACCESS_TOKEN);
-        navigate(ROUTES.AUTH.LOGIN, { replace: true });
-    }
+    const handleLogout = useLogout();
     //-----------------------End--------------------//
 
 
