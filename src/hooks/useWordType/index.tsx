@@ -15,5 +15,5 @@ export const useWordTypeList = (params: IQueryRequest) => {
         queryFn: () => wordTypeService.getAllWordTypes(params),
     });
 
-    return { data: data?.data?.data, isLoading, error };
+    return { data: data?.data, isLoading, error };
 };
