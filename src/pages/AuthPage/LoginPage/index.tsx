@@ -1,17 +1,17 @@
-import { useForm, Controller } from 'react-hook-form';
-import { Button } from '@ui/Button';
-import { Input } from '@ui/Input';
-import { ILoginFormDataRequest } from '@models/user/request';
-import authService from '@services/auth';
-import { toast } from 'react-toastify';
-import { useState } from 'react';
-import { CookiesService } from '@utils/cookies';
-import { useNavigate } from 'react-router-dom';
-import { ROUTES } from '@constants/route';
-import { decodeJWT } from '@utils/token';
-import { COOKIES, ROLE_ID, ROLE } from '@constants/common';
-import { useDispatch } from 'react-redux';
-import { setAuthState } from '@redux/features/auth/slice';
+import { useForm, Controller } from "react-hook-form";
+import { Button } from "@ui/Button";
+import { Input } from "@ui/Input";
+import { ILoginFormDataRequest } from "@models/user/request";
+import authService from "@services/auth";
+import { toast } from "react-toastify";
+import { useState } from "react";
+import { CookiesService } from "@utils/cookies";
+import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@constants/route";
+import { decodeJWT } from "@utils/token";
+import { COOKIES, ROLE_ID, ROLE } from "@constants/common";
+import { useDispatch } from "react-redux";
+import { setAuthState } from "@redux/features/auth/slice";
 
 const LoginPage = () => {
     const navigate = useNavigate();
@@ -27,8 +27,8 @@ const LoginPage = () => {
         formState: { errors },
     } = useForm<ILoginFormDataRequest>({
         defaultValues: {
-            email: '',
-            password: '',
+            email: "",
+            password: "",
         },
     });
 
@@ -50,7 +50,8 @@ const LoginPage = () => {
             CookiesService.set(COOKIES.ACCESS_TOKEN, res.data.data.accessToken);
             const decodeToken = decodeJWT();
             const mappedRole = mapRoleIdToRole((decodeToken as any)?.roleId);
-            const decodedUserId = (decodeToken as any)?.userId ?? ((decodeToken as any)?.sub ? Number((decodeToken as any)?.sub) : null);
+            const decodedUserId =
+                (decodeToken as any)?.userId ?? ((decodeToken as any)?.sub ? Number((decodeToken as any)?.sub) : null);
 
             dispatch(
                 setAuthState({
@@ -61,15 +62,15 @@ const LoginPage = () => {
             );
 
             if (!mappedRole) {
-                toast.error('Đăng nhập thất bại');
+                toast.error("Đăng nhập thất bại");
                 return;
             }
 
-            toast.success('Đăng nhập thành công');
+            toast.success("Đăng nhập thành công");
             navigate(mappedRole === ROLE.ADMIN ? ROUTES.ADMIN.ROOT : ROUTES.MANAGER.ROOT);
         } catch (error) {
             console.log(error);
-            toast.error('Đăng nhập thất bại');
+            toast.error("Đăng nhập thất bại");
         } finally {
             setIsLoading(false);
         }
@@ -87,10 +88,10 @@ const LoginPage = () => {
                     name="email"
                     control={control}
                     rules={{
-                        required: 'Email là bắt buộc',
+                        required: "Email là bắt buộc",
                         pattern: {
                             value: /^\S+@\S+$/i,
-                            message: 'Email không hợp lệ',
+                            message: "Email không hợp lệ",
                         },
                     }}
                     render={({ field }) => (
@@ -109,10 +110,10 @@ const LoginPage = () => {
                     name="password"
                     control={control}
                     rules={{
-                        required: 'Mật khẩu là bắt buộc',
+                        required: "Mật khẩu là bắt buộc",
                         minLength: {
                             value: 6,
-                            message: 'Mật khẩu phải có ít nhất 6 ký tự',
+                            message: "Mật khẩu phải có ít nhất 6 ký tự",
                         },
                     }}
                     render={({ field }) => (

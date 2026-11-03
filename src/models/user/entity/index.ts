@@ -17,12 +17,14 @@ export type IRole = z.infer<typeof Role>;
 /**
  * Level entity
  */
-export const Level = z.object({
-    id: z.number(),
-    name: z.string(),
-    minExp: z.number(),
-    maxExp: z.number(),
-}).nullable();
+export const Level = z
+    .object({
+        id: z.number(),
+        name: z.string(),
+        minExp: z.number(),
+        maxExp: z.number(),
+    })
+    .nullable();
 export type ILevel = z.infer<typeof Level>;
 
 /**
@@ -36,7 +38,7 @@ export const User = z.object({
     avatar: z.string().nullable(),
     exp: z.number(),
     eloscore: z.number(),
-    status: z.enum(['ACTIVE', 'INACTIVE', 'BANNED']),
+    status: z.enum(["ACTIVE", "INACTIVE", "BANNED"]),
     levelId: z.number().nullable(),
     roleId: z.number(),
     createdById: z.number().nullable(),
@@ -49,4 +51,3 @@ export const User = z.object({
     level: Level.nullable(),
 });
 export type IUser = z.infer<typeof User>;
-

@@ -42,11 +42,9 @@ const FilterPanel = ({
     filters,
     onClearAll,
     showClearButton = true,
-    className = ""
+    className = "",
 }: FilterPanelProps) => {
-    const hasActiveFilters =
-        searchValue ||
-        filters.some(filter => filter.value !== "all");
+    const hasActiveFilters = searchValue || filters.some((filter) => filter.value !== "all");
 
     return (
         <div className={`px-6 py-4 border-b border-border bg-muted/20 ${className}`}>
@@ -65,11 +63,17 @@ const FilterPanel = ({
                 )}
 
                 {/* Dynamic Filters Grid */}
-                <div className={`grid gap-3 ${filters.length === 1 ? 'grid-cols-1' :
-                    filters.length === 2 ? 'grid-cols-1 sm:grid-cols-2' :
-                        filters.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' :
-                            'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-                    }`}>
+                <div
+                    className={`grid gap-3 ${
+                        filters.length === 1
+                            ? "grid-cols-1"
+                            : filters.length === 2
+                              ? "grid-cols-1 sm:grid-cols-2"
+                              : filters.length === 3
+                                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                                : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+                    }`}
+                >
                     {filters.map((filter) => (
                         <Select key={filter.key} value={filter.value} onValueChange={filter.onChange}>
                             <SelectTrigger className="w-full bg-background border-border text-foreground">
@@ -99,7 +103,7 @@ const FilterPanel = ({
                             )}
                             {filters.map((filter) => {
                                 if (filter.value !== "all") {
-                                    const optionLabel = filter.options.find(opt => opt.value === filter.value)?.label;
+                                    const optionLabel = filter.options.find((opt) => opt.value === filter.value)?.label;
                                     return (
                                         <Badge key={filter.key} variant="secondary" className="text-xs">
                                             {filter.label || filter.key}: {optionLabel}

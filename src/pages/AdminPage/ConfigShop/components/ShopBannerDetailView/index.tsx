@@ -16,14 +16,12 @@ import EditShopBannerDialog from "../EditShopBannerDialog";
 import DeleteConfirmShopItem from "@organisms/DeleteConfirmShopItem";
 
 export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: IShopBannerSchema }) {
-
     /**
      * Define Variables
      */
     const { t } = useTranslation();
     const navigate = useNavigate();
     //------------------------End------------------------//
-
 
     /**
      * Handle Back to List
@@ -33,13 +31,11 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
     };
     //------------------------End------------------------//
 
-
     /**
      * Handle Hover for Delete Button
      */
     const [hoveredItemId, setHoveredItemId] = useState<number | null>(null);
     //------------------------End------------------------//
-
 
     /**
      * Handle Edit Price
@@ -79,7 +75,6 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
     };
     //------------------------End------------------------//
 
-
     /**
      * Handle Edit Shop Banner
      */
@@ -89,13 +84,12 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
     };
     //------------------------End------------------------//
 
-
     const getStatusBadge = (status: string) => {
         const statusMap: Record<string, { label: string; variant: string }> = {
-            PREVIEW: { label: t('configShop.preview'), variant: "secondary" },
-            ACTIVE: { label: t('common.active'), variant: "default" },
-            INACTIVE: { label: t('common.inactive'), variant: "outline" },
-            EXPIRED: { label: t('configShop.expired'), variant: "destructive" },
+            PREVIEW: { label: t("configShop.preview"), variant: "secondary" },
+            ACTIVE: { label: t("common.active"), variant: "default" },
+            INACTIVE: { label: t("common.inactive"), variant: "outline" },
+            EXPIRED: { label: t("configShop.expired"), variant: "destructive" },
         };
 
         const statusInfo = statusMap[status] || { label: status, variant: "outline" };
@@ -111,7 +105,6 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
         return date.toLocaleDateString("vi-VN");
     };
 
-
     /**
      * Handle Add Random Pokemon
      */
@@ -121,7 +114,6 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
     };
     //------------------------End------------------------//
 
-
     /**
      * Handle Add Pokemon Not Random
      */
@@ -130,7 +122,6 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
         setIsAddPokemonNotRandomDialogOpen(true);
     };
     //------------------------End------------------------//
-
 
     /**
      * Handle Delete Shop Item
@@ -142,9 +133,7 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
     };
     //------------------------End------------------------//
 
-
     return (
-
         <div className="p-8 mt-24">
             <Card className="bg-card border-border">
                 <CardHeader>
@@ -156,7 +145,7 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
                             <div>
                                 <CardTitle className="text-foreground">{bannerDetail?.nameTranslation}</CardTitle>
                                 <div className="flex items-center gap-2 mt-2">
-                                    {getStatusBadge(bannerDetail?.status || '') as any}
+                                    {getStatusBadge(bannerDetail?.status || "") as any}
                                 </div>
                             </div>
                         </div>
@@ -170,7 +159,7 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
                                 className="bg-blue-500 text-white hover:bg-blue-600 border-blue-500"
                             >
                                 <Settings className="h-4 w-4 mr-2" />
-                                {t('common.edit')}
+                                {t("common.edit")}
                             </Button>
 
                             {/* Add Pokemon Buttons Group */}
@@ -180,14 +169,14 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
                                     onClick={handleAddRandomPokemon}
                                 >
                                     <Sparkles className="h-4 w-4 mr-2" />
-                                    {t('configShop.addRandomPokemon')}
+                                    {t("configShop.addRandomPokemon")}
                                 </Button>
                                 <Button
                                     className="bg-secondary text-white hover:bg-secondary/90"
                                     onClick={handleAddPokemonNotRandom}
                                 >
                                     <Plus className="h-4 w-4 mr-2" />
-                                    {t('configShop.addPokemonNotRandom')}
+                                    {t("configShop.addPokemonNotRandom")}
                                 </Button>
                             </div>
                         </div>
@@ -200,34 +189,46 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
                         <div>
                             <div className="flex items-center gap-2 mb-4">
                                 <Calendar className="h-5 w-5 text-muted-foreground" />
-                                <h3 className="text-base font-semibold text-foreground">{t('configShop.basicInfo')}</h3>
+                                <h3 className="text-base font-semibold text-foreground">{t("configShop.basicInfo")}</h3>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2 bg-muted/20 p-4 rounded-lg border border-border">
                                     <div className="flex items-center gap-2">
                                         <Calendar className="h-4 w-4 text-muted-foreground" />
-                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t('configShop.startDate')}</p>
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                            {t("configShop.startDate")}
+                                        </p>
                                     </div>
-                                    <p className="text-base font-semibold text-foreground">{formatDate(bannerDetail?.startDate || '')}</p>
+                                    <p className="text-base font-semibold text-foreground">
+                                        {formatDate(bannerDetail?.startDate || "")}
+                                    </p>
                                 </div>
                                 <div className="space-y-2 bg-muted/20 p-4 rounded-lg border border-border">
                                     <div className="flex items-center gap-2">
                                         <Calendar className="h-4 w-4 text-muted-foreground" />
-                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t('configShop.endDate')}</p>
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                            {t("configShop.endDate")}
+                                        </p>
                                     </div>
-                                    <p className="text-base font-semibold text-foreground">{formatDate(bannerDetail?.endDate || '')}</p>
+                                    <p className="text-base font-semibold text-foreground">
+                                        {formatDate(bannerDetail?.endDate || "")}
+                                    </p>
                                 </div>
                                 <div className="space-y-2 bg-muted/20 p-4 rounded-lg border border-border">
                                     <div className="flex items-center gap-2">
                                         <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t('configShop.minQuantity')}</p>
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                            {t("configShop.minQuantity")}
+                                        </p>
                                     </div>
                                     <p className="text-base font-semibold text-foreground">{bannerDetail?.min}</p>
                                 </div>
                                 <div className="space-y-2 bg-muted/20 p-4 rounded-lg border border-border">
                                     <div className="flex items-center gap-2">
                                         <Package className="h-4 w-4 text-muted-foreground" />
-                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t('configShop.maxQuantity')}</p>
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                            {t("configShop.maxQuantity")}
+                                        </p>
                                     </div>
                                     <p className="text-base font-semibold text-foreground">{bannerDetail?.max}</p>
                                 </div>
@@ -241,32 +242,48 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
                         <div>
                             <div className="flex items-center gap-2 mb-4">
                                 <Zap className="h-5 w-5 text-muted-foreground" />
-                                <h3 className="text-base font-semibold text-foreground">{t('configShop.autoPrecreateSettings')}</h3>
+                                <h3 className="text-base font-semibold text-foreground">
+                                    {t("configShop.autoPrecreateSettings")}
+                                </h3>
                             </div>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                                 <div className="space-y-2 bg-muted/20 p-4 rounded-lg border border-border">
                                     <div className="flex items-center gap-2">
                                         <Zap className="h-4 w-4 text-muted-foreground" />
-                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t('configShop.enablePrecreate')}</p>
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                            {t("configShop.enablePrecreate")}
+                                        </p>
                                     </div>
-                                    <Badge variant={bannerDetail?.enablePrecreate ? "default" : "outline"} className="mt-1">
-                                        {bannerDetail?.enablePrecreate ? t('common.active') : t('common.inactive')}
+                                    <Badge
+                                        variant={bannerDetail?.enablePrecreate ? "default" : "outline"}
+                                        className="mt-1"
+                                    >
+                                        {bannerDetail?.enablePrecreate ? t("common.active") : t("common.inactive")}
                                     </Badge>
                                 </div>
                                 <div className="space-y-2 bg-muted/20 p-4 rounded-lg border border-border">
                                     <div className="flex items-center gap-2">
                                         <Calendar className="h-4 w-4 text-muted-foreground" />
-                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t('configShop.precreateBeforeEndDays')}</p>
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                            {t("configShop.precreateBeforeEndDays")}
+                                        </p>
                                     </div>
-                                    <p className="text-base font-semibold text-foreground">{bannerDetail?.precreateBeforeEndDays} {t('configShop.days')}</p>
+                                    <p className="text-base font-semibold text-foreground">
+                                        {bannerDetail?.precreateBeforeEndDays} {t("configShop.days")}
+                                    </p>
                                 </div>
                                 <div className="space-y-2 bg-muted/20 p-4 rounded-lg border border-border">
                                     <div className="flex items-center gap-2">
                                         <Sparkles className="h-4 w-4 text-muted-foreground" />
-                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{t('configShop.isRandomItemAgain')}</p>
+                                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                                            {t("configShop.isRandomItemAgain")}
+                                        </p>
                                     </div>
-                                    <Badge variant={bannerDetail?.isRandomItemAgain ? "default" : "outline"} className="mt-1">
-                                        {bannerDetail?.isRandomItemAgain ? t('common.active') : t('common.inactive')}
+                                    <Badge
+                                        variant={bannerDetail?.isRandomItemAgain ? "default" : "outline"}
+                                        className="mt-1"
+                                    >
+                                        {bannerDetail?.isRandomItemAgain ? t("common.active") : t("common.inactive")}
                                     </Badge>
                                 </div>
                             </div>
@@ -278,7 +295,7 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
                         {/* Shop Items */}
                         <div>
                             <h3 className="text-lg font-semibold text-foreground mb-4">
-                                {t('configShop.pokemonInShop')} ({bannerDetail?.shopItems?.length || 0})
+                                {t("configShop.pokemonInShop")} ({bannerDetail?.shopItems?.length || 0})
                             </h3>
                             {bannerDetail?.shopItems && bannerDetail?.shopItems.length > 0 ? (
                                 <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
@@ -317,7 +334,9 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
                                                     </div>
 
                                                     <div>
-                                                        <CardTitle className="text-sm">{item.pokemon.nameTranslations.en}</CardTitle>
+                                                        <CardTitle className="text-sm">
+                                                            {item.pokemon.nameTranslations.en}
+                                                        </CardTitle>
                                                         <p className="text-xs text-muted-foreground mt-1">
                                                             Pokedex: {item.pokemon.pokedex_number}
                                                         </p>
@@ -327,19 +346,31 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
                                             <CardContent>
                                                 <div className="space-y-2 text-sm">
                                                     <div className="flex justify-between">
-                                                        <span className="text-muted-foreground">{t('configShop.price')}:</span>
+                                                        <span className="text-muted-foreground">
+                                                            {t("configShop.price")}:
+                                                        </span>
                                                         <div className="flex items-center gap-1">
-                                                            <span className="font-medium text-foreground">{item.price.toLocaleString()}</span>
+                                                            <span className="font-medium text-foreground">
+                                                                {item.price.toLocaleString()}
+                                                            </span>
                                                             <Sparkles className="w-4 h-4" />
                                                         </div>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className="text-muted-foreground">{t('configShop.purchaseLimit')}:</span>
-                                                        <span className="font-medium text-foreground">{item.purchaseLimit}</span>
+                                                        <span className="text-muted-foreground">
+                                                            {t("configShop.purchaseLimit")}:
+                                                        </span>
+                                                        <span className="font-medium text-foreground">
+                                                            {item.purchaseLimit}
+                                                        </span>
                                                     </div>
                                                     <div className="flex justify-between">
-                                                        <span className="text-muted-foreground">{t('configShop.purchasedCount')}:</span>
-                                                        <span className="font-medium text-foreground">{item.purchasedCount}</span>
+                                                        <span className="text-muted-foreground">
+                                                            {t("configShop.purchasedCount")}:
+                                                        </span>
+                                                        <span className="font-medium text-foreground">
+                                                            {item.purchasedCount}
+                                                        </span>
                                                     </div>
                                                     <div className="mt-2">
                                                         <RarityBadge level={item.pokemon.rarity as any} />
@@ -351,7 +382,7 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
                                 </div>
                             ) : (
                                 <div className="text-center text-muted-foreground py-8">
-                                    {t('configShop.noPokemonInShop')}
+                                    {t("configShop.noPokemonInShop")}
                                 </div>
                             )}
                         </div>
@@ -396,10 +427,7 @@ export default function ShopBannerDetailView({ bannerDetail }: { bannerDetail: I
             />
 
             {/* Delete Confirmation Dialog */}
-            <DeleteConfirmShopItem
-                itemIdToDelete={itemIdToDelete}
-                setItemIdToDelete={setItemIdToDelete}
-            />
+            <DeleteConfirmShopItem itemIdToDelete={itemIdToDelete} setItemIdToDelete={setItemIdToDelete} />
         </div>
     );
 }

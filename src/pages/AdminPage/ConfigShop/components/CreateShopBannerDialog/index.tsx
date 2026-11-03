@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
-import { Button } from '@ui/Button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@ui/Dialog';
-import { Input } from '@ui/Input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui/Select';
-import { Switch } from '@ui/Switch';
-import { Separator } from '@ui/Separator';
-import { Card } from '@ui/Card';
-import MultilingualInput from '@ui/MultilingualInput';
-import CustomDatePicker from '@ui/DatePicker';
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
-import { useCreateShopBanner } from '@hooks/useShop';
-import { createCreateShopBannerSchema, ICreateShopBannerRequest } from '@models/shop/request';
-import { useTranslation } from 'react-i18next';
+import { Button } from "@ui/Button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@ui/Dialog";
+import { Input } from "@ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import { Switch } from "@ui/Switch";
+import { Separator } from "@ui/Separator";
+import { Card } from "@ui/Card";
+import MultilingualInput from "@ui/MultilingualInput";
+import CustomDatePicker from "@ui/DatePicker";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useCreateShopBanner } from "@hooks/useShop";
+import { createCreateShopBannerSchema, ICreateShopBannerRequest } from "@models/shop/request";
+import { useTranslation } from "react-i18next";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SHOP } from '@constants/shop';
+import { SHOP } from "@constants/shop";
 
 interface CreateShopBannerDialogProps {
     isOpen: boolean;
@@ -70,8 +70,8 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
     const formatDateForForm = (date: Date | null) => {
         if (!date) return "";
         const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
         return `${year}-${month}-${day}`;
     };
 
@@ -105,24 +105,27 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
             await createShopBannerMutation.mutateAsync(data);
             onClose();
         } catch (error) {
-            console.error('Error creating shop banner:', error);
+            console.error("Error creating shop banner:", error);
         }
     };
     //-------------------End-------------------//
 
     return (
-        <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+        <Dialog
+            open={isOpen}
+            onOpenChange={(open) => {
+                if (!open) onClose();
+            }}
+        >
             <DialogContent className="bg-white border-border max-w-2xl sm:max-w-3xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle className="text-foreground">
-                        {t('configShop.createBannerTitle')}
-                    </DialogTitle>
+                    <DialogTitle className="text-foreground">{t("configShop.createBannerTitle")}</DialogTitle>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 py-4" noValidate>
                     {/* Multilingual Input */}
                     <MultilingualInput
-                        label={t('configShop.bannerName')}
+                        label={t("configShop.bannerName")}
                         fields={nameFields}
                         register={register}
                         errors={errors.nameTranslations}
@@ -135,7 +138,7 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
                             <label htmlFor="startDate" className="text-sm font-medium text-foreground">
-                                {t('configShop.startDate')}
+                                {t("configShop.startDate")}
                             </label>
                             <div>
                                 <CustomDatePicker
@@ -155,22 +158,23 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                                             clearErrors("endDate");
                                         }
                                     }}
-                                    placeholder={t('configShop.startDate')}
+                                    placeholder={t("configShop.startDate")}
                                     hasError={!!errors.startDate}
                                     dayPickerProps={{
-                                        disabled: { before: new Date() }
+                                        disabled: { before: new Date() },
                                     }}
                                 />
                             </div>
-                            <input
-                                type="hidden"
-                                {...register("startDate")}
-                            />
-                            {errors.startDate && <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{errors.startDate.message as string}</p>}
+                            <input type="hidden" {...register("startDate")} />
+                            {errors.startDate && (
+                                <p className="text-xs mt-1" style={{ color: "var(--color-error)" }}>
+                                    {errors.startDate.message as string}
+                                </p>
+                            )}
                         </div>
                         <div className="space-y-1.5">
                             <label htmlFor="endDate" className="text-sm font-medium text-foreground">
-                                {t('configShop.endDate')}
+                                {t("configShop.endDate")}
                             </label>
                             <div>
                                 <CustomDatePicker
@@ -182,18 +186,21 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                                             clearErrors("endDate");
                                         }
                                     }}
-                                    placeholder={t('configShop.endDate')}
+                                    placeholder={t("configShop.endDate")}
                                     hasError={!!errors.endDate}
                                     dayPickerProps={{
-                                        disabled: selectedStartDate ? { before: selectedStartDate } : { before: new Date() }
+                                        disabled: selectedStartDate
+                                            ? { before: selectedStartDate }
+                                            : { before: new Date() },
                                     }}
                                 />
                             </div>
-                            <input
-                                type="hidden"
-                                {...register("endDate")}
-                            />
-                            {errors.endDate && <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{errors.endDate.message as string}</p>}
+                            <input type="hidden" {...register("endDate")} />
+                            {errors.endDate && (
+                                <p className="text-xs mt-1" style={{ color: "var(--color-error)" }}>
+                                    {errors.endDate.message as string}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -201,7 +208,7 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
                             <label htmlFor="min" className="text-sm font-medium text-foreground">
-                                {t('configShop.minQuantity')}
+                                {t("configShop.minQuantity")}
                             </label>
                             <Controller
                                 name="min"
@@ -217,14 +224,18 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                                             min={4}
                                             max={7}
                                         />
-                                        {errors.min && <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{errors.min.message as string}</p>}
+                                        {errors.min && (
+                                            <p className="text-xs mt-1" style={{ color: "var(--color-error)" }}>
+                                                {errors.min.message as string}
+                                            </p>
+                                        )}
                                     </>
                                 )}
                             />
                         </div>
                         <div className="space-y-1.5">
                             <label htmlFor="max" className="text-sm font-medium text-foreground">
-                                {t('configShop.maxQuantity')}
+                                {t("configShop.maxQuantity")}
                             </label>
                             <Controller
                                 name="max"
@@ -240,7 +251,11 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                                             min={5}
                                             max={8}
                                         />
-                                        {errors.max && <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{errors.max.message as string}</p>}
+                                        {errors.max && (
+                                            <p className="text-xs mt-1" style={{ color: "var(--color-error)" }}>
+                                                {errors.max.message as string}
+                                            </p>
+                                        )}
                                     </>
                                 )}
                             />
@@ -250,7 +265,7 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                     {/* Status */}
                     <div className="space-y-1.5">
                         <label htmlFor="status" className="text-sm font-medium text-foreground">
-                            {t('configShop.status')}
+                            {t("configShop.status")}
                         </label>
                         <Controller
                             name="status"
@@ -261,10 +276,18 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent className="bg-card border-border">
-                                        <SelectItem value={SHOP.ShopBannerStatus.PREVIEW}>{t('configShop.preview')}</SelectItem>
-                                        <SelectItem value={SHOP.ShopBannerStatus.ACTIVE}>{t('common.active')}</SelectItem>
-                                        <SelectItem value={SHOP.ShopBannerStatus.INACTIVE}>{t('common.inactive')}</SelectItem>
-                                        <SelectItem value={SHOP.ShopBannerStatus.EXPIRED}>{t('configShop.expired')}</SelectItem>
+                                        <SelectItem value={SHOP.ShopBannerStatus.PREVIEW}>
+                                            {t("configShop.preview")}
+                                        </SelectItem>
+                                        <SelectItem value={SHOP.ShopBannerStatus.ACTIVE}>
+                                            {t("common.active")}
+                                        </SelectItem>
+                                        <SelectItem value={SHOP.ShopBannerStatus.INACTIVE}>
+                                            {t("common.inactive")}
+                                        </SelectItem>
+                                        <SelectItem value={SHOP.ShopBannerStatus.EXPIRED}>
+                                            {t("configShop.expired")}
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                             )}
@@ -278,10 +301,10 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                     <div className="space-y-4">
                         <div>
                             <h3 className="text-sm font-semibold text-foreground mb-1">
-                                {t('configShop.autoPrecreateSettings')}
+                                {t("configShop.autoPrecreateSettings")}
                             </h3>
                             <p className="text-xs text-muted-foreground italic">
-                                {t('configShop.autoPrecreateSettingsDescription')}
+                                {t("configShop.autoPrecreateSettingsDescription")}
                             </p>
                         </div>
 
@@ -290,29 +313,29 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                             <div className="flex items-center justify-between">
                                 <div>
                                     <label htmlFor="enablePrecreate" className="text-sm font-medium text-foreground">
-                                        {t('configShop.enablePrecreate')}
+                                        {t("configShop.enablePrecreate")}
                                     </label>
                                     <p className="text-xs text-muted-foreground mt-0.5 italic">
-                                        {t('configShop.enablePrecreateDescription')}
+                                        {t("configShop.enablePrecreateDescription")}
                                     </p>
                                 </div>
                                 <Controller
                                     name="enablePrecreate"
                                     control={control}
                                     render={({ field }) => (
-                                        <Switch
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
                                     )}
                                 />
                             </div>
 
                             {/* Precreate Before End Days */}
-                            {watch('enablePrecreate') && (
+                            {watch("enablePrecreate") && (
                                 <div className="space-y-1.5 pt-2 border-t border-border">
-                                    <label htmlFor="precreateBeforeEndDays" className="text-sm font-medium text-foreground">
-                                        {t('configShop.precreateBeforeEndDays')}
+                                    <label
+                                        htmlFor="precreateBeforeEndDays"
+                                        className="text-sm font-medium text-foreground"
+                                    >
+                                        {t("configShop.precreateBeforeEndDays")}
                                     </label>
                                     <Controller
                                         name="precreateBeforeEndDays"
@@ -328,9 +351,13 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                                                     min={1}
                                                     max={7}
                                                 />
-                                                {errors.precreateBeforeEndDays && <p className="text-xs mt-1" style={{ color: 'var(--color-error)' }}>{errors.precreateBeforeEndDays.message as string}</p>}
+                                                {errors.precreateBeforeEndDays && (
+                                                    <p className="text-xs mt-1" style={{ color: "var(--color-error)" }}>
+                                                        {errors.precreateBeforeEndDays.message as string}
+                                                    </p>
+                                                )}
                                                 <p className="text-xs text-muted-foreground italic">
-                                                    {t('configShop.precreateBeforeEndDaysDescription')}
+                                                    {t("configShop.precreateBeforeEndDaysDescription")}
                                                 </p>
                                             </>
                                         )}
@@ -339,24 +366,24 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
                             )}
 
                             {/* Is Random Item Again */}
-                            {watch('enablePrecreate') && (
+                            {watch("enablePrecreate") && (
                                 <div className="flex items-center justify-between pt-2 border-t border-border">
                                     <div>
-                                        <label htmlFor="isRandomItemAgain" className="text-sm font-medium text-foreground">
-                                            {t('configShop.isRandomItemAgain')}
+                                        <label
+                                            htmlFor="isRandomItemAgain"
+                                            className="text-sm font-medium text-foreground"
+                                        >
+                                            {t("configShop.isRandomItemAgain")}
                                         </label>
                                         <p className="text-xs text-muted-foreground mt-0.5 italic">
-                                            {t('configShop.isRandomItemAgainDescription')}
+                                            {t("configShop.isRandomItemAgainDescription")}
                                         </p>
                                     </div>
                                     <Controller
                                         name="isRandomItemAgain"
                                         control={control}
                                         render={({ field }) => (
-                                            <Switch
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
                                         )}
                                     />
                                 </div>
@@ -366,10 +393,14 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
 
                     <DialogFooter className="mt-6 pt-4 border-t border-border">
                         <Button type="button" variant="outline" onClick={onClose}>
-                            {t('common.cancel')}
+                            {t("common.cancel")}
                         </Button>
-                        <Button type="submit" disabled={createShopBannerMutation.isPending} className="bg-primary text-primary-foreground hover:bg-primary/90">
-                            {createShopBannerMutation.isPending ? t('configShop.creating') : t('common.create')}
+                        <Button
+                            type="submit"
+                            disabled={createShopBannerMutation.isPending}
+                            className="bg-primary text-primary-foreground hover:bg-primary/90"
+                        >
+                            {createShopBannerMutation.isPending ? t("configShop.creating") : t("common.create")}
                         </Button>
                     </DialogFooter>
                 </form>
@@ -379,4 +410,3 @@ const CreateShopBannerDialog = ({ isOpen, onClose }: CreateShopBannerDialogProps
 };
 
 export default CreateShopBannerDialog;
-

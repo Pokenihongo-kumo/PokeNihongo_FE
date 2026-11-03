@@ -1,7 +1,6 @@
-
-import HeaderAdmin from "@organisms/Header/Admin"
-import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card"
-import { TrendingUp, Users, BookOpen, Award, ArrowUp, ArrowDown } from "lucide-react"
+import HeaderAdmin from "@organisms/Header/Admin";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card";
+import { TrendingUp, Users, BookOpen, Award, ArrowUp, ArrowDown } from "lucide-react";
 import {
     LineChart,
     Line,
@@ -16,7 +15,7 @@ import {
     Tooltip,
     Legend,
     ResponsiveContainer,
-} from "recharts"
+} from "recharts";
 
 const AnalyticsDashboard = () => {
     // Mock data for charts
@@ -27,7 +26,7 @@ const AnalyticsDashboard = () => {
         { month: "T4", users: 1890 },
         { month: "T5", users: 2100 },
         { month: "T6", users: 2543 },
-    ]
+    ];
 
     const lessonCompletionData = [
         { lesson: "Hiragana", completed: 1250, inProgress: 320 },
@@ -35,7 +34,7 @@ const AnalyticsDashboard = () => {
         { lesson: "Kanji N5", completed: 2100, inProgress: 450 },
         { lesson: "Ngữ pháp", completed: 1680, inProgress: 380 },
         { lesson: "Hội thoại", completed: 1450, inProgress: 290 },
-    ]
+    ];
 
     const levelDistributionData = [
         { name: "N5", value: 1200, color: "hsl(var(--chart-1))" },
@@ -43,7 +42,7 @@ const AnalyticsDashboard = () => {
         { name: "N3", value: 380, color: "hsl(var(--chart-3))" },
         { name: "N2", value: 90, color: "hsl(var(--chart-4))" },
         { name: "N1", value: 23, color: "hsl(var(--chart-5))" },
-    ]
+    ];
 
     const activityData = [
         { day: "T2", active: 450 },
@@ -53,7 +52,7 @@ const AnalyticsDashboard = () => {
         { day: "T6", active: 720 },
         { day: "T7", active: 892 },
         { day: "CN", active: 680 },
-    ]
+    ];
 
     return (
         <div className="p-8">
@@ -82,7 +81,9 @@ const AnalyticsDashboard = () => {
                 <Card className="bg-card border-border">
                     <CardHeader className="pb-2">
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">Bài học hoàn thành</CardTitle>
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                Bài học hoàn thành
+                            </CardTitle>
                             <BookOpen className="h-4 w-4 text-chart-2" />
                         </div>
                     </CardHeader>
@@ -99,7 +100,9 @@ const AnalyticsDashboard = () => {
                 <Card className="bg-card border-border">
                     <CardHeader className="pb-2">
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">Tỷ lệ hoàn thành</CardTitle>
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                Tỷ lệ hoàn thành
+                            </CardTitle>
                             <Award className="h-4 w-4 text-chart-3" />
                         </div>
                     </CardHeader>
@@ -116,7 +119,9 @@ const AnalyticsDashboard = () => {
                 <Card className="bg-card border-border">
                     <CardHeader className="pb-2">
                         <div className="flex items-center justify-between">
-                            <CardTitle className="text-sm font-medium text-muted-foreground">Hoạt động hôm nay</CardTitle>
+                            <CardTitle className="text-sm font-medium text-muted-foreground">
+                                Hoạt động hôm nay
+                            </CardTitle>
                             <TrendingUp className="h-4 w-4 text-chart-4" />
                         </div>
                     </CardHeader>
@@ -316,7 +321,7 @@ const AnalyticsDashboard = () => {
                 </Card>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default AnalyticsDashboard
+export default AnalyticsDashboard;

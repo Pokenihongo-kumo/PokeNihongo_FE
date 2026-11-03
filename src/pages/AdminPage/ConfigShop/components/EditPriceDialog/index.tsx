@@ -35,7 +35,7 @@ export default function EditPriceDialog({
     pokemonId,
     purchaseLimit,
     isActive,
-    pokemon
+    pokemon,
 }: EditPriceDialogProps) {
     const { t } = useTranslation();
     const [price, setPrice] = useState<string>("");
@@ -55,23 +55,23 @@ export default function EditPriceDialog({
 
         const priceNum = parseFloat(price);
         if (!price || isNaN(priceNum)) {
-            setError(t('configShop.priceRequired'));
+            setError(t("configShop.priceRequired"));
             return;
         }
 
         if (priceNum < 0) {
-            setError(t('configShop.priceMinError'));
+            setError(t("configShop.priceMinError"));
             return;
         }
 
         if (priceNum > 1000000) {
-            setError(t('configShop.priceMaxError'));
+            setError(t("configShop.priceMaxError"));
             return;
         }
 
         updatePrice({
             id: itemId,
-            data: { shopBannerId, pokemonId, price: priceNum, purchaseLimit, isActive }
+            data: { shopBannerId, pokemonId, price: priceNum, purchaseLimit, isActive },
         });
     };
 
@@ -84,10 +84,8 @@ export default function EditPriceDialog({
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[600px] bg-white">
                 <DialogHeader>
-                    <DialogTitle className="text-xl font-semibold">{t('configShop.editPrice')}</DialogTitle>
-                    <DialogDescription>
-                        {t('configShop.editPriceDescription')}
-                    </DialogDescription>
+                    <DialogTitle className="text-xl font-semibold">{t("configShop.editPrice")}</DialogTitle>
+                    <DialogDescription>{t("configShop.editPriceDescription")}</DialogDescription>
                 </DialogHeader>
 
                 <div className="space-y-6 py-4">
@@ -119,21 +117,31 @@ export default function EditPriceDialog({
                     <div className="space-y-4">
                         <div className="bg-muted/50 p-4 rounded-lg">
                             <div className="flex justify-between items-center mb-2">
-                                <span className="text-sm font-medium text-muted-foreground">{t('configShop.currentPrice')}:</span>
+                                <span className="text-sm font-medium text-muted-foreground">
+                                    {t("configShop.currentPrice")}:
+                                </span>
                                 <div className="flex items-center gap-1">
-                                    <span className="text-lg font-bold text-foreground">{currentPrice.toLocaleString()}</span>
+                                    <span className="text-lg font-bold text-foreground">
+                                        {currentPrice.toLocaleString()}
+                                    </span>
                                     <Sparkles className="w-4 h-4" />
                                 </div>
                             </div>
                             <div className="flex justify-between items-center">
-                                <span className="text-sm font-medium text-muted-foreground">{t('configShop.newPrice')}:</span>
+                                <span className="text-sm font-medium text-muted-foreground">
+                                    {t("configShop.newPrice")}:
+                                </span>
                                 <div className="flex items-center gap-1">
-                                    <span className="text-lg font-bold text-primary">{newPrice.toLocaleString()} đ</span>
+                                    <span className="text-lg font-bold text-primary">
+                                        {newPrice.toLocaleString()} đ
+                                    </span>
                                     <Sparkles className="w-4 h-4" />
                                 </div>
                             </div>
                             {price && !isNaN(parseFloat(price)) && (
-                                <div className={`mt-2 flex items-center gap-1 text-sm font-medium ${priceDiff !== 0 ? (priceDiff > 0 ? 'text-green-500' : 'text-red-500') : ''}`}>
+                                <div
+                                    className={`mt-2 flex items-center gap-1 text-sm font-medium ${priceDiff !== 0 ? (priceDiff > 0 ? "text-green-500" : "text-red-500") : ""}`}
+                                >
                                     {priceDiff > 0 && (
                                         <>
                                             <span>+{priceDiff.toLocaleString()}</span>
@@ -146,13 +154,15 @@ export default function EditPriceDialog({
                                             <Sparkles className="w-4 h-4" />
                                         </>
                                     )}
-                                    {priceDiff === 0 && t('configShop.noChange')}
+                                    {priceDiff === 0 && t("configShop.noChange")}
                                 </div>
                             )}
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="price" className="text-sm font-medium">{t('configShop.enterNewPrice')}</label>
+                            <label htmlFor="price" className="text-sm font-medium">
+                                {t("configShop.enterNewPrice")}
+                            </label>
                             <Input
                                 id="price"
                                 type="number"
@@ -161,7 +171,7 @@ export default function EditPriceDialog({
                                     setPrice(e.target.value);
                                     if (error) setError("");
                                 }}
-                                placeholder={t('configShop.enterPrice')}
+                                placeholder={t("configShop.enterPrice")}
                                 disabled={isPending}
                                 min="0"
                                 max="1000000"
@@ -169,22 +179,16 @@ export default function EditPriceDialog({
                                 className="text-lg"
                             />
                             <p className="text-xs text-muted-foreground mt-1">
-                                {t('configShop.priceRange')}: 0 - 1.000.000 đ
+                                {t("configShop.priceRange")}: 0 - 1.000.000 đ
                             </p>
-                            {error && (
-                                <p className="text-sm text-error">{error}</p>
-                            )}
+                            {error && <p className="text-sm text-error">{error}</p>}
                         </div>
                     </div>
 
                     {/* Action Buttons */}
                     <div className="flex justify-end gap-2 pt-2">
-                        <Button
-                            variant="outline"
-                            onClick={onClose}
-                            disabled={isPending}
-                        >
-                            {t('common.cancel')}
+                        <Button variant="outline" onClick={onClose} disabled={isPending}>
+                            {t("common.cancel")}
                         </Button>
                         <Button
                             onClick={handleSubmit}
@@ -192,7 +196,7 @@ export default function EditPriceDialog({
                             className="min-w-[100px]"
                         >
                             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                            {t('common.save')}
+                            {t("common.save")}
                         </Button>
                     </div>
                 </div>

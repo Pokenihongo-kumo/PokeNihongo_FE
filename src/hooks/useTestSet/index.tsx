@@ -2,13 +2,15 @@ import { useState, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import testSetService from "@services/testSet";
-import { TestSetListRequest, TestSetCreateRequest, TestSetQuestionBankLinkMultipleRequest, TestSetUpsertWithQuestionBanksRequest } from "@models/testSet/request";
+import {
+    TestSetListRequest,
+    TestSetCreateRequest,
+    TestSetQuestionBankLinkMultipleRequest,
+    TestSetUpsertWithQuestionBanksRequest,
+} from "@models/testSet/request";
 import { selectCurrentLanguage } from "@redux/features/language/selector";
 import { useSelector } from "react-redux";
 import { getApiErrorMessage } from "@utils/api-error";
-
-
-
 
 /**
  * Hook for managing TestSet list with filters and pagination
@@ -16,29 +18,29 @@ import { getApiErrorMessage } from "@utils/api-error";
  * @returns { data, isLoading, error, pagination }
  */
 export const useTestSetList = (
-  filters: TestSetListRequest,
-  options?: { enabled?: boolean; forceKey?: number; refetchOnMount?: 'always' | boolean }
+    filters: TestSetListRequest,
+    options?: { enabled?: boolean; forceKey?: number; refetchOnMount?: "always" | boolean },
 ) => {
-  const language = useSelector(selectCurrentLanguage);
+    const language = useSelector(selectCurrentLanguage);
 
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["testset-list", filters, language, options?.forceKey],
-    queryFn: () => testSetService.getTestSets(filters),
-    enabled: options?.enabled ?? true,
-    refetchOnMount: options?.refetchOnMount ?? 'always',
-  });
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["testset-list", filters, language, options?.forceKey],
+        queryFn: () => testSetService.getTestSets(filters),
+        enabled: options?.enabled ?? true,
+        refetchOnMount: options?.refetchOnMount ?? "always",
+    });
 
-  return {
-    data: data?.data?.results || [],
-    pagination: data?.data?.pagination || {
-      current: 1,
-      pageSize: 15,
-      totalPage: 1,
-      totalItem: 0,
-    },
-    isLoading,
-    error,
-  };
+    return {
+        data: data?.data?.results || [],
+        pagination: data?.data?.pagination || {
+            current: 1,
+            pageSize: 15,
+            totalPage: 1,
+            totalItem: 0,
+        },
+        isLoading,
+        error,
+    };
 };
 
 /**
@@ -46,99 +48,99 @@ export const useTestSetList = (
  * @returns { testSets, isLoading, error, pagination, filters, setFilters, refetch }
  */
 export const useTestSet = () => {
-  const [filters, setFilters] = useState<TestSetListRequest>({
-    currentPage: 1,
-    pageSize: 15,
-  });
-
-  const { data: testSets, pagination, isLoading, error } = useTestSetList(filters);
-
-  const handleSetFilters = useCallback((newFilters: Partial<TestSetListRequest>) => {
-    setFilters(prev => ({
-      ...prev,
-      ...newFilters,
-      currentPage: 1, // Reset to first page when filters change
-    }));
-  }, []);
-
-  const handlePageChange = useCallback((page: number) => {
-    setFilters(prev => ({
-      ...prev,
-      currentPage: page,
-    }));
-  }, []);
-
-  const handlePageSizeChange = useCallback((pageSize: number) => {
-    setFilters(prev => ({
-      ...prev,
-      pageSize,
-      currentPage: 1, // Reset to first page when page size changes
-    }));
-  }, []);
-
-  const handleSearch = useCallback((search: string) => {
-    setFilters(prev => ({
-      ...prev,
-      search: search || undefined,
-      currentPage: 1,
-    }));
-  }, []);
-
-  const handleFilterByLevel = useCallback((levelN: number | undefined) => {
-    setFilters(prev => ({
-      ...prev,
-      levelN,
-      currentPage: 1,
-    }));
-  }, []);
-
-  const handleFilterByTestType = useCallback((testType: TestSetListRequest['testType']) => {
-    setFilters(prev => ({
-      ...prev,
-      testType,
-      currentPage: 1,
-    }));
-  }, []);
-
-  const handleFilterByStatus = useCallback((status: TestSetListRequest['status']) => {
-    setFilters(prev => ({
-      ...prev,
-      status,
-      currentPage: 1,
-    }));
-  }, []);
-
-  const handleFilterByCreator = useCallback((creatorId: number | undefined) => {
-    setFilters(prev => ({
-      ...prev,
-      creatorId,
-      currentPage: 1,
-    }));
-  }, []);
-
-  const clearFilters = useCallback(() => {
-    setFilters({
-      currentPage: 1,
-      pageSize: 15,
+    const [filters, setFilters] = useState<TestSetListRequest>({
+        currentPage: 1,
+        pageSize: 15,
     });
-  }, []);
 
-  return {
-    testSets,
-    pagination,
-    isLoading,
-    error,
-    filters,
-    setFilters: handleSetFilters,
-    handlePageChange,
-    handlePageSizeChange,
-    handleSearch,
-    handleFilterByLevel,
-    handleFilterByTestType,
-    handleFilterByStatus,
-    handleFilterByCreator,
-    clearFilters,
-  };
+    const { data: testSets, pagination, isLoading, error } = useTestSetList(filters);
+
+    const handleSetFilters = useCallback((newFilters: Partial<TestSetListRequest>) => {
+        setFilters((prev) => ({
+            ...prev,
+            ...newFilters,
+            currentPage: 1, // Reset to first page when filters change
+        }));
+    }, []);
+
+    const handlePageChange = useCallback((page: number) => {
+        setFilters((prev) => ({
+            ...prev,
+            currentPage: page,
+        }));
+    }, []);
+
+    const handlePageSizeChange = useCallback((pageSize: number) => {
+        setFilters((prev) => ({
+            ...prev,
+            pageSize,
+            currentPage: 1, // Reset to first page when page size changes
+        }));
+    }, []);
+
+    const handleSearch = useCallback((search: string) => {
+        setFilters((prev) => ({
+            ...prev,
+            search: search || undefined,
+            currentPage: 1,
+        }));
+    }, []);
+
+    const handleFilterByLevel = useCallback((levelN: number | undefined) => {
+        setFilters((prev) => ({
+            ...prev,
+            levelN,
+            currentPage: 1,
+        }));
+    }, []);
+
+    const handleFilterByTestType = useCallback((testType: TestSetListRequest["testType"]) => {
+        setFilters((prev) => ({
+            ...prev,
+            testType,
+            currentPage: 1,
+        }));
+    }, []);
+
+    const handleFilterByStatus = useCallback((status: TestSetListRequest["status"]) => {
+        setFilters((prev) => ({
+            ...prev,
+            status,
+            currentPage: 1,
+        }));
+    }, []);
+
+    const handleFilterByCreator = useCallback((creatorId: number | undefined) => {
+        setFilters((prev) => ({
+            ...prev,
+            creatorId,
+            currentPage: 1,
+        }));
+    }, []);
+
+    const clearFilters = useCallback(() => {
+        setFilters({
+            currentPage: 1,
+            pageSize: 15,
+        });
+    }, []);
+
+    return {
+        testSets,
+        pagination,
+        isLoading,
+        error,
+        filters,
+        setFilters: handleSetFilters,
+        handlePageChange,
+        handlePageSizeChange,
+        handleSearch,
+        handleFilterByLevel,
+        handleFilterByTestType,
+        handleFilterByStatus,
+        handleFilterByCreator,
+        clearFilters,
+    };
 };
 
 /**
@@ -146,21 +148,20 @@ export const useTestSet = () => {
  * @returns mutation object with createTestSet function
  */
 export const useCreateTestSet = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const createTestSetMutation = useMutation({
-    mutationFn: (data: TestSetCreateRequest) =>
-      testSetService.createTestSetWithMeanings(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["testset-list"] });
-    },
-    onError: (error: unknown) => {
-      console.error("Error creating test set:", error);
-      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo test set"));
-    },
-  });
+    const createTestSetMutation = useMutation({
+        mutationFn: (data: TestSetCreateRequest) => testSetService.createTestSetWithMeanings(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["testset-list"] });
+        },
+        onError: (error: unknown) => {
+            console.error("Error creating test set:", error);
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo test set"));
+        },
+    });
 
-  return createTestSetMutation;
+    return createTestSetMutation;
 };
 
 /**
@@ -168,26 +169,21 @@ export const useCreateTestSet = () => {
  * @returns mutation object with updateTestSet function
  */
 export const useUpdateTestSet = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const updateTestSetMutation = useMutation({
-    mutationFn: ({
-      id,
-      data,
-    }: {
-      id: number;
-      data: Partial<TestSetCreateRequest>;
-    }) => testSetService.updateTestSet(id, data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["testset-list"] });
-    },
-    onError: (error: unknown) => {
-      console.error("Error updating test set:", error);
-      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật test set"));
-    },
-  });
+    const updateTestSetMutation = useMutation({
+        mutationFn: ({ id, data }: { id: number; data: Partial<TestSetCreateRequest> }) =>
+            testSetService.updateTestSet(id, data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["testset-list"] });
+        },
+        onError: (error: unknown) => {
+            console.error("Error updating test set:", error);
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật test set"));
+        },
+    });
 
-  return updateTestSetMutation;
+    return updateTestSetMutation;
 };
 
 /**
@@ -195,25 +191,22 @@ export const useUpdateTestSet = () => {
  * @returns mutation object with linkQuestionBanks function
  */
 export const useLinkQuestionBanksToTestSet = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const linkQuestionBanksMutation = useMutation({
-    mutationFn: (data: TestSetQuestionBankLinkMultipleRequest) =>
-      testSetService.linkQuestionBanksMultiple(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["question-bank-list"] });
-      queryClient.invalidateQueries({ queryKey: ["testset-list"] });
-      queryClient.invalidateQueries({ queryKey: ["testset-linked-question-banks"] });
-    },
-    onError: (error: unknown) => {
-      console.error("Error linking question banks:", error);
-      toast.error(
-        getApiErrorMessage(error, "Có lỗi xảy ra khi liên kết câu hỏi")
-      );
-    },
-  });
+    const linkQuestionBanksMutation = useMutation({
+        mutationFn: (data: TestSetQuestionBankLinkMultipleRequest) => testSetService.linkQuestionBanksMultiple(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["question-bank-list"] });
+            queryClient.invalidateQueries({ queryKey: ["testset-list"] });
+            queryClient.invalidateQueries({ queryKey: ["testset-linked-question-banks"] });
+        },
+        onError: (error: unknown) => {
+            console.error("Error linking question banks:", error);
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi liên kết câu hỏi"));
+        },
+    });
 
-  return linkQuestionBanksMutation;
+    return linkQuestionBanksMutation;
 };
 
 /**
@@ -222,21 +215,18 @@ export const useLinkQuestionBanksToTestSet = () => {
  * @param options { enabled?: boolean }
  * @returns { data, isLoading, error }
  */
-export const useGetLinkedQuestionBanksByTestSet = (
-  testSetId: number | null,
-  options?: { enabled?: boolean }
-) => {
-  const { data, isLoading, error } = useQuery({
-    queryKey: ["testset-linked-question-banks", testSetId],
-    queryFn: () => testSetService.getLinkedQuestionBanksByTestSet(testSetId!),
-    enabled: (options?.enabled ?? true) && testSetId !== null,
-  });
+export const useGetLinkedQuestionBanksByTestSet = (testSetId: number | null, options?: { enabled?: boolean }) => {
+    const { data, isLoading, error } = useQuery({
+        queryKey: ["testset-linked-question-banks", testSetId],
+        queryFn: () => testSetService.getLinkedQuestionBanksByTestSet(testSetId!),
+        enabled: (options?.enabled ?? true) && testSetId !== null,
+    });
 
-  return {
-    data: data || [],
-    isLoading,
-    error,
-  };
+    return {
+        data: data || [],
+        isLoading,
+        error,
+    };
 };
 
 /**
@@ -244,25 +234,22 @@ export const useGetLinkedQuestionBanksByTestSet = (
  * @returns mutation object with deleteLinkedQuestionBanks function
  */
 export const useDeleteLinkedQuestionBanksFromTestSet = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const deleteLinkedQuestionBanksMutation = useMutation({
-    mutationFn: (ids: number[]) =>
-      testSetService.deleteLinkedQuestionBanksMany(ids),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["testset-linked-question-banks"] });
-      queryClient.invalidateQueries({ queryKey: ["question-bank-list"] });
-      queryClient.invalidateQueries({ queryKey: ["testset-list"] });
-    },
-    onError: (error: unknown) => {
-      console.error("Error deleting linked question banks:", error);
-      toast.error(
-        getApiErrorMessage(error, "Có lỗi xảy ra khi xóa câu hỏi")
-      );
-    },
-  });
+    const deleteLinkedQuestionBanksMutation = useMutation({
+        mutationFn: (ids: number[]) => testSetService.deleteLinkedQuestionBanksMany(ids),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["testset-linked-question-banks"] });
+            queryClient.invalidateQueries({ queryKey: ["question-bank-list"] });
+            queryClient.invalidateQueries({ queryKey: ["testset-list"] });
+        },
+        onError: (error: unknown) => {
+            console.error("Error deleting linked question banks:", error);
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi xóa câu hỏi"));
+        },
+    });
 
-  return deleteLinkedQuestionBanksMutation;
+    return deleteLinkedQuestionBanksMutation;
 };
 
 /**
@@ -270,22 +257,22 @@ export const useDeleteLinkedQuestionBanksFromTestSet = () => {
  * @returns mutation object with upsertTestSetWithQuestionBanks function
  */
 export const useUpsertTestSetWithQuestionBanks = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const upsertMutation = useMutation({
-    mutationFn: (data: TestSetUpsertWithQuestionBanksRequest) =>
-      testSetService.upsertTestSetWithQuestionBanks(data),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["testset-list"] });
-      queryClient.invalidateQueries({ queryKey: ["testset-linked-question-banks"] });
-    },
-    onError: (error: unknown) => {
-      console.error("Error upserting test set with question banks:", error);
-      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi lưu test set"));
-    },
-  });
+    const upsertMutation = useMutation({
+        mutationFn: (data: TestSetUpsertWithQuestionBanksRequest) =>
+            testSetService.upsertTestSetWithQuestionBanks(data),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["testset-list"] });
+            queryClient.invalidateQueries({ queryKey: ["testset-linked-question-banks"] });
+        },
+        onError: (error: unknown) => {
+            console.error("Error upserting test set with question banks:", error);
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi lưu test set"));
+        },
+    });
 
-  return upsertMutation;
+    return upsertMutation;
 };
 
 /**
@@ -293,21 +280,19 @@ export const useUpsertTestSetWithQuestionBanks = () => {
  * @returns mutation object with deleteTestSet function
  */
 export const useDeleteTestSet = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const deleteTestSetMutation = useMutation({
-    mutationFn: (id: number) => testSetService.deleteTestSet(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["testset-list"] });
-      queryClient.invalidateQueries({ queryKey: ["testset-linked-question-banks"] });
-    },
-    onError: (error: unknown) => {
-      console.error("Error deleting test set:", error);
-      toast.error(
-        getApiErrorMessage(error, "Có lỗi xảy ra khi xóa test set")
-      );
-    },
-  });
+    const deleteTestSetMutation = useMutation({
+        mutationFn: (id: number) => testSetService.deleteTestSet(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ["testset-list"] });
+            queryClient.invalidateQueries({ queryKey: ["testset-linked-question-banks"] });
+        },
+        onError: (error: unknown) => {
+            console.error("Error deleting test set:", error);
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi xóa test set"));
+        },
+    });
 
-  return deleteTestSetMutation;
+    return deleteTestSetMutation;
 };

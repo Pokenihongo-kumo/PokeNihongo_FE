@@ -18,7 +18,7 @@ const SortableTableHeader = ({
     currentSort,
     onSort,
     sortable = true,
-    className = "text-muted-foreground"
+    className = "text-muted-foreground",
 }: SortableTableHeaderProps) => {
     const isActive = currentSortBy === sortKey;
     const isAsc = currentSort === "asc";
@@ -35,11 +35,7 @@ const SortableTableHeader = ({
         }
 
         if (isActive) {
-            return isAsc ? (
-                <ChevronUp className="w-4 h-4" />
-            ) : (
-                <ChevronDown className="w-4 h-4" />
-            );
+            return isAsc ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />;
         }
 
         return <ChevronsUpDown className="w-4 h-4 text-gray-400" />;
@@ -53,9 +49,7 @@ const SortableTableHeader = ({
                     onClick={handleClick}
                 >
                     {title}
-                    <span className="inline-block w-4 h-4">
-                        {renderSortIcon()}
-                    </span>
+                    <span className="inline-block w-4 h-4">{renderSortIcon()}</span>
                 </button>
             </TableHead>
         );
@@ -65,9 +59,7 @@ const SortableTableHeader = ({
         <TableHead className={className}>
             <span className="inline-flex items-center gap-1">
                 {title}
-                <span className="inline-block w-4 h-4">
-                    {renderSortIcon()}
-                </span>
+                <span className="inline-block w-4 h-4">{renderSortIcon()}</span>
             </span>
         </TableHead>
     );

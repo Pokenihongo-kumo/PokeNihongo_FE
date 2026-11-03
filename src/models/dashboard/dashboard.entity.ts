@@ -24,7 +24,6 @@ export const DashboardJlptDistributionEntitySchema = z.object({
 export type IDashboardJlptDistributionEntity = z.infer<typeof DashboardJlptDistributionEntitySchema>;
 //------------------End------------------//
 
-
 /**
  * Dashboard User Activation Entity Schema
  */
@@ -53,7 +52,6 @@ export const DashboardUserActivationEntitySchema = z.object({
 export type IDashboardUserActivationEntity = z.infer<typeof DashboardUserActivationEntitySchema>;
 //------------------End------------------//
 
-
 /**
  * Dashboard User Growth Active User Entity Schema
  */
@@ -64,7 +62,6 @@ export const DashboardUserGrowthActiveUserEntitySchema = z.object({
 
 export type IDashboardUserGrowthActiveUserEntity = z.infer<typeof DashboardUserGrowthActiveUserEntitySchema>;
 //------------------End------------------//
-
 
 /**
  * Dashboard User Growth New User Entity Schema
@@ -77,7 +74,6 @@ export const DashboardUserGrowthNewUserEntitySchema = z.object({
 export type IDashboardUserGrowthNewUserEntity = z.infer<typeof DashboardUserGrowthNewUserEntitySchema>;
 //------------------End------------------//
 
-
 /**
  * Dashboard User Growth Total User Entity Schema
  */
@@ -88,22 +84,22 @@ export const DashboardUserGrowthTotalUserEntitySchema = z.object({
 export type IDashboardUserGrowthTotalUserEntity = z.infer<typeof DashboardUserGrowthTotalUserEntitySchema>;
 //------------------End------------------//
 
-
 /**
  * Dashboard Engagement Popular Content Entity Schema
  */
 export const DashboardEngagementPopularContentEntitySchema = z.object({
-    topContent: z.array(z.object({
-        lessonId: z.number(),
-        titleKey: z.string(),
-        titleJp: z.string(),
-        titleTranslation: z.string(),
-        completedCount: z.number(),
-    })),
+    topContent: z.array(
+        z.object({
+            lessonId: z.number(),
+            titleKey: z.string(),
+            titleJp: z.string(),
+            titleTranslation: z.string(),
+            completedCount: z.number(),
+        }),
+    ),
 });
 export type IDashboardEngagementPopularContentEntity = z.infer<typeof DashboardEngagementPopularContentEntitySchema>;
 //------------------End------------------//
-
 
 /**
  * Dashboard Engagement Sparkles Accumulation Entity Schema
@@ -132,11 +128,12 @@ export const DashboardEngagementSparklesAccumulationEntitySchema = z.object({
         }),
     }),
     totalUsers: z.number(),
-    averageSparkles: z.number()
+    averageSparkles: z.number(),
 });
-export type IDashboardEngagementSparklesAccumulationEntity = z.infer<typeof DashboardEngagementSparklesAccumulationEntitySchema>;
+export type IDashboardEngagementSparklesAccumulationEntity = z.infer<
+    typeof DashboardEngagementSparklesAccumulationEntitySchema
+>;
 //------------------End------------------//
-
 
 //TODO: Dashboard Engagement Battle Activity Entity Schema
 
@@ -144,23 +141,26 @@ export type IDashboardEngagementSparklesAccumulationEntity = z.infer<typeof Dash
  * Dashboard Engagement Starter Pokemon Distribution Entity Schema
  */
 export const DashboardEngagementStarterPokemonDistributionEntitySchema = z.object({
-    starters: z.array(z.object({
-        pokemonId: z.number(),
-        nameJp: z.string(),
-        nameTranslations: z.object({
-            en: z.string(),
-            ja: z.string(),
-            vi: z.string(),
+    starters: z.array(
+        z.object({
+            pokemonId: z.number(),
+            nameJp: z.string(),
+            nameTranslations: z.object({
+                en: z.string(),
+                ja: z.string(),
+                vi: z.string(),
+            }),
+            imageUrl: z.string().url(),
+            count: z.number(),
+            percent: z.coerce.number(),
         }),
-        imageUrl: z.string().url(),
-        count: z.number(),
-        percent: z.coerce.number(),
-    })),
+    ),
     totalCount: z.number(),
 });
-export type IDashboardEngagementStarterPokemonDistributionEntity = z.infer<typeof DashboardEngagementStarterPokemonDistributionEntitySchema>;
+export type IDashboardEngagementStarterPokemonDistributionEntity = z.infer<
+    typeof DashboardEngagementStarterPokemonDistributionEntitySchema
+>;
 //------------------End------------------//
-
 
 /**
  * Dashboard Engagement Streak Relention Entity Schema
@@ -179,25 +179,27 @@ export const DashboardEngagementStreakRelentionEntitySchema = z.object({
 export type IDashboardEngagementStreakRelentionEntity = z.infer<typeof DashboardEngagementStreakRelentionEntitySchema>;
 //------------------End------------------//
 
-
 /**
  * Dashboard Content Performance Complete Rate Entity Schema
  */
 export const DashboardContentPerformanceCompleteRateEntitySchema = z.object({
-    lessonCompletionRates: z.array(z.object({
-        lessonId: z.number(),
-        titleKey: z.string(),
-        titleJp: z.string(),
-        titleTranslation: z.string(),
-        totalAttempts: z.number(),
-        completedCount: z.number(),
-        completionRate: z.coerce.number(),
-    })),
+    lessonCompletionRates: z.array(
+        z.object({
+            lessonId: z.number(),
+            titleKey: z.string(),
+            titleJp: z.string(),
+            titleTranslation: z.string(),
+            totalAttempts: z.number(),
+            completedCount: z.number(),
+            completionRate: z.coerce.number(),
+        }),
+    ),
 });
 
-export type IDashboardContentPerformanceCompleteRateEntity = z.infer<typeof DashboardContentPerformanceCompleteRateEntitySchema>;
+export type IDashboardContentPerformanceCompleteRateEntity = z.infer<
+    typeof DashboardContentPerformanceCompleteRateEntitySchema
+>;
 //------------------End------------------//
-
 
 /**
  * Dashboard Gacha Stats Overview Entity Schema
@@ -211,17 +213,18 @@ export const DashboardGachaStatsOverviewEntitySchema = z.object({
         totalRolls: z.number(),
         totalFiveStar: z.number(),
         fiveStarRate: z.coerce.number(),
-        starDistribution: z.array(z.object({
-            star: z.string(),
-            count: z.number(),
-            percentage: z.coerce.number(),
-        })),
+        starDistribution: z.array(
+            z.object({
+                star: z.string(),
+                count: z.number(),
+                percentage: z.coerce.number(),
+            }),
+        ),
     }),
 });
 
 export type IDashboardGachaStatsOverviewEntity = z.infer<typeof DashboardGachaStatsOverviewEntitySchema>;
 //------------------End------------------//
-
 
 /**
  * Dashboard Gacha Stats Detail Entity Schema
@@ -230,10 +233,12 @@ export const DashboardGachaStatsDetailEntitySchema = z.object({
     id: z.number(),
     nameKey: z.string(),
     nameTranslation: z.string(),
-    nameTranslations: z.array(z.object({
-        key: z.string(),
-        value: z.string(),
-    })),
+    nameTranslations: z.array(
+        z.object({
+            key: z.string(),
+            value: z.string(),
+        }),
+    ),
     status: z.string(),
     startDate: z.string(),
     endDate: z.string(),
@@ -241,18 +246,22 @@ export const DashboardGachaStatsDetailEntitySchema = z.object({
     costRoll: z.number(),
     totalPurchases: z.number(),
     totalRolls: z.number(),
-    starDistribution: z.array(z.object({
-        star: z.string(),
-        count: z.number(),
-        percentage: z.coerce.number(),
-    })),
-    items: z.array(z.object({
-        pokemonId: z.number(),
-        pokemonName: z.string(),
-        rarity: z.string(),
-        starType: z.string(),
-        rate: z.coerce.number(),
-    })),
+    starDistribution: z.array(
+        z.object({
+            star: z.string(),
+            count: z.number(),
+            percentage: z.coerce.number(),
+        }),
+    ),
+    items: z.array(
+        z.object({
+            pokemonId: z.number(),
+            pokemonName: z.string(),
+            rarity: z.string(),
+            starType: z.string(),
+            rate: z.coerce.number(),
+        }),
+    ),
 });
 
 export type IDashboardGachaStatsDetailEntity = z.infer<typeof DashboardGachaStatsDetailEntitySchema>;

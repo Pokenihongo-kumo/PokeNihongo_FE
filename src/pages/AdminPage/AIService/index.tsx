@@ -30,10 +30,7 @@ const AIServiceManagement: React.FC = () => {
 
     return (
         <>
-            <HeaderAdmin
-                title={t("aiService.title")}
-                description={t("aiService.description")}
-            />
+            <HeaderAdmin title={t("aiService.title")} description={t("aiService.description")} />
 
             <div className="p-8 mt-24 space-y-8">
                 <Card className="bg-gradient-to-br from-card via-card to-card/95 border-border shadow-md">
@@ -76,9 +73,7 @@ const AIServiceManagement: React.FC = () => {
                                 <div className="p-3 bg-destructive/10 rounded-full mb-4">
                                     <Settings className="w-8 h-8 text-destructive" />
                                 </div>
-                                <p className="text-destructive font-medium text-lg">
-                                    {t("common.error")}
-                                </p>
+                                <p className="text-destructive font-medium text-lg">{t("common.error")}</p>
                             </div>
                         ) : !serviceConfigs || serviceConfigs.length === 0 ? (
                             <div className="flex flex-col items-center justify-center py-16">
@@ -107,13 +102,14 @@ const AIServiceManagement: React.FC = () => {
                                                             >
                                                                 {t("aiService.columns.id")}: {config.id}
                                                             </Badge>
-                                                            <Badge
-                                                                className={getStatusBadgeColor(config.isActive)}
-                                                            >
+                                                            <Badge className={getStatusBadgeColor(config.isActive)}>
                                                                 {getStatusLabel(config.isActive)}
                                                             </Badge>
                                                             {config.isDefault && (
-                                                                <Badge variant="outline" className="bg-blue-500/80 text-blue-600 border-blue-500/80">
+                                                                <Badge
+                                                                    variant="outline"
+                                                                    className="bg-blue-500/80 text-blue-600 border-blue-500/80"
+                                                                >
                                                                     {t("aiService.isDefault")}
                                                                 </Badge>
                                                             )}
@@ -175,14 +171,10 @@ const AIServiceManagement: React.FC = () => {
                     onSuccess={handleCreateSuccess}
                 />
 
-                <DeleteConfirmAIService
-                    configIdToDelete={configIdToDelete}
-                    setConfigIdToDelete={setConfigIdToDelete}
-                />
+                <DeleteConfirmAIService configIdToDelete={configIdToDelete} setConfigIdToDelete={setConfigIdToDelete} />
             </div>
         </>
     );
 };
 
 export default AIServiceManagement;
-

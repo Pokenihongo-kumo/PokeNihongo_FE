@@ -10,7 +10,7 @@ interface FilterOption {
 
 interface FilterableTableHeaderProps {
     title: string;
-    filterType?: 'select' | 'input' | 'none';
+    filterType?: "select" | "input" | "none";
     filterOptions?: FilterOption[];
     filterValue?: string;
     onFilterChange?: (value: string) => void;
@@ -26,9 +26,9 @@ interface FilterableTableHeaderProps {
 
 const FilterableTableHeader = ({
     title,
-    filterType = 'none',
+    filterType = "none",
     filterOptions = [],
-    filterValue = '',
+    filterValue = "",
     onFilterChange,
     placeholder,
     className = "text-muted-foreground",
@@ -36,7 +36,7 @@ const FilterableTableHeader = ({
     sortKey,
     currentSortBy,
     currentSort,
-    onSort
+    onSort,
 }: FilterableTableHeaderProps) => {
     const renderSortIcon = () => {
         if (!sortable) {
@@ -47,11 +47,7 @@ const FilterableTableHeader = ({
         const isAsc = currentSort === "asc";
 
         if (isActive) {
-            return isAsc ? (
-                <ChevronUp className="w-4 h-4" />
-            ) : (
-                <ChevronDown className="w-4 h-4" />
-            );
+            return isAsc ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />;
         }
 
         return <ChevronsUpDown className="w-4 h-4 text-gray-400" />;
@@ -64,7 +60,7 @@ const FilterableTableHeader = ({
     };
 
     const renderFilter = () => {
-        if (filterType === 'select' && filterOptions.length > 0) {
+        if (filterType === "select" && filterOptions.length > 0) {
             return (
                 <Select value={filterValue} onValueChange={onFilterChange}>
                     <SelectTrigger className="w-full h-8 bg-background border-border text-foreground text-xs">
@@ -83,7 +79,7 @@ const FilterableTableHeader = ({
             );
         }
 
-        if (filterType === 'input') {
+        if (filterType === "input") {
             return (
                 <Input
                     value={filterValue}
@@ -107,19 +103,13 @@ const FilterableTableHeader = ({
                             onClick={handleSortClick}
                         >
                             {title}
-                            <span className="inline-block w-4 h-4">
-                                {renderSortIcon()}
-                            </span>
+                            <span className="inline-block w-4 h-4">{renderSortIcon()}</span>
                         </button>
                     ) : (
                         <span className="text-sm font-medium">{title}</span>
                     )}
                 </div>
-                {filterType !== 'none' && (
-                    <div className="w-full">
-                        {renderFilter()}
-                    </div>
-                )}
+                {filterType !== "none" && <div className="w-full">{renderFilter()}</div>}
             </div>
         </TableHead>
     );

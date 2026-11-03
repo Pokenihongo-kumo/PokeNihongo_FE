@@ -35,7 +35,7 @@ const MultilingualInput: React.FC<MultilingualInputProps> = ({
     requiredKey,
     isTextarea = false,
     className = "",
-    fieldName = "name"
+    fieldName = "name",
 }) => {
     const { t } = useTranslation();
 
@@ -46,19 +46,26 @@ const MultilingualInput: React.FC<MultilingualInputProps> = ({
 
     return (
         <div className={cn("space-y-1.5", className)}>
-            <label className={cn("text-sm font-medium text-foreground", errors && "text-destructive")}>
-                {label}
-            </label>
+            <label className={cn("text-sm font-medium text-foreground", errors && "text-destructive")}>{label}</label>
             <Tabs defaultValue="vi" className="w-full">
                 <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="vi" className={`${errors?.[2]?.value ? "border-error focus-visible:ring-destructive" : ""}`}>
-                        {t('dailyQuest.languages.vi')}
+                    <TabsTrigger
+                        value="vi"
+                        className={`${errors?.[2]?.value ? "border-error focus-visible:ring-destructive" : ""}`}
+                    >
+                        {t("dailyQuest.languages.vi")}
                     </TabsTrigger>
-                    <TabsTrigger value="en" className={`${errors?.[0]?.value ? "border-error focus-visible:ring-destructive" : ""}`}>
-                        {t('dailyQuest.languages.en')}
+                    <TabsTrigger
+                        value="en"
+                        className={`${errors?.[0]?.value ? "border-error focus-visible:ring-destructive" : ""}`}
+                    >
+                        {t("dailyQuest.languages.en")}
                     </TabsTrigger>
-                    <TabsTrigger value="ja" className={`${errors?.[1]?.value ? "border-error focus-visible:ring-destructive" : ""}`}>
-                        {t('dailyQuest.languages.ja')}
+                    <TabsTrigger
+                        value="ja"
+                        className={`${errors?.[1]?.value ? "border-error focus-visible:ring-destructive" : ""}`}
+                    >
+                        {t("dailyQuest.languages.ja")}
                     </TabsTrigger>
                 </TabsList>
                 {fields.map((field, index) => (
@@ -68,36 +75,44 @@ const MultilingualInput: React.FC<MultilingualInputProps> = ({
                                 placeholder={t(placeholderKey, { lang: field.key.toUpperCase() })}
                                 variant={errors?.[index]?.value ? "destructive" : "default"}
                                 {...register(`${fieldName}Translations.${index}.value` as const, {
-                                    required: field.key === 'vi'
-                                        ? t(requiredKey || 'common.required')
-                                        : field.key === 'en'
-                                            ? t(`${requiredKey?.replace('Vi', 'En')}` || 'common.required')
-                                            : t(`${requiredKey?.replace('Vi', 'Ja')}` || 'common.required'),
+                                    required:
+                                        field.key === "vi"
+                                            ? t(requiredKey || "common.required")
+                                            : field.key === "en"
+                                              ? t(`${requiredKey?.replace("Vi", "En")}` || "common.required")
+                                              : t(`${requiredKey?.replace("Vi", "Ja")}` || "common.required"),
                                 })}
                             />
                         ) : (
                             <InputComponent
                                 placeholder={t(placeholderKey, { lang: field.key.toUpperCase() })}
                                 value={values?.[`name${field.key.charAt(0).toUpperCase() + field.key.slice(1)}`] || ""}
-                                onChange={(e) => onChange?.(`name${field.key.charAt(0).toUpperCase() + field.key.slice(1)}`, e.target.value)}
-                                variant={errors?.[`name${field.key.charAt(0).toUpperCase() + field.key.slice(1)}`] ? "destructive" : "default"}
+                                onChange={(e) =>
+                                    onChange?.(
+                                        `name${field.key.charAt(0).toUpperCase() + field.key.slice(1)}`,
+                                        e.target.value,
+                                    )
+                                }
+                                variant={
+                                    errors?.[`name${field.key.charAt(0).toUpperCase() + field.key.slice(1)}`]
+                                        ? "destructive"
+                                        : "default"
+                                }
                             />
                         )}
-                        {isReactHookForm ? (
-                            errors?.[index]?.value && (
-                                <p className="text-xs text-error mt-1">
-                                    {typeof errors[index]?.value?.message === "string"
-                                        ? t(errors[index]?.value?.message as string)
-                                        : errors[index]?.value?.message}
-                                </p>
-                            )
-                        ) : (
-                            errors?.[`name${field.key.charAt(0).toUpperCase() + field.key.slice(1)}`] && (
-                                <p className="text-xs text-error mt-1">
-                                    {errors[`name${field.key.charAt(0).toUpperCase() + field.key.slice(1)}`]}
-                                </p>
-                            )
-                        )}
+                        {isReactHookForm
+                            ? errors?.[index]?.value && (
+                                  <p className="text-xs text-error mt-1">
+                                      {typeof errors[index]?.value?.message === "string"
+                                          ? t(errors[index]?.value?.message as string)
+                                          : errors[index]?.value?.message}
+                                  </p>
+                              )
+                            : errors?.[`name${field.key.charAt(0).toUpperCase() + field.key.slice(1)}`] && (
+                                  <p className="text-xs text-error mt-1">
+                                      {errors[`name${field.key.charAt(0).toUpperCase() + field.key.slice(1)}`]}
+                                  </p>
+                              )}
                         {isReactHookForm && (
                             <input type="hidden" {...register(`${fieldName}Translations.${index}.key` as const)} />
                         )}
@@ -109,18 +124,18 @@ const MultilingualInput: React.FC<MultilingualInputProps> = ({
                     {(() => {
                         const missingLanguages: string[] = [];
                         errors.forEach((error: any, index: number) => {
-                            if (error?.value?.type === 'required') {
+                            if (error?.value?.type === "required") {
                                 const languageKey = fields[index]?.key;
-                                if (languageKey === 'vi') missingLanguages.push(t('reward.languageVi'));
-                                else if (languageKey === 'en') missingLanguages.push(t('reward.languageEn'));
-                                else if (languageKey === 'ja') missingLanguages.push(t('reward.languageJa'));
+                                if (languageKey === "vi") missingLanguages.push(t("reward.languageVi"));
+                                else if (languageKey === "en") missingLanguages.push(t("reward.languageEn"));
+                                else if (languageKey === "ja") missingLanguages.push(t("reward.languageJa"));
                             }
                         });
 
                         if (missingLanguages.length > 0) {
                             return (
                                 <p className="font-medium">
-                                    {t('reward.missingLanguages')}: {missingLanguages.join(', ')}
+                                    {t("reward.missingLanguages")}: {missingLanguages.join(", ")}
                                 </p>
                             );
                         }

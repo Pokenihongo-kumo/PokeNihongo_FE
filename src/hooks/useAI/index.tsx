@@ -1,4 +1,9 @@
-import { ICreateGeminiConfigModelsRequest, ICreateServiceConfigRequest, IUpdateGeminiConfigPromptsRequest, IUpdateModelConfigsPolicySchemaRequest } from "@models/ai/request";
+import {
+    ICreateGeminiConfigModelsRequest,
+    ICreateServiceConfigRequest,
+    IUpdateGeminiConfigPromptsRequest,
+    IUpdateModelConfigsPolicySchemaRequest,
+} from "@models/ai/request";
 import { IQueryRequest } from "@models/common/request";
 import { selectCurrentLanguage } from "@redux/features/language/selector";
 import geminiService from "@services/ai";
@@ -10,33 +15,31 @@ import { useTranslation } from "react-i18next";
 //--------------------------------------Config Prompts--------------------------------------//
 /**
  * Handle Gemini Config Prompts
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export const useConfigPromptsCustom = (params: IQueryRequest) => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['gemini-config-prompts', params],
+        queryKey: ["gemini-config-prompts", params],
         queryFn: () => geminiService.getConfigCustomPrompts(params),
     });
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //-----------------------End-----------------------//
-
 
 /**
  * Handle Get Config Custom Prompts By Id
- * @param id 
- * @returns 
+ * @param id
+ * @returns
  */
 export const useGetConfigCustomPromptsById = (id: number) => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['gemini-config-prompts-by-id', id],
+        queryKey: ["gemini-config-prompts-by-id", id],
         queryFn: () => geminiService.getConfigCustomPromptsById(id),
     });
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //-----------------------End-----------------------//
-
 
 /**
  * Handle Create Config Custom Prompts
@@ -46,17 +49,16 @@ export const useCreateConfigCustomPrompts = () => {
     const createConfigCustomPromptsMutation = useMutation({
         mutationFn: (data: IUpdateGeminiConfigPromptsRequest) => geminiService.createConfigCustomPrompts(data),
         onSuccess: (data: any) => {
-            queryClient.invalidateQueries({ queryKey: ['gemini-config-prompts'], refetchType: 'all' });
-            toast.success(data?.message || 'Tạo config custom prompts thành công');
+            queryClient.invalidateQueries({ queryKey: ["gemini-config-prompts"], refetchType: "all" });
+            toast.success(data?.message || "Tạo config custom prompts thành công");
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi tạo config custom prompts');
+            toast.error(error?.response?.data?.message || "Có lỗi xảy ra khi tạo config custom prompts");
         },
     });
     return createConfigCustomPromptsMutation;
-}
+};
 //-----------------------End-----------------------//
-
 
 /**
  * Handle Update Config Custom Prompts
@@ -64,20 +66,20 @@ export const useCreateConfigCustomPrompts = () => {
 export const useUpdateConfigCustomPrompts = () => {
     const queryClient = useQueryClient();
     const updateConfigCustomPromptsMutation = useMutation({
-        mutationFn: ({ id, data }: { id: number; data: IUpdateGeminiConfigPromptsRequest }) => geminiService.updateConfigCustomPrompts(id, data),
+        mutationFn: ({ id, data }: { id: number; data: IUpdateGeminiConfigPromptsRequest }) =>
+            geminiService.updateConfigCustomPrompts(id, data),
         onSuccess: (data: any, variables: any) => {
-            queryClient.invalidateQueries({ queryKey: ['gemini-config-prompts'], refetchType: 'all' });
-            queryClient.invalidateQueries({ queryKey: ['gemini-config-prompts-by-id', variables.id] });
-            toast.success(data?.message || 'Cập nhật config custom prompts thành công');
+            queryClient.invalidateQueries({ queryKey: ["gemini-config-prompts"], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["gemini-config-prompts-by-id", variables.id] });
+            toast.success(data?.message || "Cập nhật config custom prompts thành công");
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi cập nhật config custom prompts');
+            toast.error(error?.response?.data?.message || "Có lỗi xảy ra khi cập nhật config custom prompts");
         },
     });
     return updateConfigCustomPromptsMutation;
-}
+};
 //-----------------------End-----------------------//
-
 
 /**
  * Handle Delete Config Custom Prompts
@@ -87,54 +89,46 @@ export const useDeleteConfigCustomPrompts = () => {
     const deleteConfigCustomPromptsMutation = useMutation({
         mutationFn: (id: number) => geminiService.deleteConfigCustomPrompts(id),
         onSuccess: (data: any, variables: any) => {
-            queryClient.invalidateQueries({ queryKey: ['gemini-config-prompts'], refetchType: 'all' });
-            queryClient.invalidateQueries({ queryKey: ['gemini-config-prompts-by-id', variables.id] });
-            toast.success(data?.message || 'Xóa config custom prompts thành công');
+            queryClient.invalidateQueries({ queryKey: ["gemini-config-prompts"], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["gemini-config-prompts-by-id", variables.id] });
+            toast.success(data?.message || "Xóa config custom prompts thành công");
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi xóa config custom prompts');
+            toast.error(error?.response?.data?.message || "Có lỗi xảy ra khi xóa config custom prompts");
         },
     });
     return deleteConfigCustomPromptsMutation;
-}
+};
 //-----------------------End-----------------------//
 //---------------------------------------------End Config Prompts---------------------------------------------//
-
-
-
-
-
-
 
 //--------------------------------------Custom AI--------------------------------------//
 /**
  * Handle Get Config Models
- * @returns 
+ * @returns
  */
 export const useGetAIConfigModels = (params: IQueryRequest) => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['gemini-config-models', params],
+        queryKey: ["gemini-config-models", params],
         queryFn: () => geminiService.getConfigModels(params),
     });
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //-----------------------End-----------------------//
-
 
 /**
  * Handle Get Config Model By Id
- * @param id 
- * @returns 
+ * @param id
+ * @returns
  */
 export const useGetAIConfigModelById = (id: number) => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['gemini-config-model-by-id', id],
+        queryKey: ["gemini-config-model-by-id", id],
         queryFn: () => geminiService.getConfigModelById(id),
     });
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //-----------------------End-----------------------//
-
 
 /**
  * Handle Create Gemini Config Models
@@ -144,17 +138,16 @@ export const useCreateAIGeminiConfigModels = () => {
     const createGeminiConfigModelsMutation = useMutation({
         mutationFn: (data: ICreateGeminiConfigModelsRequest) => geminiService.createGeminiConfigModels(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['gemini-config-models'], refetchType: 'all' });
-            toast.success('Tạo model thành công');
+            queryClient.invalidateQueries({ queryKey: ["gemini-config-models"], refetchType: "all" });
+            toast.success("Tạo model thành công");
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi tạo model Gemini');
+            toast.error(error?.response?.data?.message || "Có lỗi xảy ra khi tạo model Gemini");
         },
     });
     return createGeminiConfigModelsMutation;
-}
+};
 //-----------------------End-----------------------//
-
 
 /**
  * Handle Delete AI Config Model
@@ -164,104 +157,81 @@ export const useDeleteAIConfigModel = () => {
     const deleteConfigModelMutation = useMutation({
         mutationFn: (id: number) => geminiService.deleteConfigModel(id),
         onSuccess: (data: any, variables: any) => {
-            queryClient.invalidateQueries({ queryKey: ['gemini-config-models'], refetchType: 'all' });
-            queryClient.invalidateQueries({ queryKey: ['gemini-config-model-by-id', variables.id] });
-            queryClient.invalidateQueries({ queryKey: ['gemini-config-prompts'], refetchType: 'all' });
-            toast.success(data?.message || 'Xóa model thành công');
+            queryClient.invalidateQueries({ queryKey: ["gemini-config-models"], refetchType: "all" });
+            queryClient.invalidateQueries({ queryKey: ["gemini-config-model-by-id", variables.id] });
+            queryClient.invalidateQueries({ queryKey: ["gemini-config-prompts"], refetchType: "all" });
+            toast.success(data?.message || "Xóa model thành công");
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi xóa model');
+            toast.error(error?.response?.data?.message || "Có lỗi xảy ra khi xóa model");
         },
     });
     return deleteConfigModelMutation;
-}
+};
 //-----------------------End-----------------------//
 //---------------------------------------------End Custom AI---------------------------------------------//
-
-
-
-
-
-
-
-
 
 //--------------------------------------Gemini Models--------------------------------------//
 /**
  * Handle Get Gemini Models
- * @returns 
+ * @returns
  */
 export const useGetAIGeminiModels = () => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['gemini-models'],
+        queryKey: ["gemini-models"],
         queryFn: () => geminiService.getGeminiModels(),
     });
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //-----------------------End-----------------------//
 //---------------------------------------------End Gemini Models---------------------------------------------//
-
-
-
-
-
-
-
 
 //--------------------------------------Config Presets--------------------------------------//
 /**
  * Handle Get Config Presets
- * @returns 
+ * @returns
  */
 export const useGetAIGeminiConfigPresets = () => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['gemini-config-presets'],
+        queryKey: ["gemini-config-presets"],
         queryFn: () => geminiService.getConfigPresets(),
     });
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //-----------------------End-----------------------//
 //---------------------------------------------End Config Presets---------------------------------------------//
-
-
-
-
-
-
 
 //--------------------------------------Model Configs Policy Schema--------------------------------------//
 /**
  * Handle Get Model Configs Policy Schema
- * @returns 
+ * @returns
  */
 export const useGetAIModelConfigPolicySchema = (q?: string) => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['gemini-model-configs-policy-schema', q],
+        queryKey: ["gemini-model-configs-policy-schema", q],
         queryFn: () => geminiService.getModelConfigsPolicySchema(q),
     });
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //-----------------------End-----------------------//
-
 
 /**
  * Handle Get Model Configs Policy Schema Fields
- * @param entities 
- * @returns 
+ * @param entities
+ * @returns
  */
 export const useGetAIModelConfigPolicySchemaFields = (entities: string[]) => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['gemini-model-configs-policy-schema-fields', entities],
+        queryKey: ["gemini-model-configs-policy-schema-fields", entities],
         queryFn: async () => {
-            const response = await geminiService.getModelConfigsPolicySchemaFields(entities)
-            return response
+            const response = await geminiService.getModelConfigsPolicySchemaFields(entities);
+            return response;
         },
         enabled: entities.length > 0,
     });
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //-----------------------End-----------------------//
-
 
 /**
  * Handle Update Model Configs Policy Schema
@@ -272,33 +242,31 @@ export const useUpdateModelConfigsPolicySchema = () => {
         mutationFn: ({ modelId, data }: { modelId: number; data: IUpdateModelConfigsPolicySchemaRequest }) =>
             geminiService.updateModelConfigsPolicySchema(modelId, data),
         onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({ queryKey: ['gemini-config-model-by-id', variables.modelId] });
-            toast.success('Cập nhật policy schema thành công');
+            queryClient.invalidateQueries({ queryKey: ["gemini-config-model-by-id", variables.modelId] });
+            toast.success("Cập nhật policy schema thành công");
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || 'Có lỗi xảy ra khi cập nhật policy schema');
+            toast.error(error?.response?.data?.message || "Có lỗi xảy ra khi cập nhật policy schema");
         },
     });
     return mutation;
-}
+};
 //-----------------------End-----------------------//
 //---------------------------------------------End Model Configs Policy Schema---------------------------------------------//
-
-
 
 //--------------------------------------Service Config--------------------------------------//
 /**
  * Handle Get Service Configs
- * @returns 
+ * @returns
  */
 export const useGetServiceConfigs = () => {
     const language = useSelector(selectCurrentLanguage);
     const { data, isLoading, error } = useQuery({
-        queryKey: ['gemini-service-configs', language],
+        queryKey: ["gemini-service-configs", language],
         queryFn: () => geminiService.getServiceConfigs(),
     });
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //-----------------------End-----------------------//s
 
 /**
@@ -310,17 +278,16 @@ export const useCreateServiceConfig = () => {
     const createServiceConfigMutation = useMutation({
         mutationFn: (data: ICreateServiceConfigRequest) => geminiService.createServiceConfig(data),
         onSuccess: (data: any) => {
-            queryClient.invalidateQueries({ queryKey: ['gemini-service-configs'] });
-            toast.success(data?.message || t('aiService.createSuccess'));
+            queryClient.invalidateQueries({ queryKey: ["gemini-service-configs"] });
+            toast.success(data?.message || t("aiService.createSuccess"));
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || t('aiService.createError'));
+            toast.error(error?.response?.data?.message || t("aiService.createError"));
         },
     });
     return createServiceConfigMutation;
-}
+};
 //-----------------------End-----------------------//
-
 
 /**
  * Handle Delete Service Config
@@ -332,14 +299,14 @@ export const useDeleteServiceConfig = () => {
     const deleteServiceConfigMutation = useMutation({
         mutationFn: (id: number) => geminiService.deleteServiceConfig(id),
         onSuccess: (data: any, variables: any) => {
-            queryClient.invalidateQueries({ queryKey: ['gemini-service-configs'] });
-            queryClient.invalidateQueries({ queryKey: ['gemini-service-configs-by-id', variables.id] });
-            toast.success(data?.message || t('aiService.deleteSuccess'));
+            queryClient.invalidateQueries({ queryKey: ["gemini-service-configs"] });
+            queryClient.invalidateQueries({ queryKey: ["gemini-service-configs-by-id", variables.id] });
+            toast.success(data?.message || t("aiService.deleteSuccess"));
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || t('aiService.deleteError'));
+            toast.error(error?.response?.data?.message || t("aiService.deleteError"));
         },
     });
     return deleteServiceConfigMutation;
-}
+};
 //---------------------------------------------End Service Config---------------------------------------------//

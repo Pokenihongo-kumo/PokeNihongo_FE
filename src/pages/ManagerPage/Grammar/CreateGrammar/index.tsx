@@ -79,12 +79,16 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
         try {
             // Filter bỏ các item có explanation hoặc example rỗng
             const validUsageItems = values.translations.usage.filter(
-                (item) => item.explanation.trim() !== "" && item.example.trim() !== ""
+                (item) => item.explanation.trim() !== "" && item.example.trim() !== "",
             );
 
             // Kiểm tra có ít nhất 1 item hợp lệ
             if (validUsageItems.length === 0) {
-                toast.error(t("createGrammar.error.noValidTranslation", { defaultValue: "Vui lòng điền ít nhất một bản dịch hợp lệ" }));
+                toast.error(
+                    t("createGrammar.error.noValidTranslation", {
+                        defaultValue: "Vui lòng điền ít nhất một bản dịch hợp lệ",
+                    }),
+                );
                 return;
             }
 
@@ -161,7 +165,9 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
                                     {errors.structure ? (
                                         <p className="text-sm text-destructive">{errors.structure.message as string}</p>
                                     ) : (
-                                        <p className="text-xs text-muted-foreground">{t("createGrammar.structureHint")}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            {t("createGrammar.structureHint")}
+                                        </p>
                                     )}
                                 </div>
 
@@ -176,7 +182,9 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
                                             render={({ field }) => (
                                                 <Select value={field.value} onValueChange={field.onChange}>
                                                     <SelectTrigger aria-invalid={Boolean(errors.level)}>
-                                                        <SelectValue placeholder={t("createGrammar.levelPlaceholder")} />
+                                                        <SelectValue
+                                                            placeholder={t("createGrammar.levelPlaceholder")}
+                                                        />
                                                     </SelectTrigger>
                                                     <SelectContent>
                                                         {LEVEL_OPTIONS.map((level) => (
@@ -191,7 +199,9 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
                                         {errors.level ? (
                                             <p className="text-sm text-destructive">{errors.level.message as string}</p>
                                         ) : (
-                                            <p className="text-xs text-muted-foreground">{t("createGrammar.levelHint")}</p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {t("createGrammar.levelHint")}
+                                            </p>
                                         )}
                                     </div>
 
@@ -210,7 +220,9 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
                                                 {errors.usage.exampleSentenceJp.message as string}
                                             </p>
                                         ) : (
-                                            <p className="text-xs text-muted-foreground">{t("createGrammar.exampleHint")}</p>
+                                            <p className="text-xs text-muted-foreground">
+                                                {t("createGrammar.exampleHint")}
+                                            </p>
                                         )}
                                     </div>
                                 </div>
@@ -235,14 +247,20 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
                                         t("createGrammar.languagePlaceholder");
 
                                     return (
-                                        <AccordionItem key={field.id} value={field.id} className="border border-border/70 rounded-lg px-2">
+                                        <AccordionItem
+                                            key={field.id}
+                                            value={field.id}
+                                            className="border border-border/70 rounded-lg px-2"
+                                        >
                                             <AccordionTrigger className="flex w-full items-center justify-between gap-4 px-2 py-3 text-left">
                                                 <div className="flex items-center gap-3">
                                                     <Badge variant="secondary" className="uppercase tracking-wide">
                                                         {currentLanguage.toString().toUpperCase()}
                                                     </Badge>
                                                     <span className="text-sm font-medium text-foreground">
-                                                        {t("createGrammar.translationPanelTitle", { language: currentLanguage.toString().toUpperCase() })}
+                                                        {t("createGrammar.translationPanelTitle", {
+                                                            language: currentLanguage.toString().toUpperCase(),
+                                                        })}
                                                     </span>
                                                 </div>
                                             </AccordionTrigger>
@@ -256,13 +274,28 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
                                                             control={control}
                                                             name={`translations.usage.${index}.language_code`}
                                                             render={({ field }) => (
-                                                                <Select value={field.value} onValueChange={field.onChange}>
-                                                                    <SelectTrigger aria-invalid={Boolean(errors.translations?.usage?.[index]?.language_code)}>
-                                                                        <SelectValue placeholder={t("createGrammar.languagePlaceholder")} />
+                                                                <Select
+                                                                    value={field.value}
+                                                                    onValueChange={field.onChange}
+                                                                >
+                                                                    <SelectTrigger
+                                                                        aria-invalid={Boolean(
+                                                                            errors.translations?.usage?.[index]
+                                                                                ?.language_code,
+                                                                        )}
+                                                                    >
+                                                                        <SelectValue
+                                                                            placeholder={t(
+                                                                                "createGrammar.languagePlaceholder",
+                                                                            )}
+                                                                        />
                                                                     </SelectTrigger>
                                                                     <SelectContent>
                                                                         {languageOptions.map((option) => (
-                                                                            <SelectItem key={`${option.value}-${index}`} value={option.value}>
+                                                                            <SelectItem
+                                                                                key={`${option.value}-${index}`}
+                                                                                value={option.value}
+                                                                            >
                                                                                 {option.label}
                                                                             </SelectItem>
                                                                         ))}
@@ -272,10 +305,15 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
                                                         />
                                                         {errors.translations?.usage?.[index]?.language_code ? (
                                                             <p className="text-sm text-destructive">
-                                                                {errors.translations.usage?.[index]?.language_code?.message as string}
+                                                                {
+                                                                    errors.translations.usage?.[index]?.language_code
+                                                                        ?.message as string
+                                                                }
                                                             </p>
                                                         ) : (
-                                                            <p className="text-xs text-muted-foreground">{t("createGrammar.languageHint")}</p>
+                                                            <p className="text-xs text-muted-foreground">
+                                                                {t("createGrammar.languageHint")}
+                                                            </p>
                                                         )}
                                                     </div>
 
@@ -301,16 +339,27 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
                                                         </label>
                                                         <Textarea
                                                             rows={4}
-                                                            placeholder={t("createGrammar.translationExplanationPlaceholder")}
-                                                            {...register(`translations.usage.${index}.explanation` as const)}
-                                                            aria-invalid={Boolean(errors.translations?.usage?.[index]?.explanation)}
+                                                            placeholder={t(
+                                                                "createGrammar.translationExplanationPlaceholder",
+                                                            )}
+                                                            {...register(
+                                                                `translations.usage.${index}.explanation` as const,
+                                                            )}
+                                                            aria-invalid={Boolean(
+                                                                errors.translations?.usage?.[index]?.explanation,
+                                                            )}
                                                         />
                                                         {errors.translations?.usage?.[index]?.explanation ? (
                                                             <p className="text-sm text-destructive">
-                                                                {errors.translations.usage?.[index]?.explanation?.message as string}
+                                                                {
+                                                                    errors.translations.usage?.[index]?.explanation
+                                                                        ?.message as string
+                                                                }
                                                             </p>
                                                         ) : (
-                                                            <p className="text-xs text-muted-foreground">{t("createGrammar.translationExplanationHint")}</p>
+                                                            <p className="text-xs text-muted-foreground">
+                                                                {t("createGrammar.translationExplanationHint")}
+                                                            </p>
                                                         )}
                                                     </div>
 
@@ -320,16 +369,27 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
                                                         </label>
                                                         <Textarea
                                                             rows={4}
-                                                            placeholder={t("createGrammar.translationExamplePlaceholder")}
-                                                            {...register(`translations.usage.${index}.example` as const)}
-                                                            aria-invalid={Boolean(errors.translations?.usage?.[index]?.example)}
+                                                            placeholder={t(
+                                                                "createGrammar.translationExamplePlaceholder",
+                                                            )}
+                                                            {...register(
+                                                                `translations.usage.${index}.example` as const,
+                                                            )}
+                                                            aria-invalid={Boolean(
+                                                                errors.translations?.usage?.[index]?.example,
+                                                            )}
                                                         />
                                                         {errors.translations?.usage?.[index]?.example ? (
                                                             <p className="text-sm text-destructive">
-                                                                {errors.translations.usage?.[index]?.example?.message as string}
+                                                                {
+                                                                    errors.translations.usage?.[index]?.example
+                                                                        ?.message as string
+                                                                }
                                                             </p>
                                                         ) : (
-                                                            <p className="text-xs text-muted-foreground">{t("createGrammar.translationExampleHint")}</p>
+                                                            <p className="text-xs text-muted-foreground">
+                                                                {t("createGrammar.translationExampleHint")}
+                                                            </p>
                                                         )}
                                                     </div>
                                                 </div>
@@ -339,7 +399,12 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
                                 })}
                             </Accordion>
 
-                            <Button type="button" variant="outline" onClick={handleAddUsage} className="w-full sm:w-auto">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                onClick={handleAddUsage}
+                                className="w-full sm:w-auto"
+                            >
                                 <Plus className="h-4 w-4" />
                                 {t("createGrammar.addUsage")}
                             </Button>
@@ -369,4 +434,3 @@ const CreateGrammarDialog = ({ open, onOpenChange }: CreateGrammarDialogProps) =
 };
 
 export default CreateGrammarDialog;
-

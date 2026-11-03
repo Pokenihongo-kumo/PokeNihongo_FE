@@ -1,6 +1,6 @@
-import { Button } from '@ui/Button';
-import { UploadCloud, Trash2 } from 'lucide-react';
-import React from 'react';
+import { Button } from "@ui/Button";
+import { UploadCloud, Trash2 } from "lucide-react";
+import React from "react";
 
 interface AudioDropzoneProps {
     label?: string;
@@ -8,7 +8,7 @@ interface AudioDropzoneProps {
     onChange: (file?: File) => void;
 }
 
-const AudioDropzone: React.FC<AudioDropzoneProps> = ({ label = 'Audio', value, onChange }) => {
+const AudioDropzone: React.FC<AudioDropzoneProps> = ({ label = "Audio", value, onChange }) => {
     const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
     const [fileName, setFileName] = React.useState<string | null>(null);
 
@@ -27,10 +27,15 @@ const AudioDropzone: React.FC<AudioDropzoneProps> = ({ label = 'Audio', value, o
         <div className="space-y-2">
             <label className="font-medium">{label}</label>
             {!value && !previewUrl ? (
-                <label htmlFor="audio-dropzone-input" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-muted/50 transition-colors">
+                <label
+                    htmlFor="audio-dropzone-input"
+                    className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-muted/50 transition-colors"
+                >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <UploadCloud className="w-8 h-8 mb-4 text-muted-foreground" />
-                        <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">Nhấn để tải lên</span> hoặc kéo thả</p>
+                        <p className="mb-2 text-sm text-muted-foreground">
+                            <span className="font-semibold">Nhấn để tải lên</span> hoặc kéo thả
+                        </p>
                         <p className="text-xs text-muted-foreground">MP3, WAV (Tối đa 5MB)</p>
                     </div>
                     <input
@@ -56,9 +61,7 @@ const AudioDropzone: React.FC<AudioDropzoneProps> = ({ label = 'Audio', value, o
                     >
                         <Trash2 className="h-4 w-4" />
                     </Button>
-                    {fileName && (
-                        <p className="mt-2 text-xs text-muted-foreground">Đã chọn: {fileName}</p>
-                    )}
+                    {fileName && <p className="mt-2 text-xs text-muted-foreground">Đã chọn: {fileName}</p>}
                 </div>
             )}
         </div>
@@ -66,5 +69,3 @@ const AudioDropzone: React.FC<AudioDropzoneProps> = ({ label = 'Audio', value, o
 };
 
 export default AudioDropzone;
-
-

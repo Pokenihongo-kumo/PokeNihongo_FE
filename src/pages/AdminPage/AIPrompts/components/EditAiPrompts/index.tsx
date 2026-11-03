@@ -1,67 +1,74 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@ui/Dialog'
-import { Brain, Calendar, Hash, Sparkles, Trash2, Loader2 } from 'lucide-react'
-import { Badge } from '@ui/Badge'
-import { Card, CardContent } from '@ui/Card'
-import { Textarea } from '@ui/Textarea'
-import { Switch } from '@ui/Switch'
-import { Button } from '@ui/Button'
-import { useTranslation } from 'react-i18next'
-import { GeminiConfigPromptsEntity } from '@models/ai/entity'
-import { formatDate } from '@utils/date'
-import { getStatusBadgeColor } from '@atoms/BadgeStatusColor'
-import { getStatusLabel } from '@atoms/StatusLabel'
-import { useGetConfigCustomPromptsById, useUpdateConfigCustomPrompts, useGetAIGeminiModels, useGetAIConfigModels } from '@hooks/useAI'
-import { useEffect, useMemo } from 'react'
-import { Skeleton } from '@ui/Skeleton'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui/Select'
-import { toast } from 'react-toastify'
-import { useForm, Controller } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { updateGeminiConfigPromptsSchema, IUpdateGeminiConfigPromptsRequest } from '@models/ai/request'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@ui/Dialog";
+import { Brain, Calendar, Hash, Sparkles, Trash2, Loader2 } from "lucide-react";
+import { Badge } from "@ui/Badge";
+import { Card, CardContent } from "@ui/Card";
+import { Textarea } from "@ui/Textarea";
+import { Switch } from "@ui/Switch";
+import { Button } from "@ui/Button";
+import { useTranslation } from "react-i18next";
+import { GeminiConfigPromptsEntity } from "@models/ai/entity";
+import { formatDate } from "@utils/date";
+import { getStatusBadgeColor } from "@atoms/BadgeStatusColor";
+import { getStatusLabel } from "@atoms/StatusLabel";
+import {
+    useGetConfigCustomPromptsById,
+    useUpdateConfigCustomPrompts,
+    useGetAIGeminiModels,
+    useGetAIConfigModels,
+} from "@hooks/useAI";
+import { useEffect, useMemo } from "react";
+import { Skeleton } from "@ui/Skeleton";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import { toast } from "react-toastify";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { updateGeminiConfigPromptsSchema, IUpdateGeminiConfigPromptsRequest } from "@models/ai/request";
 
 interface EditAiPromptsProps {
-    selectedPrompt: GeminiConfigPromptsEntity | null
-    setSelectedPrompt: (prompt: GeminiConfigPromptsEntity | null) => void
+    selectedPrompt: GeminiConfigPromptsEntity | null;
+    setSelectedPrompt: (prompt: GeminiConfigPromptsEntity | null) => void;
 }
 
 const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps) => {
-    const { t } = useTranslation()
-    const promptId = selectedPrompt?.id
+    const { t } = useTranslation();
+    const promptId = selectedPrompt?.id;
 
     /**
      * Handle Get Config Custom Prompts By Id
      */
-    const { data: promptData, isLoading: isLoadingPrompt, error: promptError } = useGetConfigCustomPromptsById(
-        promptId || 0
-    )
+    const {
+        data: promptData,
+        isLoading: isLoadingPrompt,
+        error: promptError,
+    } = useGetConfigCustomPromptsById(promptId || 0);
     //-----------------------End-----------------------//
 
-    const prompt = (promptId && promptData) ? promptData : selectedPrompt
-    const isLoading = promptId ? isLoadingPrompt : false
+    const prompt = promptId && promptData ? promptData : selectedPrompt;
+    const isLoading = promptId ? isLoadingPrompt : false;
 
     /**
      * Handle Get Gemini Models
-     * @returns 
+     * @returns
      */
-    const { data: geminiModels } = useGetAIGeminiModels()
-    const { data: configModelsData } = useGetAIConfigModels({ page: 1, limit: 1000 })
+    const { data: geminiModels } = useGetAIGeminiModels();
+    const { data: configModelsData } = useGetAIConfigModels({ page: 1, limit: 1000 });
 
     // Find config model and gemini model for display
     const configModel = useMemo(() => {
-        if (!prompt?.geminiConfigModelId || !configModelsData?.results) return null
-        return configModelsData.results.find((cm: any) => cm.id === prompt.geminiConfigModelId)
-    }, [prompt?.geminiConfigModelId, configModelsData])
+        if (!prompt?.geminiConfigModelId || !configModelsData?.results) return null;
+        return configModelsData.results.find((cm: any) => cm.id === prompt.geminiConfigModelId);
+    }, [prompt?.geminiConfigModelId, configModelsData]);
 
     const geminiModelName = useMemo(() => {
         if (configModel?.geminiModel) {
-            return configModel.geminiModel.displayName || configModel.geminiModel.key
+            return configModel.geminiModel.displayName || configModel.geminiModel.key;
         }
         if (configModel?.geminiModelId && geminiModels) {
-            const model = geminiModels.find((m: any) => m.id === configModel.geminiModelId)
-            return model?.displayName || model?.key || `ID ${configModel.geminiModelId}`
+            const model = geminiModels.find((m: any) => m.id === configModel.geminiModelId);
+            return model?.displayName || model?.key || `ID ${configModel.geminiModelId}`;
         }
-        return prompt?.geminiConfigModelId ? `Config Model ID: ${prompt.geminiConfigModelId}` : 'N/A'
-    }, [configModel, geminiModels, prompt?.geminiConfigModelId])
+        return prompt?.geminiConfigModelId ? `Config Model ID: ${prompt.geminiConfigModelId}` : "N/A";
+    }, [configModel, geminiModels, prompt?.geminiConfigModelId]);
     //-----------------------End-----------------------//
 
     /**
@@ -77,14 +84,14 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
         resolver: zodResolver(updateGeminiConfigPromptsSchema(t)),
         defaultValues: {
             geminiConfigModelId: prompt?.geminiConfigModelId || 0,
-            prompt: prompt?.prompt || '',
+            prompt: prompt?.prompt || "",
             isActive: prompt?.isActive || false,
         },
-        mode: 'onChange',
-    })
+        mode: "onChange",
+    });
 
     // Watch prompt length for character count
-    const promptValue = watch('prompt')
+    const promptValue = watch("prompt");
 
     // Update form when prompt data changes
     useEffect(() => {
@@ -93,52 +100,54 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                 geminiConfigModelId: prompt.geminiConfigModelId,
                 prompt: prompt.prompt,
                 isActive: prompt.isActive,
-            })
+            });
         }
-    }, [prompt, reset])
+    }, [prompt, reset]);
     //-----------------------End-----------------------//
 
     /**
      * Handle Update Config Custom Prompts
-     * @returns 
+     * @returns
      */
-    const updateMutation = useUpdateConfigCustomPrompts()
+    const updateMutation = useUpdateConfigCustomPrompts();
 
     const onSubmit = async (data: IUpdateGeminiConfigPromptsRequest) => {
-        if (!promptId) return
+        if (!promptId) return;
 
         try {
             await updateMutation.mutateAsync({
                 id: promptId,
                 data,
-            })
-            setSelectedPrompt(null)
+            });
+            setSelectedPrompt(null);
         } catch (error: any) {
-            console.error('Failed to update prompt:', error)
-            toast.error(error?.response?.data?.message || t('aiCommon.errorUpdating', { defaultValue: 'Lỗi khi cập nhật prompt' }))
+            console.error("Failed to update prompt:", error);
+            toast.error(
+                error?.response?.data?.message ||
+                    t("aiCommon.errorUpdating", { defaultValue: "Lỗi khi cập nhật prompt" }),
+            );
         }
-    }
+    };
     //-----------------------End-----------------------//
-
 
     /**
      * Handle Close Dialog
      */
     const handleClose = () => {
-        setSelectedPrompt(null)
+        setSelectedPrompt(null);
 
         if (prompt) {
             reset({
                 geminiConfigModelId: prompt.geminiConfigModelId,
                 prompt: prompt.prompt,
                 isActive: prompt.isActive,
-            })
+            });
         }
-    }
+    };
     //------------------------End------------------------//
 
     if (!selectedPrompt && !promptId) {
-        return null
+        return null;
     }
 
     return (
@@ -157,13 +166,13 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                                 </div>
                             ) : promptError ? (
                                 <div className="text-destructive">
-                                    {t('aiCommon.errorLoading', { defaultValue: 'Lỗi khi tải dữ liệu' })}
+                                    {t("aiCommon.errorLoading", { defaultValue: "Lỗi khi tải dữ liệu" })}
                                 </div>
                             ) : prompt ? (
                                 <>
                                     <div className="flex items-center gap-3">
                                         <span className="text-xl font-bold">
-                                            {t('aiPrompts.itemTitle', { defaultValue: 'AI Prompt' })} #{prompt.id}
+                                            {t("aiPrompts.itemTitle", { defaultValue: "AI Prompt" })} #{prompt.id}
                                         </span>
                                         <Badge className={getStatusBadgeColor(prompt.isActive)}>
                                             <Sparkles className="h-3 w-3 mr-1" />
@@ -172,7 +181,8 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                                     </div>
                                     <p className="text-sm font-normal text-muted-foreground mt-1 flex items-center gap-1.5">
                                         <Hash className="h-3.5 w-3.5" />
-                                        {t('aiCommon.modelId', { defaultValue: 'Model ID' })}: {geminiModelName} {prompt.geminiConfigModelId && `(${prompt.geminiConfigModelId})`}
+                                        {t("aiCommon.modelId", { defaultValue: "Model ID" })}: {geminiModelName}{" "}
+                                        {prompt.geminiConfigModelId && `(${prompt.geminiConfigModelId})`}
                                     </p>
                                 </>
                             ) : null}
@@ -193,17 +203,25 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                         </div>
                     </div>
                 ) : promptError ? (
-                    <div className="flex-1 overflow-y-auto py-6 px-6 flex items-center justify-center" style={{ minHeight: 0 }}>
+                    <div
+                        className="flex-1 overflow-y-auto py-6 px-6 flex items-center justify-center"
+                        style={{ minHeight: 0 }}
+                    >
                         <Card className="w-full">
                             <CardContent className="p-6 text-center">
                                 <p className="text-destructive">
-                                    {t('aiCommon.errorLoading', { defaultValue: 'Lỗi khi tải dữ liệu' })}
+                                    {t("aiCommon.errorLoading", { defaultValue: "Lỗi khi tải dữ liệu" })}
                                 </p>
                             </CardContent>
                         </Card>
                     </div>
                 ) : prompt ? (
-                    <form id="edit-prompt-form" onSubmit={handleSubmit(onSubmit)} className="flex-1 overflow-y-auto py-6 px-6 space-y-6" style={{ minHeight: 0 }}>
+                    <form
+                        id="edit-prompt-form"
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="flex-1 overflow-y-auto py-6 px-6 space-y-6"
+                        style={{ minHeight: 0 }}
+                    >
                         {/* Metadata Cards */}
                         <div className="grid grid-cols-2 gap-4">
                             <Card className="bg-gradient-to-br from-primary/5 to-transparent border-primary/20">
@@ -211,11 +229,11 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                                     <div className="flex items-center gap-2 mb-2">
                                         <Calendar className="h-4 w-4 text-primary" />
                                         <p className="text-xs font-medium text-muted-foreground">
-                                            {t('aiCommon.createdAt', { defaultValue: 'Ngày tạo' })}
+                                            {t("aiCommon.createdAt", { defaultValue: "Ngày tạo" })}
                                         </p>
                                     </div>
                                     <p className="text-sm font-semibold text-foreground">
-                                        {prompt.createdAt ? formatDate(prompt.createdAt) : 'N/A'}
+                                        {prompt.createdAt ? formatDate(prompt.createdAt) : "N/A"}
                                     </p>
                                 </CardContent>
                             </Card>
@@ -224,11 +242,11 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                                     <div className="flex items-center gap-2 mb-2">
                                         <Calendar className="h-4 w-4 text-chart-2" />
                                         <p className="text-xs font-medium text-muted-foreground">
-                                            {t('aiCommon.updatedAt', { defaultValue: 'Cập nhật lần cuối' })}
+                                            {t("aiCommon.updatedAt", { defaultValue: "Cập nhật lần cuối" })}
                                         </p>
                                     </div>
                                     <p className="text-sm font-semibold text-foreground">
-                                        {prompt.updatedAt ? formatDate(prompt.updatedAt) : 'N/A'}
+                                        {prompt.updatedAt ? formatDate(prompt.updatedAt) : "N/A"}
                                     </p>
                                 </CardContent>
                             </Card>
@@ -239,7 +257,7 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-foreground flex items-center gap-2">
                                     <Hash className="h-4 w-4 text-primary" />
-                                    {t('aiCommon.modelId', { defaultValue: 'Config Model' })}
+                                    {t("aiCommon.modelId", { defaultValue: "Config Model" })}
                                 </label>
                                 <Controller
                                     control={control}
@@ -249,22 +267,33 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                                             value={String(field.value)}
                                             onValueChange={(value) => field.onChange(parseInt(value) || 0)}
                                         >
-                                            <SelectTrigger className={`bg-background border-border text-foreground h-11 ${errors.geminiConfigModelId ? 'border-destructive' : ''}`}>
-                                                <SelectValue placeholder={t('aiCommon.selectModel', { defaultValue: 'Chọn config model' })} />
+                                            <SelectTrigger
+                                                className={`bg-background border-border text-foreground h-11 ${errors.geminiConfigModelId ? "border-destructive" : ""}`}
+                                            >
+                                                <SelectValue
+                                                    placeholder={t("aiCommon.selectModel", {
+                                                        defaultValue: "Chọn config model",
+                                                    })}
+                                                />
                                             </SelectTrigger>
                                             <SelectContent className="bg-card border-border">
-                                                {configModelsData?.results && Array.isArray(configModelsData.results) && configModelsData.results.length > 0 ? (
+                                                {configModelsData?.results &&
+                                                Array.isArray(configModelsData.results) &&
+                                                configModelsData.results.length > 0 ? (
                                                     configModelsData.results.map((cm: any) => {
-                                                        const modelName = cm.geminiModel?.displayName || cm.geminiModel?.key || `ID ${cm.geminiModelId}`
+                                                        const modelName =
+                                                            cm.geminiModel?.displayName ||
+                                                            cm.geminiModel?.key ||
+                                                            `ID ${cm.geminiModelId}`;
                                                         return (
                                                             <SelectItem key={cm.id} value={String(cm.id)}>
                                                                 {cm.name} - {modelName}
                                                             </SelectItem>
-                                                        )
+                                                        );
                                                     })
                                                 ) : (
                                                     <SelectItem value={String(field.value)} disabled>
-                                                        {t('aiCommon.noModels', { defaultValue: 'Không có model' })}
+                                                        {t("aiCommon.noModels", { defaultValue: "Không có model" })}
                                                     </SelectItem>
                                                 )}
                                             </SelectContent>
@@ -281,7 +310,7 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                             <div className="space-y-2">
                                 <label className="text-sm font-semibold text-foreground flex items-center gap-2">
                                     <Brain className="h-4 w-4 text-primary" />
-                                    {t('aiPrompts.content', { defaultValue: 'Nội dung Prompt' })}
+                                    {t("aiPrompts.content", { defaultValue: "Nội dung Prompt" })}
                                 </label>
                                 <Controller
                                     control={control}
@@ -291,21 +320,20 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                                             <Textarea
                                                 rows={14}
                                                 {...field}
-                                                className={`bg-background border-border text-foreground font-mono text-sm leading-relaxed resize-none pr-20 ${errors.prompt ? 'border-destructive' : ''}`}
-                                                placeholder={t('aiPrompts.contentPlaceholder', {
-                                                    defaultValue: 'Nhập nội dung prompt...',
+                                                className={`bg-background border-border text-foreground font-mono text-sm leading-relaxed resize-none pr-20 ${errors.prompt ? "border-destructive" : ""}`}
+                                                placeholder={t("aiPrompts.contentPlaceholder", {
+                                                    defaultValue: "Nhập nội dung prompt...",
                                                 })}
                                             />
                                             <div className="absolute bottom-3 right-3 px-2 py-1 bg-muted rounded text-xs font-medium text-muted-foreground">
-                                                {promptValue?.length || 0} {t('aiCommon.chars', { defaultValue: 'ký tự' })}
+                                                {promptValue?.length || 0}{" "}
+                                                {t("aiCommon.chars", { defaultValue: "ký tự" })}
                                             </div>
                                         </div>
                                     )}
                                 />
                                 {errors.prompt && (
-                                    <p className="text-sm text-destructive mt-1">
-                                        {errors.prompt.message as string}
-                                    </p>
+                                    <p className="text-sm text-destructive mt-1">{errors.prompt.message as string}</p>
                                 )}
                             </div>
 
@@ -314,17 +342,17 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                                     <div className="space-y-1">
                                         <label className="text-sm font-semibold text-foreground flex items-center gap-2">
                                             <Sparkles className="h-4 w-4 text-primary" />
-                                            {t('aiPrompts.activeState', { defaultValue: 'Trạng thái hoạt động' })}
+                                            {t("aiPrompts.activeState", { defaultValue: "Trạng thái hoạt động" })}
                                         </label>
                                         <p className="text-xs text-muted-foreground max-w-sm">
-                                            {watch('isActive')
-                                                ? t('aiPrompts.activeOn', {
-                                                    defaultValue:
-                                                        'Prompt đang được kích hoạt và có thể sử dụng trong hệ thống',
-                                                })
-                                                : t('aiPrompts.activeOff', {
-                                                    defaultValue: 'Prompt hiện đang tắt và không thể sử dụng',
-                                                })}
+                                            {watch("isActive")
+                                                ? t("aiPrompts.activeOn", {
+                                                      defaultValue:
+                                                          "Prompt đang được kích hoạt và có thể sử dụng trong hệ thống",
+                                                  })
+                                                : t("aiPrompts.activeOff", {
+                                                      defaultValue: "Prompt hiện đang tắt và không thể sử dụng",
+                                                  })}
                                         </p>
                                     </div>
                                     <Controller
@@ -353,7 +381,7 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                             disabled={isLoading || isSubmitting || updateMutation.isPending}
                         >
                             <Trash2 className="h-4 w-4 mr-2" />
-                            {t('aiCommon.deletePrompt', { defaultValue: 'Xóa prompt' })}
+                            {t("aiCommon.deletePrompt", { defaultValue: "Xóa prompt" })}
                         </Button>
                         <div className="flex gap-3">
                             <Button
@@ -363,7 +391,7 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                                 className="border-border text-foreground hover:bg-muted"
                                 disabled={isSubmitting || updateMutation.isPending}
                             >
-                                {t('aiCommon.cancel', { defaultValue: 'Hủy' })}
+                                {t("aiCommon.cancel", { defaultValue: "Hủy" })}
                             </Button>
                             <Button
                                 type="submit"
@@ -374,12 +402,12 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                                 {isSubmitting || updateMutation.isPending ? (
                                     <>
                                         <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                        {t('aiCommon.saving', { defaultValue: 'Đang lưu...' })}
+                                        {t("aiCommon.saving", { defaultValue: "Đang lưu..." })}
                                     </>
                                 ) : (
                                     <>
                                         <Sparkles className="h-4 w-4 mr-2" />
-                                        {t('aiCommon.saveChanges', { defaultValue: 'Lưu thay đổi' })}
+                                        {t("aiCommon.saveChanges", { defaultValue: "Lưu thay đổi" })}
                                     </>
                                 )}
                             </Button>
@@ -388,7 +416,7 @@ const EditAiPrompts = ({ selectedPrompt, setSelectedPrompt }: EditAiPromptsProps
                 )}
             </DialogContent>
         </Dialog>
-    )
-}
+    );
+};
 
-export default EditAiPrompts
+export default EditAiPrompts;

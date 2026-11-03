@@ -17,8 +17,6 @@ export const GachaItemRateEntitySchema = z.object({
 export type IGachaItemRateEntity = z.infer<typeof GachaItemRateEntitySchema>;
 //----------------------End----------------------//
 
-
-
 //----------------------Gacha Item Entity----------------------//
 /**
  * Gacha Item Entity Schema
@@ -35,8 +33,6 @@ export const GachaItemEntitySchema = z.object({
 });
 export type IGachaItemEntity = z.infer<typeof GachaItemEntitySchema>;
 //----------------------End----------------------//
-
-
 
 /**
  * Gacha Banner Entity Schema
@@ -71,4 +67,3 @@ export const GachaBannerEntitySchema = z.object({
 
 export type IGachaBannerEntity = z.infer<typeof GachaBannerEntitySchema>;
 //----------------------End----------------------//
-

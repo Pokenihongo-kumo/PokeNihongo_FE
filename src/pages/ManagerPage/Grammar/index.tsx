@@ -329,9 +329,9 @@ const GrammarManagementPage = () => {
                                             currentSort={sortDirection}
                                             onSort={(key) => handleSort(key as SortColumn)}
                                         />
-                                    <TableHead className="text-right w-36">
-                                        {t("managerGrammar.columns.actions", { defaultValue: "Thao tác" })}
-                                    </TableHead>
+                                        <TableHead className="text-right w-36">
+                                            {t("managerGrammar.columns.actions", { defaultValue: "Thao tác" })}
+                                        </TableHead>
                                     </TableRow>
                                 </TableHeader>
 
@@ -347,35 +347,35 @@ const GrammarManagementPage = () => {
                                                         {grammar.structure || grammar.title || "—"}
                                                     </TableCell>
                                                     <TableCell>
-                                                    <Badge
-                                                        variant="flat"
-                                                        className={`${LEVEL_BADGE_BASE_CLASS} ${getLevelClassName(levelLabel)}`}
-                                                    >
-                                                        {levelLabel}
-                                                    </Badge>
+                                                        <Badge
+                                                            variant="flat"
+                                                            className={`${LEVEL_BADGE_BASE_CLASS} ${getLevelClassName(levelLabel)}`}
+                                                        >
+                                                            {levelLabel}
+                                                        </Badge>
                                                     </TableCell>
                                                     <TableCell>{formatDateTime(grammar.createdAt)}</TableCell>
                                                     <TableCell>{formatDateTime(grammar.updatedAt)}</TableCell>
-                                                <TableCell className="text-right space-x-2">
-                                                    <Button
-                                                        type="button"
-                                                        variant="outline"
-                                                        size="icon"
-                                                        className="h-8 w-8"
-                                                        onClick={() => openEditDialog(grammar)}
-                                                    >
-                                                        <Pencil className="h-4 w-4" />
-                                                    </Button>
-                                                    <Button
-                                                        type="button"
-                                                        variant="ghost"
-                                                        size="icon"
-                                                        className="h-8 w-8 text-destructive"
-                                                        onClick={() => openDeleteDialog(grammar)}
-                                                    >
-                                                        <Trash2 className="h-4 w-4" />
-                                                    </Button>
-                                                </TableCell>
+                                                    <TableCell className="text-right space-x-2">
+                                                        <Button
+                                                            type="button"
+                                                            variant="outline"
+                                                            size="icon"
+                                                            className="h-8 w-8"
+                                                            onClick={() => openEditDialog(grammar)}
+                                                        >
+                                                            <Pencil className="h-4 w-4" />
+                                                        </Button>
+                                                        <Button
+                                                            type="button"
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-8 w-8 text-destructive"
+                                                            onClick={() => openDeleteDialog(grammar)}
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </TableCell>
                                                 </TableRow>
                                             );
                                         })}
@@ -412,7 +412,9 @@ const GrammarManagementPage = () => {
             <Dialog open={Boolean(editingGrammar)} onOpenChange={(open) => (!open ? closeEditDialog() : null)}>
                 <DialogContent className="max-w-lg bg-white">
                     <DialogHeader>
-                        <DialogTitle>{t("managerGrammar.editTitle", { defaultValue: "Chỉnh sửa ngữ pháp" })}</DialogTitle>
+                        <DialogTitle>
+                            {t("managerGrammar.editTitle", { defaultValue: "Chỉnh sửa ngữ pháp" })}
+                        </DialogTitle>
                         <DialogDescription>
                             {t("managerGrammar.editSubtitle", { defaultValue: "Cập nhật cấu trúc và cấp độ" })}
                         </DialogDescription>
@@ -424,7 +426,9 @@ const GrammarManagementPage = () => {
                             </label>
                             <Input
                                 value={editForm.structure}
-                                onChange={(event) => setEditForm((prev) => ({ ...prev, structure: event.target.value }))}
+                                onChange={(event) =>
+                                    setEditForm((prev) => ({ ...prev, structure: event.target.value }))
+                                }
                                 placeholder={t("managerGrammar.structurePlaceholder", { defaultValue: "Ví dụ: ~です" })}
                                 autoFocus
                             />
@@ -436,7 +440,9 @@ const GrammarManagementPage = () => {
                             </label>
                             <Select
                                 value={editForm.level}
-                                onValueChange={(value) => setEditForm((prev) => ({ ...prev, level: value as GrammarLevelValue }))}
+                                onValueChange={(value) =>
+                                    setEditForm((prev) => ({ ...prev, level: value as GrammarLevelValue }))
+                                }
                             >
                                 <SelectTrigger>
                                     <SelectValue placeholder={t("managerGrammar.levelLabel")} />
@@ -459,14 +465,21 @@ const GrammarManagementPage = () => {
                                 <AlertDescription>
                                     {getApiErrorMessage(
                                         updateGrammar.error,
-                                        t("updateGrammar.error.general", { defaultValue: "Có lỗi xảy ra khi cập nhật" })
+                                        t("updateGrammar.error.general", {
+                                            defaultValue: "Có lỗi xảy ra khi cập nhật",
+                                        }),
                                     )}
                                 </AlertDescription>
                             </Alert>
                         ) : null}
 
                         <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-                            <Button type="button" variant="ghost" onClick={closeEditDialog} disabled={updateGrammar.isPending}>
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={closeEditDialog}
+                                disabled={updateGrammar.isPending}
+                            >
                                 {t("common.cancel")}
                             </Button>
                             <Button type="submit" disabled={updateGrammar.isPending || !editForm.structure.trim()}>
@@ -499,7 +512,12 @@ const GrammarManagementPage = () => {
                         </p>
                     </div>
                     <DialogFooter className="flex flex-col gap-2 sm:flex-row sm:justify-end">
-                        <Button type="button" variant="ghost" onClick={closeDeleteDialog} disabled={deleteGrammar.isPending}>
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            onClick={closeDeleteDialog}
+                            disabled={deleteGrammar.isPending}
+                        >
                             {t("common.cancel")}
                         </Button>
                         <Button
@@ -520,4 +538,3 @@ const GrammarManagementPage = () => {
 };
 
 export default GrammarManagementPage;
-

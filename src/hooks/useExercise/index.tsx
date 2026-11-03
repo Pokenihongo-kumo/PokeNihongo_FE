@@ -9,87 +9,87 @@ import { getApiErrorMessage } from "@utils/api-error";
  * @returns { createExercise, isLoading, error }
  */
 export const useCreateExercise = () => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: (data: CreateExerciseRequest) => exerciseService.createExercise(data),
-    onSuccess: (response) => {
-      toast.success(response.message || "Tạo bài tập thành công");
-      // Invalidate and refetch exercises list
-      queryClient.invalidateQueries({ queryKey: ["exercises"] });
-    },
-    onError: (error: unknown) => {
-      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo bài tập"));
-    },
-  });
+    const mutation = useMutation({
+        mutationFn: (data: CreateExerciseRequest) => exerciseService.createExercise(data),
+        onSuccess: (response) => {
+            toast.success(response.message || "Tạo bài tập thành công");
+            // Invalidate and refetch exercises list
+            queryClient.invalidateQueries({ queryKey: ["exercises"] });
+        },
+        onError: (error: unknown) => {
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi tạo bài tập"));
+        },
+    });
 
-  return {
-    createExercise: mutation.mutate,
-    isLoading: mutation.isPending,
-    error: mutation.error,
-  };
+    return {
+        createExercise: mutation.mutate,
+        isLoading: mutation.isPending,
+        error: mutation.error,
+    };
 };
 
 /**
  * Hook for fetching exercises by lesson id
  */
 export const useExercisesByLessonId = (lessonId: number) => {
-  const query = useQuery({
-    queryKey: ["exercises", { lessonId }],
-    queryFn: () => exerciseService.getExercisesByLessonId(lessonId),
-    enabled: Boolean(lessonId),
-  });
+    const query = useQuery({
+        queryKey: ["exercises", { lessonId }],
+        queryFn: () => exerciseService.getExercisesByLessonId(lessonId),
+        enabled: Boolean(lessonId),
+    });
 
-  return {
-    ...query,
-  };
+    return {
+        ...query,
+    };
 };
 
 /**
  * Hook for deleting an exercise by id
  */
 export const useDeleteExercise = (lessonId: number) => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: (id: number) => exerciseService.deleteExercise(id),
-    onSuccess: (response) => {
-      toast.success((response as any)?.message || 'Xóa bài tập thành công');
-      queryClient.invalidateQueries({ queryKey: ["exercises", { lessonId }] });
-    },
-    onError: (error: unknown) => {
-      toast.error(getApiErrorMessage(error, 'Không thể xóa bài tập'));
-    },
-  });
+    const mutation = useMutation({
+        mutationFn: (id: number) => exerciseService.deleteExercise(id),
+        onSuccess: (response) => {
+            toast.success((response as any)?.message || "Xóa bài tập thành công");
+            queryClient.invalidateQueries({ queryKey: ["exercises", { lessonId }] });
+        },
+        onError: (error: unknown) => {
+            toast.error(getApiErrorMessage(error, "Không thể xóa bài tập"));
+        },
+    });
 
-  return {
-    deleteExercise: mutation.mutate,
-    isDeleting: mutation.isPending,
-    error: mutation.error,
-  };
+    return {
+        deleteExercise: mutation.mutate,
+        isDeleting: mutation.isPending,
+        error: mutation.error,
+    };
 };
 
 /**
  * Hook for updating an exercise by id
  */
 export const useUpdateExercise = (lessonId: number) => {
-  const queryClient = useQueryClient();
+    const queryClient = useQueryClient();
 
-  const mutation = useMutation({
-    mutationFn: ({ id, data }: { id: number; data: UpdateExerciseRequest }) => 
-      exerciseService.updateExercise(id, data),
-    onSuccess: (response) => {
-      toast.success(response.message || "Cập nhật bài tập thành công");
-      queryClient.invalidateQueries({ queryKey: ["exercises", { lessonId }] });
-    },
-    onError: (error: unknown) => {
-      toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật bài tập"));
-    },
-  });
+    const mutation = useMutation({
+        mutationFn: ({ id, data }: { id: number; data: UpdateExerciseRequest }) =>
+            exerciseService.updateExercise(id, data),
+        onSuccess: (response) => {
+            toast.success(response.message || "Cập nhật bài tập thành công");
+            queryClient.invalidateQueries({ queryKey: ["exercises", { lessonId }] });
+        },
+        onError: (error: unknown) => {
+            toast.error(getApiErrorMessage(error, "Có lỗi xảy ra khi cập nhật bài tập"));
+        },
+    });
 
-  return {
-    updateExercise: mutation.mutate,
-    isUpdating: mutation.isPending,
-    error: mutation.error,
-  };
+    return {
+        updateExercise: mutation.mutate,
+        isUpdating: mutation.isPending,
+        error: mutation.error,
+    };
 };

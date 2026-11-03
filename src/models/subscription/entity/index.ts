@@ -7,42 +7,45 @@ import z from "zod";
  */
 export const DashboardSubscriptionPlanEntitySchema = z.object({
     totalActivePlans: z.number(),
-    plans: z.array(z.object({
-        planId: z.number(),
-        subscriptionId: z.number(),
-        subscription: z.object({
-            id: z.number(),
-            nameKey: z.string(),
-            descriptionKey: z.string(),
-            tagName: z.string(),
-            nameTranslation: z.string(),
-            nameTranslations: TranslationInputSchema,
-            descriptionTranslation: z.string(),
-            descriptionTranslations: TranslationInputSchema,
-            features: z.array(z.object({
+    plans: z.array(
+        z.object({
+            planId: z.number(),
+            subscriptionId: z.number(),
+            subscription: z.object({
                 id: z.number(),
-                value: z.string().nullable(),
-                feature: z.object({
-                    id: z.number(),
-                    nameKey: z.string(),
-                    featureKey: z.string(),
-                    nameTranslation: z.string(),
-                    nameTranslations: TranslationInputSchema,
-                }),
-            })),
+                nameKey: z.string(),
+                descriptionKey: z.string(),
+                tagName: z.string(),
+                nameTranslation: z.string(),
+                nameTranslations: TranslationInputSchema,
+                descriptionTranslation: z.string(),
+                descriptionTranslations: TranslationInputSchema,
+                features: z.array(
+                    z.object({
+                        id: z.number(),
+                        value: z.string().nullable(),
+                        feature: z.object({
+                            id: z.number(),
+                            nameKey: z.string(),
+                            featureKey: z.string(),
+                            nameTranslation: z.string(),
+                            nameTranslations: TranslationInputSchema,
+                        }),
+                    }),
+                ),
+            }),
+            durationInDays: z.number().nullable(),
+            price: z.number(),
+            type: z.enum(SUBSCRIPTION.SUBSCRIPTION_TYPE),
+            stats: z.object({
+                totalPurchases: z.number(),
+                activeUsers: z.number(),
+                inactiveUsers: z.number(),
+            }),
         }),
-        durationInDays: z.number().nullable(),
-        price: z.number(),
-        type: z.enum(SUBSCRIPTION.SUBSCRIPTION_TYPE),
-        stats: z.object({
-            totalPurchases: z.number(),
-            activeUsers: z.number(),
-            inactiveUsers: z.number(),
-        }),
-    })),
-})
+    ),
+});
 //------------------End------------------//
-
 
 /**
  * Dashboard Revenue Entity Schema
@@ -50,7 +53,7 @@ export const DashboardSubscriptionPlanEntitySchema = z.object({
 const RevenueSummarySchema = z.object({
     total: z.number(),
     count: z.number(),
-})
+});
 
 export const DashboardRevenueEntitySchema = z.object({
     period: z.object({
@@ -61,22 +64,24 @@ export const DashboardRevenueEntitySchema = z.object({
         month: z.number(),
         year: z.number(),
     }),
-    plans: z.array(z.object({
-        planId: z.number(),
-        subscriptionId: z.number(),
-        subscription: z.object({
-            id: z.number(),
-            nameKey: z.string(),
-            descriptionKey: z.string(),
-            tagName: z.string(),
+    plans: z.array(
+        z.object({
+            planId: z.number(),
+            subscriptionId: z.number(),
+            subscription: z.object({
+                id: z.number(),
+                nameKey: z.string(),
+                descriptionKey: z.string(),
+                tagName: z.string(),
+            }),
+            durationInDays: z.number().nullable(),
+            price: z.number(),
+            type: z.enum(SUBSCRIPTION.SUBSCRIPTION_TYPE),
+            revenue: z.object({
+                month: RevenueSummarySchema,
+                year: RevenueSummarySchema,
+            }),
         }),
-        durationInDays: z.number().nullable(),
-        price: z.number(),
-        type: z.enum(SUBSCRIPTION.SUBSCRIPTION_TYPE),
-        revenue: z.object({
-            month: RevenueSummarySchema,
-            year: RevenueSummarySchema,
-        }),
-    })),
-})
+    ),
+});
 //------------------End------------------//

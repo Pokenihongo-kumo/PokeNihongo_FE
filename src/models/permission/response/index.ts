@@ -3,7 +3,6 @@ import { z } from "zod";
 import { PaginationResponseSchema } from "@models/common/response";
 import { PermissionEntitySchema, RoleEntitySchema } from "../entity";
 
-
 /**
  * Role Response Schema
  */
@@ -13,7 +12,6 @@ export const RoleResponseSchema = PaginationResponseSchema.extend({
 
 export type IRoleResponse = z.infer<typeof RoleResponseSchema>;
 //----------------------End----------------------//
-
 
 /**
  * Permission Response Schema
@@ -28,5 +26,3 @@ export const PermissionResponseSchema = z.object({
 
 export type IPermissionResponse = z.infer<typeof PermissionResponseSchema>;
 //----------------------End----------------------//
-
-

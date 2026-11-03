@@ -1,15 +1,15 @@
-
-import { BATTLE } from "@constants/battle"
+import { BATTLE } from "@constants/battle";
 
 type StatusStyle = {
-    colorClass: string
-    label: string
-}
+    colorClass: string;
+    label: string;
+};
 
-export type StatusStyleConfig = Record<string, StatusStyle>
+export type StatusStyleConfig = Record<string, StatusStyle>;
 
-const DEFAULT_COLOR_CLASS = "bg-gradient-to-r from-gray-500/20 to-slate-500/20 text-gray-600 border-gray-500/40 shadow-sm"
-const DEFAULT_LABEL = "Không xác định"
+const DEFAULT_COLOR_CLASS =
+    "bg-gradient-to-r from-gray-500/20 to-slate-500/20 text-gray-600 border-gray-500/40 shadow-sm";
+const DEFAULT_LABEL = "Không xác định";
 
 export const BATTLE_STATUS_CONFIG: StatusStyleConfig = {
     [BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.ACTIVE]: {
@@ -32,21 +32,21 @@ export const BATTLE_STATUS_CONFIG: StatusStyleConfig = {
         colorClass: DEFAULT_COLOR_CLASS,
         label: DEFAULT_LABEL,
     },
-}
+};
 
 export const getStatusBadgeColor = (
     statusOrActive: string | boolean,
-    config: StatusStyleConfig = BATTLE_STATUS_CONFIG
+    config: StatusStyleConfig = BATTLE_STATUS_CONFIG,
 ) => {
     if (typeof statusOrActive === "boolean") {
         return statusOrActive
             ? "bg-chart-4 text-black"
-            : "bg-white border border-black [&&]:text-black hover:bg-white hover:border-black hover:text-black"
+            : "bg-white border border-black [&&]:text-black hover:bg-white hover:border-black hover:text-black";
     }
 
-    return config[statusOrActive]?.colorClass ?? config.DEFAULT?.colorClass ?? DEFAULT_COLOR_CLASS
-}
+    return config[statusOrActive]?.colorClass ?? config.DEFAULT?.colorClass ?? DEFAULT_COLOR_CLASS;
+};
 
 export const getStatusText = (status: string, config: StatusStyleConfig = BATTLE_STATUS_CONFIG) => {
-    return config[status]?.label ?? config.DEFAULT?.label ?? status
-}
+    return config[status]?.label ?? config.DEFAULT?.label ?? status;
+};

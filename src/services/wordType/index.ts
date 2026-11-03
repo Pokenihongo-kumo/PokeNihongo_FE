@@ -5,11 +5,11 @@ import { toApiResult } from "@utils/api-response";
 
 const wordTypeService = {
     getAllWordTypes: async (params: IQueryRequest) => {
-        const response = await axiosPrivate.get('/wordtype', {
+        const response = await axiosPrivate.get("/wordtype", {
             params: params,
         });
         return toApiResult(response, WordTypeListSchema);
-    }
-}
+    },
+};
 
 export default wordTypeService;

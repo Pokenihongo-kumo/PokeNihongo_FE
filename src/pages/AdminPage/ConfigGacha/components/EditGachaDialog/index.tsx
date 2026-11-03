@@ -1,20 +1,20 @@
 import { useEffect, useState } from "react";
-import { Button } from '@ui/Button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@ui/Dialog';
-import { Input } from '@ui/Input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui/Select';
-import { Switch } from '@ui/Switch';
-import { Separator } from '@ui/Separator';
-import { Card } from '@ui/Card';
-import MultilingualInput from '@ui/MultilingualInput';
-import CustomDatePicker from '@ui/DatePicker';
-import { useForm, useFieldArray, Controller } from 'react-hook-form';
+import { Button } from "@ui/Button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@ui/Dialog";
+import { Input } from "@ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import { Switch } from "@ui/Switch";
+import { Separator } from "@ui/Separator";
+import { Card } from "@ui/Card";
+import MultilingualInput from "@ui/MultilingualInput";
+import CustomDatePicker from "@ui/DatePicker";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useTranslation } from 'react-i18next';
-import { GACHA } from '@constants/gacha';
-import { IGachaBannerEntity } from '@models/gacha/entity';
-import { createCreateGachaSchema, ICreateGachaRequest } from '@models/gacha/request';
-import { useUpdateGachaBanner } from '@hooks/useGacha';
+import { useTranslation } from "react-i18next";
+import { GACHA } from "@constants/gacha";
+import { IGachaBannerEntity } from "@models/gacha/entity";
+import { createCreateGachaSchema, ICreateGachaRequest } from "@models/gacha/request";
+import { useUpdateGachaBanner } from "@hooks/useGacha";
 
 interface EditGachaDialogProps {
     isOpen: boolean;
@@ -23,13 +23,11 @@ interface EditGachaDialogProps {
 }
 
 const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) => {
-
     /**
      * Define variables
      */
     const { t } = useTranslation();
     //------------------------End------------------------//
-
 
     /**
      * Handle Form
@@ -71,7 +69,6 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
     const { fields: nameFields } = useFieldArray({ control, name: "nameTranslations" });
     //------------------------End------------------------//
 
-
     /**
      * Handle Date Picker
      * Handle Reset Form
@@ -91,7 +88,9 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
 
             // Map translations ensuring en, ja, vi order
             const translationMap: Record<string, string> = {};
-            (bannerData.nameTranslations || []).forEach((tr) => { translationMap[tr.key] = tr.value; });
+            (bannerData.nameTranslations || []).forEach((tr) => {
+                translationMap[tr.key] = tr.value;
+            });
 
             reset({
                 startDate: toIsoDateString(startDate),
@@ -117,7 +116,6 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
     }, [isOpen, bannerData, reset]);
     //------------------------End------------------------//
 
-
     /**
      * Handle Update Gacha Banner
      */
@@ -134,18 +132,21 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
     //------------------------End------------------------//
 
     return (
-        <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+        <Dialog
+            open={isOpen}
+            onOpenChange={(open) => {
+                if (!open) onClose();
+            }}
+        >
             <DialogContent className="bg-white border-border max-w-2xl sm:max-w-3xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
-                    <DialogTitle className="text-foreground">
-                        {t('configGacha.editBannerTitle')}
-                    </DialogTitle>
+                    <DialogTitle className="text-foreground">{t("configGacha.editBannerTitle")}</DialogTitle>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 py-4" noValidate>
                     {/* Multilingual Input */}
                     <MultilingualInput
-                        label={t('configGacha.bannerName')}
+                        label={t("configGacha.bannerName")}
                         fields={nameFields.map((field) => ({
                             id: field.id,
                             key: field.key,
@@ -161,7 +162,7 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
                             <label htmlFor="startDate" className="text-sm font-medium text-foreground">
-                                {t('configGacha.startDate')}
+                                {t("configGacha.startDate")}
                             </label>
                             <div>
                                 <CustomDatePicker
@@ -181,19 +182,23 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                                             }
                                         }
                                     }}
-                                    placeholder={t('configGacha.startDate')}
+                                    placeholder={t("configGacha.startDate")}
                                     hasError={!!errors.startDate}
                                     dayPickerProps={{
-                                        disabled: { before: new Date() }
+                                        disabled: { before: new Date() },
                                     }}
                                 />
                             </div>
                             <input type="hidden" {...register("startDate")} />
-                            {errors.startDate && <p className={`text-xs mt-1 ${errors.startDate ? 'text-error' : 'text-foreground'}`}>{errors.startDate.message as string}</p>}
+                            {errors.startDate && (
+                                <p className={`text-xs mt-1 ${errors.startDate ? "text-error" : "text-foreground"}`}>
+                                    {errors.startDate.message as string}
+                                </p>
+                            )}
                         </div>
                         <div className="space-y-1.5">
                             <label htmlFor="endDate" className="text-sm font-medium text-foreground">
-                                {t('configGacha.endDate')}
+                                {t("configGacha.endDate")}
                             </label>
                             <div>
                                 <CustomDatePicker
@@ -205,15 +210,21 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                                             clearErrors("endDate");
                                         }
                                     }}
-                                    placeholder={t('configGacha.endDate')}
+                                    placeholder={t("configGacha.endDate")}
                                     hasError={!!errors.endDate}
                                     dayPickerProps={{
-                                        disabled: selectedStartDate ? { before: selectedStartDate } : { before: new Date() }
+                                        disabled: selectedStartDate
+                                            ? { before: selectedStartDate }
+                                            : { before: new Date() },
                                     }}
                                 />
                             </div>
                             <input type="hidden" {...register("endDate")} />
-                            {errors.endDate && <p className={`text-xs mt-1 ${errors.endDate ? 'text-error' : 'text-foreground'}`}>{errors.endDate.message as string}</p>}
+                            {errors.endDate && (
+                                <p className={`text-xs mt-1 ${errors.endDate ? "text-error" : "text-foreground"}`}>
+                                    {errors.endDate.message as string}
+                                </p>
+                            )}
                         </div>
                     </div>
 
@@ -221,7 +232,7 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-1.5">
                             <label htmlFor="costRoll" className="text-sm font-medium text-foreground">
-                                {t('configGacha.costRoll')}
+                                {t("configGacha.costRoll")}
                             </label>
                             <Controller
                                 name="costRoll"
@@ -238,11 +249,15 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                                     />
                                 )}
                             />
-                            {errors.costRoll && <p className={`text-xs mt-1 ${errors.costRoll ? 'text-error' : 'text-foreground'}`}>{errors.costRoll.message as string}</p>}
+                            {errors.costRoll && (
+                                <p className={`text-xs mt-1 ${errors.costRoll ? "text-error" : "text-foreground"}`}>
+                                    {errors.costRoll.message as string}
+                                </p>
+                            )}
                         </div>
                         <div className="space-y-1.5">
                             <label htmlFor="hardPity5Star" className="text-sm font-medium text-foreground">
-                                {t('configGacha.hardPity')}
+                                {t("configGacha.hardPity")}
                             </label>
                             <Controller
                                 name="hardPity5Star"
@@ -259,53 +274,134 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                                     />
                                 )}
                             />
-                            {errors.hardPity5Star && <p className={`text-xs mt-1 ${errors.hardPity5Star ? 'text-error' : 'text-foreground'}`}>{errors.hardPity5Star.message as string}</p>}
+                            {errors.hardPity5Star && (
+                                <p
+                                    className={`text-xs mt-1 ${errors.hardPity5Star ? "text-error" : "text-foreground"}`}
+                                >
+                                    {errors.hardPity5Star.message as string}
+                                </p>
+                            )}
                         </div>
                     </div>
 
                     {/* Amounts */}
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-1.5">
-                            <label htmlFor="amount5Star" className="text-sm font-medium text-foreground">{t('configGacha.amount5Star')}</label>
-                            <Controller name="amount5Star" control={control} render={({ field }) => (
-                                <Input id="amount5Star" type="number" value={field.value} onChange={(e) => field.onChange(Number(e.target.value))} />
-                            )} />
-                            {errors.amount5Star && <p className={`text-xs mt-1 ${errors.amount5Star ? 'text-error' : 'text-foreground'}`}>{errors.amount5Star.message as string}</p>}
+                            <label htmlFor="amount5Star" className="text-sm font-medium text-foreground">
+                                {t("configGacha.amount5Star")}
+                            </label>
+                            <Controller
+                                name="amount5Star"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        id="amount5Star"
+                                        type="number"
+                                        value={field.value}
+                                        onChange={(e) => field.onChange(Number(e.target.value))}
+                                    />
+                                )}
+                            />
+                            {errors.amount5Star && (
+                                <p className={`text-xs mt-1 ${errors.amount5Star ? "text-error" : "text-foreground"}`}>
+                                    {errors.amount5Star.message as string}
+                                </p>
+                            )}
                         </div>
                         <div className="space-y-1.5">
-                            <label htmlFor="amount4Star" className="text-sm font-medium text-foreground">{t('configGacha.amount4Star')}</label>
-                            <Controller name="amount4Star" control={control} render={({ field }) => (
-                                <Input id="amount4Star" type="number" value={field.value} onChange={(e) => field.onChange(Number(e.target.value))} />
-                            )} />
-                            {errors.amount4Star && <p className={`text-xs mt-1 ${errors.amount4Star ? 'text-error' : 'text-foreground'}`}>{errors.amount4Star.message as string}</p>}
+                            <label htmlFor="amount4Star" className="text-sm font-medium text-foreground">
+                                {t("configGacha.amount4Star")}
+                            </label>
+                            <Controller
+                                name="amount4Star"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        id="amount4Star"
+                                        type="number"
+                                        value={field.value}
+                                        onChange={(e) => field.onChange(Number(e.target.value))}
+                                    />
+                                )}
+                            />
+                            {errors.amount4Star && (
+                                <p className={`text-xs mt-1 ${errors.amount4Star ? "text-error" : "text-foreground"}`}>
+                                    {errors.amount4Star.message as string}
+                                </p>
+                            )}
                         </div>
                         <div className="space-y-1.5">
-                            <label htmlFor="amount3Star" className="text-sm font-medium text-foreground">{t('configGacha.amount3Star')}</label>
-                            <Controller name="amount3Star" control={control} render={({ field }) => (
-                                <Input id="amount3Star" type="number" value={field.value} onChange={(e) => field.onChange(Number(e.target.value))} />
-                            )} />
-                            {errors.amount3Star && <p className={`text-xs mt-1 ${errors.amount3Star ? 'text-error' : 'text-foreground'}`}>{errors.amount3Star.message as string}</p>}
+                            <label htmlFor="amount3Star" className="text-sm font-medium text-foreground">
+                                {t("configGacha.amount3Star")}
+                            </label>
+                            <Controller
+                                name="amount3Star"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        id="amount3Star"
+                                        type="number"
+                                        value={field.value}
+                                        onChange={(e) => field.onChange(Number(e.target.value))}
+                                    />
+                                )}
+                            />
+                            {errors.amount3Star && (
+                                <p className={`text-xs mt-1 ${errors.amount3Star ? "text-error" : "text-foreground"}`}>
+                                    {errors.amount3Star.message as string}
+                                </p>
+                            )}
                         </div>
                         <div className="space-y-1.5">
-                            <label htmlFor="amount2Star" className="text-sm font-medium text-foreground">{t('configGacha.amount2Star')}</label>
-                            <Controller name="amount2Star" control={control} render={({ field }) => (
-                                <Input id="amount2Star" type="number" value={field.value} onChange={(e) => field.onChange(Number(e.target.value))} />
-                            )} />
-                            {errors.amount2Star && <p className={`text-xs mt-1 ${errors.amount2Star ? 'text-error' : 'text-foreground'}`}>{errors.amount2Star.message as string}</p>}
+                            <label htmlFor="amount2Star" className="text-sm font-medium text-foreground">
+                                {t("configGacha.amount2Star")}
+                            </label>
+                            <Controller
+                                name="amount2Star"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        id="amount2Star"
+                                        type="number"
+                                        value={field.value}
+                                        onChange={(e) => field.onChange(Number(e.target.value))}
+                                    />
+                                )}
+                            />
+                            {errors.amount2Star && (
+                                <p className={`text-xs mt-1 ${errors.amount2Star ? "text-error" : "text-foreground"}`}>
+                                    {errors.amount2Star.message as string}
+                                </p>
+                            )}
                         </div>
                         <div className="space-y-1.5">
-                            <label htmlFor="amount1Star" className="text-sm font-medium text-foreground">{t('configGacha.amount1Star')}</label>
-                            <Controller name="amount1Star" control={control} render={({ field }) => (
-                                <Input id="amount1Star" type="number" value={field.value} onChange={(e) => field.onChange(Number(e.target.value))} />
-                            )} />
-                            {errors.amount1Star && <p className={`text-xs mt-1 ${errors.amount1Star ? 'text-error' : 'text-foreground'}`}>{errors.amount1Star.message as string}</p>}
+                            <label htmlFor="amount1Star" className="text-sm font-medium text-foreground">
+                                {t("configGacha.amount1Star")}
+                            </label>
+                            <Controller
+                                name="amount1Star"
+                                control={control}
+                                render={({ field }) => (
+                                    <Input
+                                        id="amount1Star"
+                                        type="number"
+                                        value={field.value}
+                                        onChange={(e) => field.onChange(Number(e.target.value))}
+                                    />
+                                )}
+                            />
+                            {errors.amount1Star && (
+                                <p className={`text-xs mt-1 ${errors.amount1Star ? "text-error" : "text-foreground"}`}>
+                                    {errors.amount1Star.message as string}
+                                </p>
+                            )}
                         </div>
                     </div>
 
                     {/* Status */}
                     <div className="space-y-1.5">
                         <label htmlFor="status" className="text-sm font-medium text-foreground">
-                            {t('configGacha.status')}
+                            {t("configGacha.status")}
                         </label>
                         <Controller
                             name="status"
@@ -316,10 +412,18 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent className="bg-card border-border">
-                                        <SelectItem value={GACHA.GachaBannerStatus.PREVIEW}>{t('configGacha.preview')}</SelectItem>
-                                        <SelectItem value={GACHA.GachaBannerStatus.ACTIVE}>{t('common.active')}</SelectItem>
-                                        <SelectItem value={GACHA.GachaBannerStatus.INACTIVE}>{t('common.inactive')}</SelectItem>
-                                        <SelectItem value={GACHA.GachaBannerStatus.EXPIRED}>{t('configGacha.expired')}</SelectItem>
+                                        <SelectItem value={GACHA.GachaBannerStatus.PREVIEW}>
+                                            {t("configGacha.preview")}
+                                        </SelectItem>
+                                        <SelectItem value={GACHA.GachaBannerStatus.ACTIVE}>
+                                            {t("common.active")}
+                                        </SelectItem>
+                                        <SelectItem value={GACHA.GachaBannerStatus.INACTIVE}>
+                                            {t("common.inactive")}
+                                        </SelectItem>
+                                        <SelectItem value={GACHA.GachaBannerStatus.EXPIRED}>
+                                            {t("configGacha.expired")}
+                                        </SelectItem>
                                     </SelectContent>
                                 </Select>
                             )}
@@ -333,10 +437,10 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                     <div className="space-y-4">
                         <div>
                             <h3 className="text-sm font-semibold text-foreground mb-1">
-                                {t('configGacha.autoPrecreateSettings')}
+                                {t("configGacha.autoPrecreateSettings")}
                             </h3>
                             <p className="text-xs text-muted-foreground italic">
-                                {t('configGacha.autoPrecreateSettingsDescription')}
+                                {t("configGacha.autoPrecreateSettingsDescription")}
                             </p>
                         </div>
 
@@ -345,29 +449,29 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                             <div className="flex items-center justify-between">
                                 <div>
                                     <label htmlFor="enablePrecreate" className="text-sm font-medium text-foreground">
-                                        {t('configGacha.enablePrecreate')}
+                                        {t("configGacha.enablePrecreate")}
                                     </label>
                                     <p className="text-xs text-muted-foreground mt-0.5 italic">
-                                        {t('configGacha.enablePrecreateDescription')}
+                                        {t("configGacha.enablePrecreateDescription")}
                                     </p>
                                 </div>
                                 <Controller
                                     name="enablePrecreate"
                                     control={control}
                                     render={({ field }) => (
-                                        <Switch
-                                            checked={field.value}
-                                            onCheckedChange={field.onChange}
-                                        />
+                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
                                     )}
                                 />
                             </div>
 
                             {/* Precreate Before End Days */}
-                            {watch('enablePrecreate') && (
+                            {watch("enablePrecreate") && (
                                 <div className="space-y-1.5 pt-2 border-t border-border">
-                                    <label htmlFor="precreateBeforeEndDays" className="text-sm font-medium text-foreground">
-                                        {t('configGacha.precreateBeforeEndDays')}
+                                    <label
+                                        htmlFor="precreateBeforeEndDays"
+                                        className="text-sm font-medium text-foreground"
+                                    >
+                                        {t("configGacha.precreateBeforeEndDays")}
                                     </label>
                                     <Controller
                                         name="precreateBeforeEndDays"
@@ -383,9 +487,15 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                                                     min={1}
                                                     max={90}
                                                 />
-                                                {errors.precreateBeforeEndDays && <p className={`text-xs mt-1 ${errors.precreateBeforeEndDays ? 'text-error' : 'text-foreground'}`}>{errors.precreateBeforeEndDays.message as string}</p>}
+                                                {errors.precreateBeforeEndDays && (
+                                                    <p
+                                                        className={`text-xs mt-1 ${errors.precreateBeforeEndDays ? "text-error" : "text-foreground"}`}
+                                                    >
+                                                        {errors.precreateBeforeEndDays.message as string}
+                                                    </p>
+                                                )}
                                                 <p className="text-xs text-muted-foreground italic">
-                                                    {t('configGacha.precreateBeforeEndDaysDescription')}
+                                                    {t("configGacha.precreateBeforeEndDaysDescription")}
                                                 </p>
                                             </>
                                         )}
@@ -394,24 +504,24 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
                             )}
 
                             {/* Is Random Item Again */}
-                            {watch('enablePrecreate') && (
+                            {watch("enablePrecreate") && (
                                 <div className="flex items-center justify-between pt-2 border-t border-border">
                                     <div>
-                                        <label htmlFor="isRandomItemAgain" className="text-sm font-medium text-foreground">
-                                            {t('configGacha.isRandomItemAgain')}
+                                        <label
+                                            htmlFor="isRandomItemAgain"
+                                            className="text-sm font-medium text-foreground"
+                                        >
+                                            {t("configGacha.isRandomItemAgain")}
                                         </label>
                                         <p className="text-xs text-muted-foreground mt-0.5 italic">
-                                            {t('configGacha.isRandomItemAgainDescription')}
+                                            {t("configGacha.isRandomItemAgainDescription")}
                                         </p>
                                     </div>
                                     <Controller
                                         name="isRandomItemAgain"
                                         control={control}
                                         render={({ field }) => (
-                                            <Switch
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                            />
+                                            <Switch checked={field.value} onCheckedChange={field.onChange} />
                                         )}
                                     />
                                 </div>
@@ -421,10 +531,14 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
 
                     <DialogFooter className="mt-6 pt-4 border-t border-border">
                         <Button type="button" variant="outline" onClick={onClose}>
-                            {t('common.cancel')}
+                            {t("common.cancel")}
                         </Button>
-                        <Button type="submit" disabled={updateGachaBannerMutation.isPending} className="bg-primary text-primary-foreground hover:bg-primary/90">
-                            {updateGachaBannerMutation.isPending ? t('common.saving') : t('common.save')}
+                        <Button
+                            type="submit"
+                            disabled={updateGachaBannerMutation.isPending}
+                            className="bg-primary text-primary-foreground hover:bg-primary/90"
+                        >
+                            {updateGachaBannerMutation.isPending ? t("common.saving") : t("common.save")}
                         </Button>
                     </DialogFooter>
                 </form>
@@ -434,5 +548,3 @@ const EditGachaDialog = ({ isOpen, onClose, bannerData }: EditGachaDialogProps) 
 };
 
 export default EditGachaDialog;
-
-

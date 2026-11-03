@@ -1,129 +1,141 @@
-import { useMemo, useState } from "react"
-import { useGetBattleLeaderBoardSeasonDetail } from "@hooks/useBattle"
-import { Badge } from "@ui/Badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card"
-import { Button } from "@ui/Button"
-import { Award, Calendar, CheckCircle2, Clock, Gift, Languages, Loader2, RefreshCcw, Trophy, XCircle, BarChart3 } from "lucide-react"
-import { useParams } from "react-router-dom"
-import { formatDateOnly, formatDateTime } from "@utils/date"
-import { BATTLE_STATUS_CONFIG, getStatusBadgeColor, getStatusText } from "@atoms/BadgeStatusColor"
-import HeaderAdmin from "@organisms/Header/Admin"
-import { useTranslation } from "react-i18next"
-import DialogUpdateRewardSeason from "../DialogUpdateRewardSeason"
-import DialogPeriodStats from "../DialogPeriodStats"
+import { useMemo, useState } from "react";
+import { useGetBattleLeaderBoardSeasonDetail } from "@hooks/useBattle";
+import { Badge } from "@ui/Badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card";
+import { Button } from "@ui/Button";
+import {
+    Award,
+    Calendar,
+    CheckCircle2,
+    Clock,
+    Gift,
+    Languages,
+    Loader2,
+    RefreshCcw,
+    Trophy,
+    XCircle,
+    BarChart3,
+} from "lucide-react";
+import { useParams } from "react-router-dom";
+import { formatDateOnly, formatDateTime } from "@utils/date";
+import { BATTLE_STATUS_CONFIG, getStatusBadgeColor, getStatusText } from "@atoms/BadgeStatusColor";
+import HeaderAdmin from "@organisms/Header/Admin";
+import { useTranslation } from "react-i18next";
+import DialogUpdateRewardSeason from "../DialogUpdateRewardSeason";
+import DialogPeriodStats from "../DialogPeriodStats";
 
 type SeasonRankRewardEntry = {
-    id: number
-    order: number | null | undefined
-}
+    id: number;
+    order: number | null | undefined;
+};
 
-const getRewardOrderValue = (value: SeasonRankRewardEntry["order"]) => value ?? Number.MAX_SAFE_INTEGER
+const getRewardOrderValue = (value: SeasonRankRewardEntry["order"]) => value ?? Number.MAX_SAFE_INTEGER;
 
 const compareSeasonRankRewards = <T extends SeasonRankRewardEntry>(a: T, b: T) => {
-    const diff = getRewardOrderValue(a.order) - getRewardOrderValue(b.order)
-    if (diff !== 0) return diff
-    return a.id - b.id
-}
+    const diff = getRewardOrderValue(a.order) - getRewardOrderValue(b.order);
+    if (diff !== 0) return diff;
+    return a.id - b.id;
+};
 
 const renderRewardValue = (value: unknown) => {
-    if (value === null || value === undefined) return "—"
-    return typeof value === "string" || typeof value === "number" ? value : JSON.stringify(value)
-}
+    if (value === null || value === undefined) return "—";
+    return typeof value === "string" || typeof value === "number" ? value : JSON.stringify(value);
+};
 
 interface LeaderboardDetailProps {
-    leaderboardSeasonId?: number
+    leaderboardSeasonId?: number;
 }
 
 export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDetailProps) {
     const { t } = useTranslation();
-    const { tournamentId } = useParams<{ tournamentId?: string }>()
-    const resolvedId = leaderboardSeasonId ?? (tournamentId ? Number(tournamentId) : undefined)
+    const { tournamentId } = useParams<{ tournamentId?: string }>();
+    const resolvedId = leaderboardSeasonId ?? (tournamentId ? Number(tournamentId) : undefined);
 
     const messages = {
-        invalidSeason: t('tournaments.detail.messages.invalidSeason'),
-        loading: t('tournaments.detail.messages.loading'),
-        loadError: t('tournaments.detail.messages.loadError'),
-        noData: t('tournaments.detail.messages.noData'),
-        noTimeline: t('tournaments.detail.messages.noTimeline'),
-        noRewardStats: t('tournaments.detail.messages.noRewardStats'),
-        noRewards: t('tournaments.detail.messages.noRewards'),
-        noRewardRange: t('tournaments.detail.messages.noRewardRange'),
-        noTranslations: t('tournaments.detail.messages.noTranslations'),
-    }
+        invalidSeason: t("tournaments.detail.messages.invalidSeason"),
+        loading: t("tournaments.detail.messages.loading"),
+        loadError: t("tournaments.detail.messages.loadError"),
+        noData: t("tournaments.detail.messages.noData"),
+        noTimeline: t("tournaments.detail.messages.noTimeline"),
+        noRewardStats: t("tournaments.detail.messages.noRewardStats"),
+        noRewards: t("tournaments.detail.messages.noRewards"),
+        noRewardRange: t("tournaments.detail.messages.noRewardRange"),
+        noTranslations: t("tournaments.detail.messages.noTranslations"),
+    };
 
     const commonTexts = {
-        yes: t('tournaments.detail.common.yes'),
-        no: t('tournaments.detail.common.no'),
-        notAvailable: t('tournaments.detail.common.notAvailable'),
-    }
+        yes: t("tournaments.detail.common.yes"),
+        no: t("tournaments.detail.common.no"),
+        notAvailable: t("tournaments.detail.common.notAvailable"),
+    };
 
     const summaryLabels = {
-        rankGroups: t('tournaments.detail.summary.rankGroups'),
-        rewardBuckets: t('tournaments.detail.summary.rewardBuckets'),
-        rewardItems: t('tournaments.detail.summary.rewardItems'),
-        duration: t('tournaments.detail.summary.duration'),
+        rankGroups: t("tournaments.detail.summary.rankGroups"),
+        rewardBuckets: t("tournaments.detail.summary.rewardBuckets"),
+        rewardItems: t("tournaments.detail.summary.rewardItems"),
+        duration: t("tournaments.detail.summary.duration"),
         openStatus: {
-            label: t('tournaments.detail.summary.openStatus.label'),
-            opened: t('tournaments.detail.summary.openStatus.opened'),
-            closed: t('tournaments.detail.summary.openStatus.closed'),
+            label: t("tournaments.detail.summary.openStatus.label"),
+            opened: t("tournaments.detail.summary.openStatus.opened"),
+            closed: t("tournaments.detail.summary.openStatus.closed"),
         },
-    }
+    };
 
     const timelineLabels = {
-        title: t('tournaments.detail.timeline.title'),
-        start: t('tournaments.detail.timeline.start'),
-        end: t('tournaments.detail.timeline.end'),
-        created: t('tournaments.detail.timeline.created'),
-        updated: t('tournaments.detail.timeline.updated'),
-    }
+        title: t("tournaments.detail.timeline.title"),
+        start: t("tournaments.detail.timeline.start"),
+        end: t("tournaments.detail.timeline.end"),
+        created: t("tournaments.detail.timeline.created"),
+        updated: t("tournaments.detail.timeline.updated"),
+    };
 
     const overviewLabels = {
-        duration: t('tournaments.detail.overview.duration'),
-        createdAt: t('tournaments.detail.overview.createdAt'),
-        updatedAt: t('tournaments.detail.overview.updatedAt'),
-        createdBy: t('tournaments.detail.overview.createdBy'),
-        updatedBy: t('tournaments.detail.overview.updatedBy'),
-    }
+        duration: t("tournaments.detail.overview.duration"),
+        createdAt: t("tournaments.detail.overview.createdAt"),
+        updatedAt: t("tournaments.detail.overview.updatedAt"),
+        createdBy: t("tournaments.detail.overview.createdBy"),
+        updatedBy: t("tournaments.detail.overview.updatedBy"),
+    };
 
     const metadataLabels = {
-        title: t('tournaments.detail.metadata.title'),
-        seasonId: t('tournaments.detail.metadata.seasonId'),
-        seasonKey: t('tournaments.detail.metadata.seasonKey'),
-        enablePrecreate: t('tournaments.detail.metadata.enablePrecreate'),
-        precreateDays: t('tournaments.detail.metadata.precreateDays'),
-        randomAgain: t('tournaments.detail.metadata.randomAgain'),
-        hasOpened: t('tournaments.detail.metadata.hasOpened'),
-    }
+        title: t("tournaments.detail.metadata.title"),
+        seasonId: t("tournaments.detail.metadata.seasonId"),
+        seasonKey: t("tournaments.detail.metadata.seasonKey"),
+        enablePrecreate: t("tournaments.detail.metadata.enablePrecreate"),
+        precreateDays: t("tournaments.detail.metadata.precreateDays"),
+        randomAgain: t("tournaments.detail.metadata.randomAgain"),
+        hasOpened: t("tournaments.detail.metadata.hasOpened"),
+    };
 
-    const [isRewardDialogOpen, setIsRewardDialogOpen] = useState(false)
-    const [isPeriodStatsDialogOpen, setIsPeriodStatsDialogOpen] = useState(false)
+    const [isRewardDialogOpen, setIsRewardDialogOpen] = useState(false);
+    const [isPeriodStatsDialogOpen, setIsPeriodStatsDialogOpen] = useState(false);
 
     const rewardOverviewLabels = {
-        title: t('tournaments.detail.rewardOverview.title'),
-        rankGroups: t('tournaments.detail.rewardOverview.rankGroups'),
-        rewardItems: t('tournaments.detail.rewardOverview.rewardItems'),
-        typeCount: (count: number) => t('tournaments.detail.rewardOverview.typeCount', { count }),
-    }
+        title: t("tournaments.detail.rewardOverview.title"),
+        rankGroups: t("tournaments.detail.rewardOverview.rankGroups"),
+        rewardItems: t("tournaments.detail.rewardOverview.rewardItems"),
+        typeCount: (count: number) => t("tournaments.detail.rewardOverview.typeCount", { count }),
+    };
 
     const translationLabels = {
-        title: t('tournaments.detail.translations.title'),
+        title: t("tournaments.detail.translations.title"),
         empty: messages.noTranslations,
-        language: t('tournaments.detail.translations.language'),
-        value: t('tournaments.detail.translations.value'),
-    }
+        language: t("tournaments.detail.translations.language"),
+        value: t("tournaments.detail.translations.value"),
+    };
 
     const rewardsLabels = {
-        title: t('tournaments.detail.rewards.title'),
+        title: t("tournaments.detail.rewards.title"),
         empty: messages.noRewardStats,
-        groupCount: (count: number) => t('tournaments.detail.rewards.groupCount', { count }),
-        rewardCount: (count: number) => t('tournaments.detail.rewards.rewardCount', { count }),
+        groupCount: (count: number) => t("tournaments.detail.rewards.groupCount", { count }),
+        rewardCount: (count: number) => t("tournaments.detail.rewards.rewardCount", { count }),
         table: {
-            type: t('tournaments.detail.rewards.table.type'),
-            target: t('tournaments.detail.rewards.table.target'),
-            value: t('tournaments.detail.rewards.table.value'),
-            note: t('tournaments.detail.rewards.table.note'),
+            type: t("tournaments.detail.rewards.table.type"),
+            target: t("tournaments.detail.rewards.table.target"),
+            value: t("tournaments.detail.rewards.table.value"),
+            note: t("tournaments.detail.rewards.table.note"),
         },
-    }
+    };
 
     if (resolvedId === undefined || Number.isNaN(resolvedId)) {
         return (
@@ -135,70 +147,66 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                     </div>
                 </CardContent>
             </Card>
-        )
+        );
     }
 
-    const { data: season, isLoading, error } = useGetBattleLeaderBoardSeasonDetail(resolvedId)
+    const { data: season, isLoading, error } = useGetBattleLeaderBoardSeasonDetail(resolvedId);
 
     const nameTranslations = useMemo(
         () => (Array.isArray(season?.nameTranslations) ? season!.nameTranslations : []),
-        [season]
-    )
+        [season],
+    );
 
     const sortedRewards = useMemo(() => {
-        if (!Array.isArray(season?.seasonRankRewards)) return []
-        return [...season.seasonRankRewards].sort(compareSeasonRankRewards)
-    }, [season])
+        if (!Array.isArray(season?.seasonRankRewards)) return [];
+        return [...season.seasonRankRewards].sort(compareSeasonRankRewards);
+    }, [season]);
 
     const rankGroups = useMemo(() => {
-        const map = new Map<string, typeof sortedRewards>()
+        const map = new Map<string, typeof sortedRewards>();
         sortedRewards.forEach((reward) => {
-            const list = map.get(reward.rankName)
+            const list = map.get(reward.rankName);
             if (list) {
-                list.push(reward)
+                list.push(reward);
             } else {
-                map.set(reward.rankName, [reward])
+                map.set(reward.rankName, [reward]);
             }
-        })
+        });
         return Array.from(map.entries()).map(([rankName, list]) => [
             rankName,
             [...list].sort(compareSeasonRankRewards),
-        ]) as Array<[string, typeof sortedRewards]>
-    }, [sortedRewards])
+        ]) as Array<[string, typeof sortedRewards]>;
+    }, [sortedRewards]);
 
-    const totalRankGroups = rankGroups.length
-    const totalRewardBuckets = sortedRewards.length
+    const totalRankGroups = rankGroups.length;
+    const totalRewardBuckets = sortedRewards.length;
     const totalRewardItems = useMemo(
-        () =>
-            sortedRewards.reduce(
-                (acc, rank) => acc + (Array.isArray(rank.rewards) ? rank.rewards.length : 0),
-                0
-            ),
-        [sortedRewards]
-    )
+        () => sortedRewards.reduce((acc, rank) => acc + (Array.isArray(rank.rewards) ? rank.rewards.length : 0), 0),
+        [sortedRewards],
+    );
 
     const rewardTypeSummary = useMemo(() => {
-        const typeMap = new Map<string, number>()
+        const typeMap = new Map<string, number>();
         sortedRewards.forEach((rank) => {
-            if (!Array.isArray(rank.rewards)) return
+            if (!Array.isArray(rank.rewards)) return;
             rank.rewards.forEach((reward) => {
-                const key = String(reward.rewardType)
-                typeMap.set(key, (typeMap.get(key) ?? 0) + 1)
-            })
-        })
-        return Array.from(typeMap.entries()).map(([type, count]) => ({ type, count }))
-    }, [sortedRewards])
+                const key = String(reward.rewardType);
+                typeMap.set(key, (typeMap.get(key) ?? 0) + 1);
+            });
+        });
+        return Array.from(typeMap.entries()).map(([type, count]) => ({ type, count }));
+    }, [sortedRewards]);
 
     const durationDays = useMemo(() => {
-        if (!season?.startDate || !season?.endDate) return null
-        const start = new Date(season.startDate).getTime()
-        const end = new Date(season.endDate).getTime()
-        if (Number.isNaN(start) || Number.isNaN(end)) return null
-        return Math.max(1, Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1)
-    }, [season])
+        if (!season?.startDate || !season?.endDate) return null;
+        const start = new Date(season.startDate).getTime();
+        const end = new Date(season.endDate).getTime();
+        if (Number.isNaN(start) || Number.isNaN(end)) return null;
+        return Math.max(1, Math.round((end - start) / (1000 * 60 * 60 * 24)) + 1);
+    }, [season]);
 
     const timelineItems = useMemo(() => {
-        if (!season) return []
+        if (!season) return [];
         return [
             season.startDate && {
                 label: timelineLabels.start,
@@ -220,8 +228,8 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                 value: formatDateTime(season.updatedAt),
                 icon: RefreshCcw,
             },
-        ].filter(Boolean) as Array<{ label: string; value: string; icon: typeof Calendar }>
-    }, [season, timelineLabels])
+        ].filter(Boolean) as Array<{ label: string; value: string; icon: typeof Calendar }>;
+    }, [season, timelineLabels]);
 
     if (isLoading) {
         return (
@@ -231,7 +239,7 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                     <p className="text-muted-foreground">{messages.loading}</p>
                 </CardContent>
             </Card>
-        )
+        );
     }
 
     if (error) {
@@ -244,7 +252,7 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                     </div>
                 </CardContent>
             </Card>
-        )
+        );
     }
 
     if (!season) {
@@ -257,7 +265,7 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                     </div>
                 </CardContent>
             </Card>
-        )
+        );
     }
 
     const summaryStats = [
@@ -279,7 +287,7 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
         {
             label: summaryLabels.duration,
             value: durationDays
-                ? t('tournaments.detail.summary.durationValue', { count: durationDays })
+                ? t("tournaments.detail.summary.durationValue", { count: durationDays })
                 : commonTexts.notAvailable,
             icon: Calendar,
         },
@@ -289,7 +297,7 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
             icon: season.hasOpened ? CheckCircle2 : XCircle,
             highlightClass: season.hasOpened ? "text-green-600" : "text-orange-500",
         },
-    ]
+    ];
 
     const statusChips = [
         {
@@ -304,20 +312,21 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
             key: "hasOpened",
             content: (
                 <Badge
-                    className={`flex items-center gap-1 border ${season.hasOpened
-                        ? "bg-green-500/10 text-green-600 border-green-500/30"
-                        : "bg-orange-500/10 text-orange-600 border-orange-500/30"
-                        }`}
+                    className={`flex items-center gap-1 border ${
+                        season.hasOpened
+                            ? "bg-green-500/10 text-green-600 border-green-500/30"
+                            : "bg-orange-500/10 text-orange-600 border-orange-500/30"
+                    }`}
                 >
                     {season.hasOpened ? (
                         <>
                             <CheckCircle2 className="w-3 h-3" />
-                            {t('tournaments.detail.chips.hasOpened.opened')}
+                            {t("tournaments.detail.chips.hasOpened.opened")}
                         </>
                     ) : (
                         <>
                             <XCircle className="w-3 h-3" />
-                            {t('tournaments.detail.chips.hasOpened.closed')}
+                            {t("tournaments.detail.chips.hasOpened.closed")}
                         </>
                     )}
                 </Badge>
@@ -327,15 +336,16 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
             key: "precreate",
             content: (
                 <Badge
-                    className={`flex items-center gap-1 border ${season.enablePrecreate
-                        ? "bg-blue-500/10 text-blue-600 border-blue-500/30"
-                        : "bg-muted text-muted-foreground border-border/60"
-                        }`}
+                    className={`flex items-center gap-1 border ${
+                        season.enablePrecreate
+                            ? "bg-blue-500/10 text-blue-600 border-blue-500/30"
+                            : "bg-muted text-muted-foreground border-border/60"
+                    }`}
                 >
                     <Calendar className="w-3 h-3" />
                     {season.enablePrecreate
-                        ? t('tournaments.detail.chips.precreate.enabled', { days: season.precreateBeforeEndDays })
-                        : t('tournaments.detail.chips.precreate.disabled')}
+                        ? t("tournaments.detail.chips.precreate.enabled", { days: season.precreateBeforeEndDays })
+                        : t("tournaments.detail.chips.precreate.disabled")}
                 </Badge>
             ),
         },
@@ -343,19 +353,20 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
             key: "random-reward",
             content: (
                 <Badge
-                    className={`flex items-center gap-1 border ${season.isRandomItemAgain
-                        ? "bg-purple-500/10 text-purple-600 border-purple-500/30"
-                        : "bg-muted text-muted-foreground border-border/60"
-                        }`}
+                    className={`flex items-center gap-1 border ${
+                        season.isRandomItemAgain
+                            ? "bg-purple-500/10 text-purple-600 border-purple-500/30"
+                            : "bg-muted text-muted-foreground border-border/60"
+                    }`}
                 >
                     <RefreshCcw className="w-3 h-3" />
                     {season.isRandomItemAgain
-                        ? t('tournaments.detail.chips.randomReward.enabled')
-                        : t('tournaments.detail.chips.randomReward.disabled')}
+                        ? t("tournaments.detail.chips.randomReward.enabled")
+                        : t("tournaments.detail.chips.randomReward.disabled")}
                 </Badge>
             ),
         },
-    ]
+    ];
 
     const overviewItems = [
         {
@@ -375,19 +386,21 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
         },
         {
             label: overviewLabels.createdBy,
-            value: season.createdById !== null && season.createdById !== undefined
-                ? season.createdById.toString()
-                : commonTexts.notAvailable,
+            value:
+                season.createdById !== null && season.createdById !== undefined
+                    ? season.createdById.toString()
+                    : commonTexts.notAvailable,
             icon: Trophy,
         },
         {
             label: overviewLabels.updatedBy,
-            value: season.updatedById !== null && season.updatedById !== undefined
-                ? season.updatedById.toString()
-                : commonTexts.notAvailable,
+            value:
+                season.updatedById !== null && season.updatedById !== undefined
+                    ? season.updatedById.toString()
+                    : commonTexts.notAvailable,
             icon: Trophy,
         },
-    ]
+    ];
 
     const metadataItems = [
         { label: metadataLabels.seasonId, value: season.id?.toString() ?? commonTexts.notAvailable },
@@ -396,29 +409,29 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
         {
             label: metadataLabels.precreateDays,
             value: season.enablePrecreate
-                ? t('tournaments.detail.metadata.daysValue', { count: season.precreateBeforeEndDays })
+                ? t("tournaments.detail.metadata.daysValue", { count: season.precreateBeforeEndDays })
                 : commonTexts.notAvailable,
         },
         { label: metadataLabels.randomAgain, value: season.isRandomItemAgain ? commonTexts.yes : commonTexts.no },
         { label: metadataLabels.hasOpened, value: season.hasOpened ? commonTexts.yes : commonTexts.no },
-    ]
+    ];
 
     const formatRankRange = (start?: number | null, nextStart?: number | null) => {
         if (start === null || start === undefined) {
-            return t('tournaments.detail.rewards.range.default')
+            return t("tournaments.detail.rewards.range.default");
         }
         if (nextStart === null || nextStart === undefined) {
-            return t('tournaments.detail.rewards.range.infinite', { start })
+            return t("tournaments.detail.rewards.range.infinite", { start });
         }
-        const end = nextStart - 1
+        const end = nextStart - 1;
         if (end <= start) {
-            return t('tournaments.detail.rewards.range.single', { rank: start })
+            return t("tournaments.detail.rewards.range.single", { rank: start });
         }
-        return t('tournaments.detail.rewards.range.range', { start, end })
-    }
+        return t("tournaments.detail.rewards.range.range", { start, end });
+    };
 
-    const isStandalonePage = leaderboardSeasonId === undefined
-    const containerClassName = isStandalonePage ? "mt-24 p-8 space-y-8" : "space-y-8"
+    const isStandalonePage = leaderboardSeasonId === undefined;
+    const containerClassName = isStandalonePage ? "mt-24 p-8 space-y-8" : "space-y-8";
 
     const content = (
         <div className={containerClassName}>
@@ -429,7 +442,7 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                             {season.nameTranslation || season.nameKey}
                         </CardTitle>
                         <p className="text-sm text-muted-foreground">
-                            {t('tournaments.detail.labels.seasonCode', { code: season.nameKey })}
+                            {t("tournaments.detail.labels.seasonCode", { code: season.nameKey })}
                         </p>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -451,7 +464,9 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                                         <stat.icon className="w-4 h-4" />
                                     </div>
                                 </div>
-                                <p className={`mt-3 text-2xl font-semibold text-foreground ${stat.highlightClass ?? ""}`}>
+                                <p
+                                    className={`mt-3 text-2xl font-semibold text-foreground ${stat.highlightClass ?? ""}`}
+                                >
                                     {stat.value}
                                 </p>
                             </div>
@@ -480,9 +495,16 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                         <CardContent>
                             <div className="grid gap-3 sm:grid-cols-2">
                                 {metadataItems.map((item) => (
-                                    <div key={item.label} className="flex flex-col gap-1 rounded-lg border border-border/50 p-3">
-                                        <span className="text-xs uppercase text-muted-foreground tracking-wide">{item.label}</span>
-                                        <span className="text-sm font-medium text-foreground">{item.value ?? commonTexts.notAvailable}</span>
+                                    <div
+                                        key={item.label}
+                                        className="flex flex-col gap-1 rounded-lg border border-border/50 p-3"
+                                    >
+                                        <span className="text-xs uppercase text-muted-foreground tracking-wide">
+                                            {item.label}
+                                        </span>
+                                        <span className="text-sm font-medium text-foreground">
+                                            {item.value ?? commonTexts.notAvailable}
+                                        </span>
                                     </div>
                                 ))}
                             </div>
@@ -576,10 +598,10 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                             </div>
                             <div>
                                 <CardTitle className="text-lg font-bold text-foreground">
-                                    {t('tournaments.detail.periodStats.title')}
+                                    {t("tournaments.detail.periodStats.title")}
                                 </CardTitle>
                                 <p className="text-sm text-muted-foreground mt-1">
-                                    {t('tournaments.detail.periodStats.description')}
+                                    {t("tournaments.detail.periodStats.description")}
                                 </p>
                             </div>
                         </div>
@@ -588,7 +610,7 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                             className="bg-gradient-to-r from-indigo-500 to-indigo-600 hover:from-indigo-600 hover:to-indigo-700 text-white shadow-lg"
                         >
                             <BarChart3 className="w-4 h-4 mr-2" />
-                            {t('tournaments.detail.periodStats.viewButton')}
+                            {t("tournaments.detail.periodStats.viewButton")}
                         </Button>
                     </div>
                 </CardContent>
@@ -600,9 +622,7 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                         <div className="p-2 bg-primary/10 rounded-lg">
                             <Languages className="w-5 h-5 text-primary" />
                         </div>
-                        <CardTitle className="text-xl font-bold text-foreground">
-                            {translationLabels.title}
-                        </CardTitle>
+                        <CardTitle className="text-xl font-bold text-foreground">{translationLabels.title}</CardTitle>
                     </div>
                 </CardHeader>
                 <CardContent>
@@ -627,9 +647,7 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                                             <td className="px-4 py-2 text-sm font-medium uppercase text-muted-foreground">
                                                 {translation.key}
                                             </td>
-                                            <td className="px-4 py-2 text-sm text-foreground">
-                                                {translation.value}
-                                            </td>
+                                            <td className="px-4 py-2 text-sm text-foreground">{translation.value}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -646,17 +664,10 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                             <div className="p-2 bg-primary/10 rounded-lg">
                                 <Gift className="w-5 h-5 text-primary" />
                             </div>
-                            <CardTitle className="text-xl font-bold text-foreground">
-                                {rewardsLabels.title}
-                            </CardTitle>
+                            <CardTitle className="text-xl font-bold text-foreground">{rewardsLabels.title}</CardTitle>
                         </div>
-                        <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setIsRewardDialogOpen(true)}
-                            className="h-9"
-                        >
-                            {t('tournaments.detail.rewards.editButton')}
+                        <Button variant="outline" size="sm" onClick={() => setIsRewardDialogOpen(true)} className="h-9">
+                            {t("tournaments.detail.rewards.editButton")}
                         </Button>
                     </div>
                 </CardHeader>
@@ -667,8 +678,8 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                         rankGroups.map(([rankName, entries]) => {
                             const totalRewardsForRank = entries.reduce(
                                 (acc, entry) => acc + (Array.isArray(entry.rewards) ? entry.rewards.length : 0),
-                                0
-                            )
+                                0,
+                            );
                             return (
                                 <div
                                     key={rankName}
@@ -690,9 +701,9 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                                     </div>
                                     <div className="space-y-3">
                                         {entries.map((entry, index) => {
-                                            const nextEntry = entries[index + 1]
-                                            const rangeLabel = formatRankRange(entry.order, nextEntry?.order ?? null)
-                                            const entryRewards = Array.isArray(entry.rewards) ? entry.rewards : []
+                                            const nextEntry = entries[index + 1];
+                                            const rangeLabel = formatRankRange(entry.order, nextEntry?.order ?? null);
+                                            const entryRewards = Array.isArray(entry.rewards) ? entry.rewards : [];
 
                                             return (
                                                 <div
@@ -735,7 +746,10 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                                                                 </thead>
                                                                 <tbody className="divide-y divide-border/40">
                                                                     {entryRewards.map((reward) => (
-                                                                        <tr key={reward.id} className="bg-background/60">
+                                                                        <tr
+                                                                            key={reward.id}
+                                                                            className="bg-background/60"
+                                                                        >
                                                                             <td className="px-4 py-2 text-sm text-foreground font-medium">
                                                                                 {renderRewardValue(reward.rewardType)}
                                                                             </td>
@@ -746,7 +760,8 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                                                                                 {renderRewardValue(reward.rewardItem)}
                                                                             </td>
                                                                             <td className="px-4 py-2 text-sm text-muted-foreground">
-                                                                                {reward.nameTranslation || commonTexts.notAvailable}
+                                                                                {reward.nameTranslation ||
+                                                                                    commonTexts.notAvailable}
                                                                             </td>
                                                                         </tr>
                                                                     ))}
@@ -755,17 +770,17 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
                                                         </div>
                                                     )}
                                                 </div>
-                                            )
+                                            );
                                         })}
                                     </div>
                                 </div>
-                            )
+                            );
                         })
                     )}
                 </CardContent>
             </Card>
         </div>
-    )
+    );
 
     const rewardDialog = (
         <DialogUpdateRewardSeason
@@ -774,7 +789,7 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
             seasonId={season.id}
             rankGroups={rankGroups}
         />
-    )
+    );
 
     const periodStatsDialog = (
         <DialogPeriodStats
@@ -782,17 +797,17 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
             onOpenChange={setIsPeriodStatsDialogOpen}
             seasonId={resolvedId}
         />
-    )
+    );
 
     if (isStandalonePage) {
         return (
             <>
-                <HeaderAdmin title={t('tournaments.title')} description={t('tournaments.description')} />
+                <HeaderAdmin title={t("tournaments.title")} description={t("tournaments.description")} />
                 {content}
                 {rewardDialog}
                 {periodStatsDialog}
             </>
-        )
+        );
     }
 
     return (
@@ -801,5 +816,5 @@ export default function LeaderboardDetail({ leaderboardSeasonId }: LeaderboardDe
             {rewardDialog}
             {periodStatsDialog}
         </>
-    )
+    );
 }

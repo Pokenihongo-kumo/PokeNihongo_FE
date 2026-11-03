@@ -1,16 +1,16 @@
-import * as Icons from 'lucide-react';
-import { LucideProps } from 'lucide-react';
-import styles from './index.module.scss';
+import * as Icons from "lucide-react";
+import { LucideProps } from "lucide-react";
+import styles from "./index.module.scss";
 
 export default function LucideIcon({
     name,
     iconSize = 18,
-    iconColor = 'currentColor',
-    className = '',
+    iconColor = "currentColor",
+    className = "",
     spin = false,
-    fill = 'none',
+    fill = "none",
 }: COMPONENTS.ILucideIconProps) {
-    if (!name || typeof name !== 'string') {
+    if (!name || typeof name !== "string") {
         // Không render gì nếu không có tên icon hợp lệ
         return null;
     }
@@ -21,14 +21,7 @@ export default function LucideIcon({
         return null;
     }
 
-    const combinedClass = `${className} ${spin ? styles['lucide-spin'] : ''}`.trim();
+    const combinedClass = `${className} ${spin ? styles["lucide-spin"] : ""}`.trim();
 
-    return (
-        <IconComponent
-            size={iconSize}
-            color={iconColor}
-            className={combinedClass}
-            fill={fill}
-        />
-    );
+    return <IconComponent size={iconSize} color={iconColor} className={combinedClass} fill={fill} />;
 }

@@ -1,24 +1,15 @@
-import { DialogContent, DialogHeader, DialogTitle } from '@ui/Dialog';
-import { Input } from '@ui/Input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui/Select';
-import { Button } from '@ui/Button';
-import { Switch } from '@ui/Switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@ui/Card';
-import { Badge } from '@ui/Badge';
-import { Separator } from '@ui/Separator';
-import { useState } from 'react';
-import { toast } from 'react-toastify';
-import { useTranslation } from 'react-i18next';
-import {
-    ClipboardList,
-    Clock,
-    Hash,
-    Save,
-    Send,
-    X,
-    BookOpen,
-    BarChart3
-} from 'lucide-react';
+import { DialogContent, DialogHeader, DialogTitle } from "@ui/Dialog";
+import { Input } from "@ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import { Button } from "@ui/Button";
+import { Switch } from "@ui/Switch";
+import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card";
+import { Badge } from "@ui/Badge";
+import { Separator } from "@ui/Separator";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useTranslation } from "react-i18next";
+import { ClipboardList, Clock, Hash, Save, Send, X, BookOpen, BarChart3 } from "lucide-react";
 
 interface CreateQuestionSetDialogProps {
     setIsAddDialogOpen: (value: boolean) => void;
@@ -31,37 +22,45 @@ interface CreateQuestionSetDialogProps {
     }>;
 }
 
-const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, availableExercises = [] }: CreateQuestionSetDialogProps) => {
+const CreateQuestionSetDialog = ({
+    setIsAddDialogOpen,
+    lessonId,
+    lessonTitle,
+    availableExercises = [],
+}: CreateQuestionSetDialogProps) => {
     const { t } = useTranslation();
 
     // Mock exercises data - replace with actual API call
-    const exercises = availableExercises.length > 0 ? availableExercises : [
-        { id: 1, title: "Hiragana Recognition Quiz", type: "multiple_choice" },
-        { id: 2, title: "Hiragana Writing Practice", type: "fill_blank" },
-        { id: 3, title: "Hiragana Listening Test", type: "listening" }
-    ];
+    const exercises =
+        availableExercises.length > 0
+            ? availableExercises
+            : [
+                  { id: 1, title: "Hiragana Recognition Quiz", type: "multiple_choice" },
+                  { id: 2, title: "Hiragana Writing Practice", type: "fill_blank" },
+                  { id: 3, title: "Hiragana Listening Test", type: "listening" },
+              ];
 
     const [formData, setFormData] = useState({
-        title: '',
+        title: "",
         exerciseId: exercises[0]?.id || 1,
         questionCount: 10,
         timeLimit: 15,
         isActive: true,
-        lessonId: lessonId || 1
+        lessonId: lessonId || 1,
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
 
     const handleInputChange = (field: string, value: any) => {
-        setFormData(prev => ({
+        setFormData((prev) => ({
             ...prev,
-            [field]: value
+            [field]: value,
         }));
         // Clear error when user starts typing
         if (errors[field]) {
-            setErrors(prev => ({
+            setErrors((prev) => ({
                 ...prev,
-                [field]: ''
+                [field]: "",
             }));
         }
     };
@@ -70,13 +69,13 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
         const newErrors: Record<string, string> = {};
 
         if (!formData.title.trim()) {
-            newErrors.title = 'Title is required';
+            newErrors.title = "Title is required";
         }
         if (formData.questionCount < 1) {
-            newErrors.questionCount = 'Question count must be at least 1';
+            newErrors.questionCount = "Question count must be at least 1";
         }
         if (formData.timeLimit < 1) {
-            newErrors.timeLimit = 'Time limit must be at least 1 minute';
+            newErrors.timeLimit = "Time limit must be at least 1 minute";
         }
 
         setErrors(newErrors);
@@ -85,17 +84,17 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
 
     const handleSubmit = async (isPublish: boolean = false) => {
         if (!validateForm()) {
-            toast.error('Please check your information');
+            toast.error("Please check your information");
             return;
         }
 
         try {
             // TODO: Implement API call
-            console.log('Creating question set:', { ...formData, isActive: isPublish });
-            toast.success(isPublish ? 'Question set published successfully!' : 'Question set saved as draft!');
+            console.log("Creating question set:", { ...formData, isActive: isPublish });
+            toast.success(isPublish ? "Question set published successfully!" : "Question set saved as draft!");
             setIsAddDialogOpen(false);
         } catch (error) {
-            toast.error('Failed to create question set');
+            toast.error("Failed to create question set");
         }
     };
 
@@ -108,9 +107,7 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
                             <ClipboardList className="h-6 w-6 text-primary" />
                         </div>
                         <div>
-                            <DialogTitle className="text-2xl font-bold text-foreground">
-                                Add Question Set
-                            </DialogTitle>
+                            <DialogTitle className="text-2xl font-bold text-foreground">Add Question Set</DialogTitle>
                             <p className="text-sm text-muted-foreground mt-1">
                                 {lessonTitle && `For lesson: ${lessonTitle}`}
                             </p>
@@ -131,19 +128,19 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
                             <CardContent className="space-y-6">
                                 {/* Title */}
                                 <div className="space-y-2">
-                                    <label className="text-sm font-semibold text-foreground">
-                                        Title *
-                                    </label>
+                                    <label className="text-sm font-semibold text-foreground">Title *</label>
                                     <Input
                                         placeholder="Enter question set title"
                                         className="bg-background border-border text-foreground h-11 text-base"
                                         value={formData.title}
-                                        onChange={(e) => handleInputChange('title', e.target.value)}
+                                        onChange={(e) => handleInputChange("title", e.target.value)}
                                     />
-                                    {errors.title && <p className="text-sm text-red-500 flex items-center gap-1">
-                                        <X className="h-3 w-3" />
-                                        {errors.title}
-                                    </p>}
+                                    {errors.title && (
+                                        <p className="text-sm text-red-500 flex items-center gap-1">
+                                            <X className="h-3 w-3" />
+                                            {errors.title}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Exercise Selection */}
@@ -152,7 +149,10 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
                                         <BookOpen className="h-4 w-4 text-primary" />
                                         Select Exercise *
                                     </label>
-                                    <Select value={formData.exerciseId.toString()} onValueChange={(value) => handleInputChange('exerciseId', parseInt(value))}>
+                                    <Select
+                                        value={formData.exerciseId.toString()}
+                                        onValueChange={(value) => handleInputChange("exerciseId", parseInt(value))}
+                                    >
                                         <SelectTrigger className="bg-background border-border text-foreground h-11">
                                             <SelectValue placeholder="Select an exercise" />
                                         </SelectTrigger>
@@ -161,7 +161,9 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
                                                 <SelectItem key={exercise.id} value={exercise.id.toString()}>
                                                     <div className="flex items-center gap-2">
                                                         <span className="text-sm font-medium">{exercise.title}</span>
-                                                        <Badge className="bg-blue-100 text-blue-800 text-xs">{exercise.type}</Badge>
+                                                        <Badge className="bg-blue-100 text-blue-800 text-xs">
+                                                            {exercise.type}
+                                                        </Badge>
                                                     </div>
                                                 </SelectItem>
                                             ))}
@@ -181,12 +183,16 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
                                             placeholder="10"
                                             className="bg-background border-border text-foreground h-11"
                                             value={formData.questionCount}
-                                            onChange={(e) => handleInputChange('questionCount', parseInt(e.target.value) || 0)}
+                                            onChange={(e) =>
+                                                handleInputChange("questionCount", parseInt(e.target.value) || 0)
+                                            }
                                         />
-                                        {errors.questionCount && <p className="text-sm text-red-500 flex items-center gap-1">
-                                            <X className="h-3 w-3" />
-                                            {errors.questionCount}
-                                        </p>}
+                                        {errors.questionCount && (
+                                            <p className="text-sm text-red-500 flex items-center gap-1">
+                                                <X className="h-3 w-3" />
+                                                {errors.questionCount}
+                                            </p>
+                                        )}
                                     </div>
 
                                     {/* Time Limit */}
@@ -200,12 +206,16 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
                                             placeholder="15"
                                             className="bg-background border-border text-foreground h-11"
                                             value={formData.timeLimit}
-                                            onChange={(e) => handleInputChange('timeLimit', parseInt(e.target.value) || 0)}
+                                            onChange={(e) =>
+                                                handleInputChange("timeLimit", parseInt(e.target.value) || 0)
+                                            }
                                         />
-                                        {errors.timeLimit && <p className="text-sm text-red-500 flex items-center gap-1">
-                                            <X className="h-3 w-3" />
-                                            {errors.timeLimit}
-                                        </p>}
+                                        {errors.timeLimit && (
+                                            <p className="text-sm text-red-500 flex items-center gap-1">
+                                                <X className="h-3 w-3" />
+                                                {errors.timeLimit}
+                                            </p>
+                                        )}
                                     </div>
                                 </div>
                             </CardContent>
@@ -220,7 +230,10 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
                                             <BarChart3 className="h-5 w-5 text-blue-600" />
                                         </div>
                                         <div>
-                                            <label htmlFor="isActive" className="text-sm font-semibold text-foreground cursor-pointer">
+                                            <label
+                                                htmlFor="isActive"
+                                                className="text-sm font-semibold text-foreground cursor-pointer"
+                                            >
                                                 Activate Question Set
                                             </label>
                                             <p className="text-xs text-muted-foreground">
@@ -231,7 +244,7 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
                                     <Switch
                                         id="isActive"
                                         checked={formData.isActive}
-                                        onCheckedChange={(checked) => handleInputChange('isActive', checked)}
+                                        onCheckedChange={(checked) => handleInputChange("isActive", checked)}
                                         className="data-[state=checked]:bg-blue-600"
                                     />
                                 </div>
@@ -243,9 +256,7 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
                 <Separator className="my-4" />
 
                 <div className="flex justify-between items-center pt-4">
-                    <div className="text-xs text-muted-foreground">
-                        * Required fields
-                    </div>
+                    <div className="text-xs text-muted-foreground">* Required fields</div>
                     <div className="flex gap-3">
                         <Button
                             variant="outline"
@@ -274,7 +285,7 @@ const CreateQuestionSetDialog = ({ setIsAddDialogOpen, lessonId, lessonTitle, av
                 </div>
             </DialogContent>
         </>
-    )
-}
+    );
+};
 
-export default CreateQuestionSetDialog
+export default CreateQuestionSetDialog;

@@ -7,14 +7,23 @@ import gachaService from "@services/gacha";
 import dashboardService from "@services/dashboard";
 import { IGachaBannerEntity } from "@models/gacha/entity";
 import { ICreateGachaItemListRequest, ICreateGachaRequest } from "@models/gacha/request";
-import { IDashboardGachaStatsOverviewEntity, IDashboardGachaStatsDetailEntity } from "@models/dashboard/dashboard.entity";
+import {
+    IDashboardGachaStatsOverviewEntity,
+    IDashboardGachaStatsDetailEntity,
+} from "@models/dashboard/dashboard.entity";
 
 /**
  * Handle Gacha Banner List
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
-export const useGachaBannerList = (params: { page?: number; limit?: number; startDate?: string; endDate?: string; status?: string[] }) => {
+export const useGachaBannerList = (params: {
+    page?: number;
+    limit?: number;
+    startDate?: string;
+    endDate?: string;
+    status?: string[];
+}) => {
     const currentLanguage = useSelector(selectCurrentLanguage);
     return useQuery<any>({
         queryKey: ["gachaBanners", params, currentLanguage],
@@ -28,8 +37,8 @@ export const useGachaBannerList = (params: { page?: number; limit?: number; star
 
 /**
  * Handle Get Gacha Banner By ID
- * @param id 
- * @returns 
+ * @param id
+ * @returns
  */
 export const useGachaBannerById = (id: number | null) => {
     const currentLanguage = useSelector(selectCurrentLanguage);
@@ -47,10 +56,21 @@ export const useGachaBannerById = (id: number | null) => {
 
 /**
  * Handle Get Prepare Pokemon List
- * @param gachaBannerId 
- * @returns 
+ * @param gachaBannerId
+ * @returns
  */
-export const usePreparePokemonList = (gachaBannerId: number, params?: { rarity?: string[]; types?: number | number[]; nameEn?: string; currentPage?: number; pageSize?: number; page?: number }, enabled?: boolean) => {
+export const usePreparePokemonList = (
+    gachaBannerId: number,
+    params?: {
+        rarity?: string[];
+        types?: number | number[];
+        nameEn?: string;
+        currentPage?: number;
+        pageSize?: number;
+        page?: number;
+    },
+    enabled?: boolean,
+) => {
     return useQuery<any>({
         queryKey: ["preparePokemonList", gachaBannerId, params],
         queryFn: async () => {
@@ -61,7 +81,6 @@ export const usePreparePokemonList = (gachaBannerId: number, params?: { rarity?:
     });
 };
 //------------------------End------------------------//
-
 
 /**
  * Handle Create Gacha Banner
@@ -78,15 +97,14 @@ export const useCreateGachaBanner = () => {
         },
         onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["gachaBanners"] });
-            toast.success(data?.message || t('configGacha.createSuccess'));
+            toast.success(data?.message || t("configGacha.createSuccess"));
         },
         onError: (error: any) => {
-            toast.error(error.response?.data?.message || t('configGacha.createError'));
+            toast.error(error.response?.data?.message || t("configGacha.createError"));
         },
     });
 };
 //-------------------End-------------------//
-
 
 /**
  * Handle Update Gacha Banner
@@ -101,20 +119,18 @@ export const useUpdateGachaBanner = () => {
             return response.data;
         },
         onSuccess: (data: any, variables) => {
-            toast.success(data?.message || t('common.success'));
+            toast.success(data?.message || t("common.success"));
             queryClient.invalidateQueries({ queryKey: ["gachaBanners"] });
             if (variables?.id) {
                 queryClient.invalidateQueries({ queryKey: ["gachaBanner", variables.id] });
             }
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || t('common.error'));
+            toast.error(error?.response?.data?.message || t("common.error"));
         },
     });
 };
 //------------------------End------------------------//
-
-
 
 //------------------------------------------------Gacha Item------------------------------------------------//
 /**
@@ -132,15 +148,14 @@ export const useDeleteGachaItem = () => {
         },
         onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["gachaBanner"] });
-            toast.success(data?.message || t('common.success'));
+            toast.success(data?.message || t("common.success"));
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || t('common.error'));
+            toast.error(error?.response?.data?.message || t("common.error"));
         },
     });
 };
 //------------------------End------------------------//
-
 
 /**
  * Handle Create Gacha Item List
@@ -156,15 +171,14 @@ export const useCreateGachaItemList = () => {
         },
         onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["gachaBanner"] });
-            toast.success(data?.message || t('common.success'));
+            toast.success(data?.message || t("common.success"));
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || t('common.error'));
+            toast.error(error?.response?.data?.message || t("common.error"));
         },
     });
 };
 //------------------------End------------------------//
-
 
 /**
  * Handle Update Gacha Item List
@@ -180,10 +194,10 @@ export const useUpdateGachaItemList = () => {
         },
         onSuccess: (data: any) => {
             queryClient.invalidateQueries({ queryKey: ["gachaBanner"] });
-            toast.success(data?.message || t('common.success'));
+            toast.success(data?.message || t("common.success"));
         },
         onError: (error: any) => {
-            toast.error(error?.response?.data?.message || t('common.error'));
+            toast.error(error?.response?.data?.message || t("common.error"));
         },
     });
 };
@@ -192,7 +206,7 @@ export const useUpdateGachaItemList = () => {
 //------------------------------------------------Dashboard------------------------------------------------//
 /**
  * Handle Get Dashboard Gacha Stats Overview
- * @returns 
+ * @returns
  */
 export const useDashboardGachaStatsOverview = () => {
     return useQuery<{ data: IDashboardGachaStatsOverviewEntity }>({
@@ -205,11 +219,10 @@ export const useDashboardGachaStatsOverview = () => {
 };
 //------------------------End------------------------//
 
-
 /**
  * Handle Get Dashboard Gacha Stats Detail
- * @param gachaBannerId 
- * @returns 
+ * @param gachaBannerId
+ * @returns
  */
 export const useDashboardGachaStatsDetail = (gachaBannerId: number) => {
     return useQuery<{ data: IDashboardGachaStatsDetailEntity }>({

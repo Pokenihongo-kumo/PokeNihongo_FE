@@ -6,7 +6,14 @@ import z from "zod";
  */
 export const DailyRequestResponseSchema = z.object({
     id: z.number(),
-    dailyRequestType: z.enum(['DAILY_LOGIN', 'DAILY_LESSON', 'DAILY_EXERCISE', 'STREAK_LOGIN', 'STREAK_LESSON', 'STREAK_EXCERCISE']),
+    dailyRequestType: z.enum([
+        "DAILY_LOGIN",
+        "DAILY_LESSON",
+        "DAILY_EXERCISE",
+        "STREAK_LOGIN",
+        "STREAK_LESSON",
+        "STREAK_EXCERCISE",
+    ]),
     conditionValue: z.number(),
     rewardId: z.number(),
     isStreak: z.boolean(),

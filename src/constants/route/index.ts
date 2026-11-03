@@ -1,59 +1,59 @@
 const AUTH = {
-    LOGIN: '/auth/login',
-    REGISTER: '/auth/register',
-    FORGOT_PASSWORD: '/auth/forgot-password',
-    RESET_PASSWORD: '/auth/reset-password',
-    VERIFY_EMAIL: '/auth/verify-email',
-    UNAUTHORIZED: '/auth/unauthorized',
-    LOGOUT: '/auth/logout',
+    LOGIN: "/auth/login",
+    REGISTER: "/auth/register",
+    FORGOT_PASSWORD: "/auth/forgot-password",
+    RESET_PASSWORD: "/auth/reset-password",
+    VERIFY_EMAIL: "/auth/verify-email",
+    UNAUTHORIZED: "/auth/unauthorized",
+    LOGOUT: "/auth/logout",
 };
 
 const PUBLIC = {
-    HOME: '/',
-    NOT_FOUND: '/404',
-}
+    HOME: "/",
+    NOT_FOUND: "/404",
+};
 
 const PAYMENT = {
-    FAILED: '/payment/failed',
-    SUCCESS: '/payment/success',
-}
+    FAILED: "/payment/failed",
+    SUCCESS: "/payment/success",
+};
 
 const ADMIN = {
-    ROOT: '/admin/overview',
-    USERS: '/admin/users',
-    ANALYTICS: '/admin/analytics',
-    SETTINGS: '/admin/settings',
-    PACKAGE_MANAGEMENT: '/admin/package-management',
-    POKEMON_MANAGEMENT: '/admin/pokemon-management',
-    TOURNAMENT_MANAGEMENT: '/admin/tournament-management',
-    AI_PROMPTS_MANAGEMENT: '/admin/ai-prompts-management',
-    CUSTOM_AI_MANAGEMENT: '/admin/custom-ai-management',
-    CUSTOM_AI_MANAGEMENT_DETAIL: '/admin/custom-ai-management/:modelId',
-    AI_SERVICE_MANAGEMENT: '/admin/ai-service-management',
-    DAILY_QUEST_MANAGEMENT: '/admin/daily-quest-management',
-    REWARD_MANAGEMENT: '/admin/reward-management',
-    PERMISSION_MANAGEMENT: '/admin/permission-management',
-    CONFIG_SHOP: '/admin/config-shop',
-    CONFIG_SHOP_BANNER_DETAIL: '/admin/config-shop/:bannerId',
-    CONFIG_GACHA: '/admin/config-gacha',
-    CONFIG_GACHA_BANNER_DETAIL: '/admin/config-gacha/:bannerId',
+    ROOT: "/admin/overview",
+    USERS: "/admin/users",
+    ANALYTICS: "/admin/analytics",
+    SETTINGS: "/admin/settings",
+    PACKAGE_MANAGEMENT: "/admin/package-management",
+    POKEMON_MANAGEMENT: "/admin/pokemon-management",
+    TOURNAMENT_MANAGEMENT: "/admin/tournament-management",
+    AI_PROMPTS_MANAGEMENT: "/admin/ai-prompts-management",
+    CUSTOM_AI_MANAGEMENT: "/admin/custom-ai-management",
+    CUSTOM_AI_MANAGEMENT_DETAIL: "/admin/custom-ai-management/:modelId",
+    AI_SERVICE_MANAGEMENT: "/admin/ai-service-management",
+    DAILY_QUEST_MANAGEMENT: "/admin/daily-quest-management",
+    REWARD_MANAGEMENT: "/admin/reward-management",
+    PERMISSION_MANAGEMENT: "/admin/permission-management",
+    CONFIG_SHOP: "/admin/config-shop",
+    CONFIG_SHOP_BANNER_DETAIL: "/admin/config-shop/:bannerId",
+    CONFIG_GACHA: "/admin/config-gacha",
+    CONFIG_GACHA_BANNER_DETAIL: "/admin/config-gacha/:bannerId",
 };
 
 const MANAGER = {
-    ROOT: '/manager/lessons/management',
-    VOCABULARY: '/manager/vocabulary',
-    GRAMMAR_MANAGEMENT: '/manager/grammar-management',
-    QUESTION_BANK: '/manager/question-bank',
-    TESTSET_MANAGEMENT: '/manager/testset-management',
-    TESTSET_SPEAKING_MANAGEMENT: '/manager/testset-speaking',
-    TESTSET_SPEAKING_MANAGEMENT_EDIT: '/manager/testset-speaking/:id',
-    TEST_MANAGEMENT: '/manager/test-management',
-    SETTINGS: '/manager/settings',
+    ROOT: "/manager/lessons/management",
+    VOCABULARY: "/manager/vocabulary",
+    GRAMMAR_MANAGEMENT: "/manager/grammar-management",
+    QUESTION_BANK: "/manager/question-bank",
+    TESTSET_MANAGEMENT: "/manager/testset-management",
+    TESTSET_SPEAKING_MANAGEMENT: "/manager/testset-speaking",
+    TESTSET_SPEAKING_MANAGEMENT_EDIT: "/manager/testset-speaking/:id",
+    TEST_MANAGEMENT: "/manager/test-management",
+    SETTINGS: "/manager/settings",
 };
 
 const LESSONS = {
-    ROOT: '/admin/lessons',
-    MANAGEMENT: '/admin/lessons/management',
+    ROOT: "/admin/lessons",
+    MANAGEMENT: "/admin/lessons/management",
 };
 
 const ROLE = {
@@ -71,4 +71,3 @@ export const ROUTES = {
     ROLE,
     PAYMENT,
 };
-

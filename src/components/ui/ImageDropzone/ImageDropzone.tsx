@@ -1,7 +1,7 @@
-import { Button } from '@ui/Button';
-import { UploadCloud, Trash2 } from 'lucide-react';
-import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { Button } from "@ui/Button";
+import { UploadCloud, Trash2 } from "lucide-react";
+import React from "react";
+import { useTranslation } from "react-i18next";
 
 interface ImageDropzoneProps {
     label?: string;
@@ -14,7 +14,7 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ label, value, onChange })
     const [previewUrl, setPreviewUrl] = React.useState<string | null>(null);
 
     React.useEffect(() => {
-        if (typeof value === 'string') {
+        if (typeof value === "string") {
             setPreviewUrl(value || null);
             return;
         }
@@ -28,13 +28,19 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ label, value, onChange })
 
     return (
         <div className="space-y-2">
-            <label className="font-medium">{label || t('imageDropzone.defaultLabel')}</label>
+            <label className="font-medium">{label || t("imageDropzone.defaultLabel")}</label>
             {!value && !previewUrl ? (
-                <label htmlFor="image-dropzone-input" className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-muted/50 transition-colors">
+                <label
+                    htmlFor="image-dropzone-input"
+                    className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-muted hover:bg-muted/50 transition-colors"
+                >
                     <div className="flex flex-col items-center justify-center pt-5 pb-6">
                         <UploadCloud className="w-8 h-8 mb-4 text-muted-foreground" />
-                        <p className="mb-2 text-sm text-muted-foreground"><span className="font-semibold">{t('imageDropzone.clickToUpload')}</span> {t('imageDropzone.orDragDrop')}</p>
-                        <p className="text-xs text-muted-foreground">{t('imageDropzone.supportedFormats')}</p>
+                        <p className="mb-2 text-sm text-muted-foreground">
+                            <span className="font-semibold">{t("imageDropzone.clickToUpload")}</span>{" "}
+                            {t("imageDropzone.orDragDrop")}
+                        </p>
+                        <p className="text-xs text-muted-foreground">{t("imageDropzone.supportedFormats")}</p>
                     </div>
                     <input
                         id="image-dropzone-input"
@@ -50,7 +56,11 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ label, value, onChange })
             ) : (
                 <div className="relative w-32 h-32">
                     {previewUrl && (
-                        <img src={previewUrl} alt="preview" className="object-contain w-full h-full rounded-lg border bg-muted" />
+                        <img
+                            src={previewUrl}
+                            alt="preview"
+                            className="object-contain w-full h-full rounded-lg border bg-muted"
+                        />
                     )}
                     <Button
                         type="button"
@@ -68,5 +78,3 @@ const ImageDropzone: React.FC<ImageDropzoneProps> = ({ label, value, onChange })
 };
 
 export default ImageDropzone;
-
-

@@ -1,17 +1,17 @@
-import { ChevronRight, BookOpen, Target, HelpCircle } from "lucide-react"
+import { ChevronRight, BookOpen, Target, HelpCircle } from "lucide-react";
 
 interface RelationshipBreadcrumbProps {
-    lessonTitle?: string
-    lessonLevel?: number
-    exerciseTitle?: string
-    className?: string
+    lessonTitle?: string;
+    lessonLevel?: number;
+    exerciseTitle?: string;
+    className?: string;
 }
 
-const RelationshipBreadcrumb = ({ 
-    lessonTitle, 
-    lessonLevel, 
-    exerciseTitle, 
-    className = "" 
+const RelationshipBreadcrumb = ({
+    lessonTitle,
+    lessonLevel,
+    exerciseTitle,
+    className = "",
 }: RelationshipBreadcrumbProps) => {
     return (
         <div className={`flex items-center space-x-1 text-xs text-muted-foreground ${className}`}>
@@ -26,7 +26,7 @@ const RelationshipBreadcrumb = ({
                     )}
                 </div>
             )}
-            
+
             {exerciseTitle && lessonTitle && (
                 <>
                     <ChevronRight className="h-3 w-3" />
@@ -37,7 +37,7 @@ const RelationshipBreadcrumb = ({
                 </>
             )}
         </div>
-    )
-}
+    );
+};
 
-export default RelationshipBreadcrumb
+export default RelationshipBreadcrumb;

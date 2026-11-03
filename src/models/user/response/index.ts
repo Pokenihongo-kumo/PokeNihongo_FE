@@ -24,4 +24,3 @@ export const UserListResponse = z.object({
     }),
 });
 export type IUserListResponse = z.infer<typeof UserListResponse>;
-

@@ -1,4 +1,13 @@
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@ui/AlertDialog";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@ui/AlertDialog";
 import { Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
@@ -33,12 +42,8 @@ const DeleteConfirm = ({
         <AlertDialog open={open} onOpenChange={onOpenChange}>
             <AlertDialogContent className="bg-white border-border">
                 <AlertDialogHeader>
-                    <AlertDialogTitle className="text-foreground">
-                        {t(titleKey)}
-                    </AlertDialogTitle>
-                    <AlertDialogDescription className="text-muted-foreground">
-                        {t(messageKey)}
-                    </AlertDialogDescription>
+                    <AlertDialogTitle className="text-foreground">{t(titleKey)}</AlertDialogTitle>
+                    <AlertDialogDescription className="text-muted-foreground">{t(messageKey)}</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel className="border-border text-foreground hover:bg-muted cursor-pointer">

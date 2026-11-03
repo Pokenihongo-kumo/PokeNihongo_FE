@@ -7,10 +7,12 @@ export const AnswerEntitySchema = z.object({
     isCorrect: z.boolean(),
     questionBankId: z.number(),
     translations: z.object({
-        meaning: z.array(z.object({
-            language_code: z.string(),
-            value: z.string(),
-        })),
+        meaning: z.array(
+            z.object({
+                language_code: z.string(),
+                value: z.string(),
+            }),
+        ),
     }),
     ...byUser,
     ...at,

@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@ui/Card";
 import { Button } from "@ui/Button";
 import { Input } from "@ui/Input";
@@ -49,23 +48,22 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
     });
     //--------------------------------End--------------------------------//
 
-
     /**
      * handle play audio
-     * @param audioUrl 
+     * @param audioUrl
      */
     const handlePlayAudio = (audioUrl: string) => {
         const audio = new Audio(audioUrl);
-        audio.play().catch(error => {
-            console.error('Error playing audio:', error);
+        audio.play().catch((error) => {
+            console.error("Error playing audio:", error);
         });
     };
     //--------------------------------End--------------------------------//
 
     /**
      * get type badge color
-     * @param type 
-     * @returns 
+     * @param type
+     * @returns
      */
     const getTypeBadgeColor = (type: string) => {
         switch (type) {
@@ -85,11 +83,10 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
     };
     //--------------------------------End--------------------------------//
 
-
     /**
      * get level badge color
-     * @param level 
-     * @returns 
+     * @param level
+     * @returns
      */
 
     //--------------------------------End--------------------------------//
@@ -101,7 +98,7 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
      */
     const toggleSort = (columnKey: string) => {
         if (sortBy === columnKey) {
-            setSort(prev => (prev === "asc" ? "desc" : "asc"));
+            setSort((prev) => (prev === "asc" ? "desc" : "asc"));
         } else {
             setSortBy(columnKey);
             setSort("asc");
@@ -117,13 +114,25 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
         <Table>
             <TableHeader>
                 <TableRow className="border-gray-200 hover:bg-gray-50">
-                    <TableHead className="text-gray-600 font-semibold">{t("vocabulary.listVocabulary.columns.wordJp")}</TableHead>
-                    <TableHead className="text-gray-600 font-semibold">{t("vocabulary.listVocabulary.columns.reading")}</TableHead>
-                    <TableHead className="text-gray-600 font-semibold">{t("vocabulary.listVocabulary.columns.wordType")}</TableHead>
-                    <TableHead className="text-gray-600 font-semibold">{t("vocabulary.listVocabulary.columns.level")}</TableHead>
-                    <TableHead className="text-gray-600 font-semibold">{t("vocabulary.listVocabulary.columns.media")}</TableHead>
+                    <TableHead className="text-gray-600 font-semibold">
+                        {t("vocabulary.listVocabulary.columns.wordJp")}
+                    </TableHead>
+                    <TableHead className="text-gray-600 font-semibold">
+                        {t("vocabulary.listVocabulary.columns.reading")}
+                    </TableHead>
+                    <TableHead className="text-gray-600 font-semibold">
+                        {t("vocabulary.listVocabulary.columns.wordType")}
+                    </TableHead>
+                    <TableHead className="text-gray-600 font-semibold">
+                        {t("vocabulary.listVocabulary.columns.level")}
+                    </TableHead>
+                    <TableHead className="text-gray-600 font-semibold">
+                        {t("vocabulary.listVocabulary.columns.media")}
+                    </TableHead>
                     <TableHead>
-                        <div className="text-center font-semibold text-gray-600">{t("vocabulary.listVocabulary.columns.actions")}</div>
+                        <div className="text-center font-semibold text-gray-600">
+                            {t("vocabulary.listVocabulary.columns.actions")}
+                        </div>
                     </TableHead>
                 </TableRow>
             </TableHeader>
@@ -161,7 +170,9 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
         <Card className="bg-white shadow-lg">
             <CardHeader className="pb-0">
                 <div className="flex items-center justify-between mt-2">
-                    <CardTitle className="text-2xl font-bold text-gray-800">{t("vocabulary.listVocabulary.title")}</CardTitle>
+                    <CardTitle className="text-2xl font-bold text-gray-800">
+                        {t("vocabulary.listVocabulary.title")}
+                    </CardTitle>
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -221,7 +232,11 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
                                                 {t("vocabulary.listVocabulary.columns.level")}
                                                 <span className="inline-block w-4 h-4">
                                                     {sortBy === "levelN" ? (
-                                                        sort === "asc" ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                                                        sort === "asc" ? (
+                                                            <ChevronUp className="w-4 h-4" />
+                                                        ) : (
+                                                            <ChevronDown className="w-4 h-4" />
+                                                        )
                                                     ) : (
                                                         <ChevronsUpDown className="w-4 h-4 text-gray-400" />
                                                     )}
@@ -245,14 +260,24 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
                                 <TableBody>
                                     {vocabularies?.results?.map((vocab: any) => (
                                         <TableRow key={vocab.id} className="border-gray-200 hover:bg-gray-50">
-                                            <TableCell className="font-semibold text-lg text-gray-800 w-40 whitespace-nowrap">{vocab.wordJp}</TableCell>
-                                            <TableCell className="text-gray-500 w-36 whitespace-nowrap">{vocab.reading}</TableCell>
+                                            <TableCell className="font-semibold text-lg text-gray-800 w-40 whitespace-nowrap">
+                                                {vocab.wordJp}
+                                            </TableCell>
+                                            <TableCell className="text-gray-500 w-36 whitespace-nowrap">
+                                                {vocab.reading}
+                                            </TableCell>
                                             <TableCell className="w-28 whitespace-nowrap">
                                                 {(() => {
-                                                    const typeName = (vocab?.wordType?.name as string | undefined) || "unknown";
-                                                    const label = t(`vocabulary.listVocabulary.wordTypes.${typeName}`, typeName);
+                                                    const typeName =
+                                                        (vocab?.wordType?.name as string | undefined) || "unknown";
+                                                    const label = t(
+                                                        `vocabulary.listVocabulary.wordTypes.${typeName}`,
+                                                        typeName,
+                                                    );
                                                     return (
-                                                        <Badge className={getTypeBadgeColor(typeName) + " font-semibold"}>
+                                                        <Badge
+                                                            className={getTypeBadgeColor(typeName) + " font-semibold"}
+                                                        >
                                                             {label}
                                                         </Badge>
                                                     );
@@ -276,7 +301,11 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
                                                 </div>
                                             </TableCell>
                                             <TableCell className="text-right w-28">
-                                                <Button variant="ghost" size="icon" onClick={() => setVocabularyToEdit(vocab)}>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() => setVocabularyToEdit(vocab)}
+                                                >
                                                     <Edit className="h-4 w-4" />
                                                 </Button>
                                                 <Button
@@ -313,12 +342,9 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
                 vocabularyIdToDelete={vocabularyIdToDelete}
                 setVocabularyIdToDelete={setVocabularyIdToDelete}
             />
-            <UpdateVocabularyDialog
-                vocabulary={vocabularyToEdit}
-                onClose={() => setVocabularyToEdit(null)}
-            />
+            <UpdateVocabularyDialog vocabulary={vocabularyToEdit} onClose={() => setVocabularyToEdit(null)} />
         </Card>
-    )
-}
+    );
+};
 
-export default ListVocabulary
+export default ListVocabulary;

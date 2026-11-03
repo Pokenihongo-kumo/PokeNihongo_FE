@@ -13,13 +13,12 @@ import { selectCurrentLanguage } from "@redux/features/language/selector";
 export const useLessonList = (params: IQueryRequest) => {
     const currentLanguage = useSelector(selectCurrentLanguage);
 
-
     const { data, isLoading, error } = useQuery({
         queryKey: ["lesson-list", params, currentLanguage],
         queryFn: () => lessonService.getLessonList({ ...params, language: currentLanguage }),
-    })
-    return { data: data?.data?.data, isLoading, error }
-}
+    });
+    return { data: data?.data?.data, isLoading, error };
+};
 
 /**
  * hanlde Create Lesson
@@ -31,11 +30,11 @@ export const useCreateLesson = () => {
     const createLessonMutation = useMutation({
         mutationFn: (data: ICreateLessonRequest) => lessonService.createLesson(data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lesson-list'] });
+            queryClient.invalidateQueries({ queryKey: ["lesson-list"] });
         },
-    })
-    return createLessonMutation
-}
+    });
+    return createLessonMutation;
+};
 
 /**
  * Handle Get Lesson By Id
@@ -47,9 +46,9 @@ export const useGetLessonById = (id: number | null) => {
         queryKey: ["lesson-detail", id],
         queryFn: () => lessonService.getLessonById(id!),
         enabled: !!id,
-    })
-    return { data: data?.data?.data, isLoading, error }
-}
+    });
+    return { data: data?.data?.data, isLoading, error };
+};
 
 /**
  * Handle Update Lesson
@@ -61,9 +60,9 @@ export const useUpdateLesson = () => {
     const updateLessonMutation = useMutation({
         mutationFn: ({ id, data }: { id: number; data: IUpdateLessonRequest }) => lessonService.updateLesson(id, data),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['lesson-list'] });
-            queryClient.invalidateQueries({ queryKey: ['lesson-detail'] });
+            queryClient.invalidateQueries({ queryKey: ["lesson-list"] });
+            queryClient.invalidateQueries({ queryKey: ["lesson-detail"] });
         },
-    })
-    return updateLessonMutation
-}
+    });
+    return updateLessonMutation;
+};

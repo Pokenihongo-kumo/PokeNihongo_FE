@@ -4,8 +4,8 @@ import { IQueryRequest } from "@models/common/request";
 
 /**
  * hanlde Elemental Type List
- * @param params 
- * @returns 
+ * @param params
+ * @returns
  */
 export const useElementalTypeList = (params: IQueryRequest) => {
     const { data, isLoading, error } = useQuery({
@@ -15,5 +15,5 @@ export const useElementalTypeList = (params: IQueryRequest) => {
     });
 
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //------------------------End------------------------//

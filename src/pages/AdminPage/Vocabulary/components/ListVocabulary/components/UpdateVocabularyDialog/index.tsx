@@ -26,13 +26,20 @@ type UpdateVocabularyFormValues = {
 
 const UpdateVocabularyDialog = ({ vocabulary, onClose }: UpdateVocabularyDialogProps) => {
     const { t } = useTranslation();
-    const { control, handleSubmit, reset, formState: { isSubmitting }, watch, setValue } = useForm<UpdateVocabularyFormValues>({
+    const {
+        control,
+        handleSubmit,
+        reset,
+        formState: { isSubmitting },
+        watch,
+        setValue,
+    } = useForm<UpdateVocabularyFormValues>({
         defaultValues: {
             reading: vocabulary?.reading || "",
             imageUrl: null,
             audioUrl: null,
             regenerateAudio: false,
-        }
+        },
     });
 
     const updateMutation = useUpdateVocabulary();
@@ -90,24 +97,33 @@ const UpdateVocabularyDialog = ({ vocabulary, onClose }: UpdateVocabularyDialogP
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     <div className="space-y-1.5">
-                        <p className="text-sm font-medium text-muted-foreground">{t("vocabulary.listVocabulary.columns.wordJp")}</p>
+                        <p className="text-sm font-medium text-muted-foreground">
+                            {t("vocabulary.listVocabulary.columns.wordJp")}
+                        </p>
                         <Input value={vocabulary?.wordJp || ""} disabled />
                     </div>
 
                     <div className="space-y-1.5">
-                        <p className="text-sm font-medium text-muted-foreground">{t("vocabulary.listVocabulary.columns.reading")}</p>
+                        <p className="text-sm font-medium text-muted-foreground">
+                            {t("vocabulary.listVocabulary.columns.reading")}
+                        </p>
                         <Controller
                             name="reading"
                             control={control}
                             rules={{ required: true }}
                             render={({ field }) => (
-                                <Input {...field} placeholder={t("vocabulary.updateDialog.readingPlaceholder", "Nhập cách đọc mới")} />
+                                <Input
+                                    {...field}
+                                    placeholder={t("vocabulary.updateDialog.readingPlaceholder", "Nhập cách đọc mới")}
+                                />
                             )}
                         />
                     </div>
 
                     <div className="space-y-2">
-                        <p className="text-sm font-medium text-muted-foreground">{t("vocabulary.updateDialog.mediaSection", "Tệp đính kèm (tùy chọn)")}</p>
+                        <p className="text-sm font-medium text-muted-foreground">
+                            {t("vocabulary.updateDialog.mediaSection", "Tệp đính kèm (tùy chọn)")}
+                        </p>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <Controller
                                 name="imageUrl"
@@ -128,7 +144,9 @@ const UpdateVocabularyDialog = ({ vocabulary, onClose }: UpdateVocabularyDialogP
                             <div className="space-y-2">
                                 {vocabulary?.imageUrl && (
                                     <div className="space-y-1">
-                                        <p className="text-xs text-muted-foreground">{t("vocabulary.updateDialog.currentImage", "Ảnh hiện tại")}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            {t("vocabulary.updateDialog.currentImage", "Ảnh hiện tại")}
+                                        </p>
                                         <div className="w-40 h-28 rounded-md border border-dashed border-gray-200 overflow-hidden bg-muted/30">
                                             <img
                                                 src={vocabulary.imageUrl}
@@ -140,7 +158,9 @@ const UpdateVocabularyDialog = ({ vocabulary, onClose }: UpdateVocabularyDialogP
                                 )}
                                 {vocabulary?.audioUrl && (
                                     <div className="space-y-1">
-                                        <p className="text-xs text-muted-foreground">{t("vocabulary.updateDialog.currentAudio", "Audio hiện tại")}</p>
+                                        <p className="text-xs text-muted-foreground">
+                                            {t("vocabulary.updateDialog.currentAudio", "Audio hiện tại")}
+                                        </p>
                                         <audio controls className="w-full">
                                             <source src={vocabulary.audioUrl} />
                                         </audio>
@@ -156,15 +176,27 @@ const UpdateVocabularyDialog = ({ vocabulary, onClose }: UpdateVocabularyDialogP
                             onCheckedChange={(checked) => setValue("regenerateAudio", checked)}
                         />
                         <span className="text-sm text-foreground">
-                            {t("vocabulary.updateDialog.regenerateAudio", "Tự động sinh audio mới bằng TTS nếu không tải audio")}
+                            {t(
+                                "vocabulary.updateDialog.regenerateAudio",
+                                "Tự động sinh audio mới bằng TTS nếu không tải audio",
+                            )}
                         </span>
                     </div>
 
                     <DialogFooter className="pt-2">
-                        <Button type="button" variant="outline" onClick={onClose} disabled={updateMutation.isPending || isSubmitting}>
+                        <Button
+                            type="button"
+                            variant="outline"
+                            onClick={onClose}
+                            disabled={updateMutation.isPending || isSubmitting}
+                        >
                             {t("common.cancel", "Hủy")}
                         </Button>
-                        <Button type="submit" className="bg-primary text-primary-foreground" disabled={updateMutation.isPending || isSubmitting}>
+                        <Button
+                            type="submit"
+                            className="bg-primary text-primary-foreground"
+                            disabled={updateMutation.isPending || isSubmitting}
+                        >
                             {updateMutation.isPending ? (
                                 <>
                                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -182,4 +214,3 @@ const UpdateVocabularyDialog = ({ vocabulary, onClose }: UpdateVocabularyDialogP
 };
 
 export default UpdateVocabularyDialog;
-

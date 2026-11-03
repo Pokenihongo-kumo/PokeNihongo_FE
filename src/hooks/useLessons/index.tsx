@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
 interface Lesson {
     id: number;
@@ -9,13 +9,13 @@ interface Lesson {
 }
 
 export const useLessons = () => {
-    const [lessons, setLessons] = useState<Lesson[]>([])
-    const [isLoading, setIsLoading] = useState(false)
+    const [lessons, setLessons] = useState<Lesson[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
         // TODO: Replace with actual API call
         const fetchLessons = async () => {
-            setIsLoading(true)
+            setIsLoading(true);
             try {
                 // Mock data - replace with actual API call
                 const mockLessons: Lesson[] = [
@@ -26,31 +26,31 @@ export const useLessons = () => {
                     { id: 5, title: "Family", level: 4, slug: "family", isPublished: true },
                     { id: 6, title: "Colors", level: 5, slug: "colors", isPublished: false },
                     { id: 7, title: "Food", level: 4, slug: "food", isPublished: true },
-                    { id: 8, title: "Time", level: 3, slug: "time", isPublished: true }
-                ]
-                
-                setLessons(mockLessons)
+                    { id: 8, title: "Time", level: 3, slug: "time", isPublished: true },
+                ];
+
+                setLessons(mockLessons);
             } catch (error) {
-                console.error('Failed to fetch lessons:', error)
+                console.error("Failed to fetch lessons:", error);
             } finally {
-                setIsLoading(false)
+                setIsLoading(false);
             }
-        }
+        };
 
-        fetchLessons()
-    }, [])
+        fetchLessons();
+    }, []);
 
-    const getPublishedLessons = () => lessons.filter(lesson => lesson.isPublished)
-    
-    const getLessonsByLevel = (level: number) => lessons.filter(lesson => lesson.level === level)
-    
-    const getLessonById = (id: number) => lessons.find(lesson => lesson.id === id)
+    const getPublishedLessons = () => lessons.filter((lesson) => lesson.isPublished);
+
+    const getLessonsByLevel = (level: number) => lessons.filter((lesson) => lesson.level === level);
+
+    const getLessonById = (id: number) => lessons.find((lesson) => lesson.id === id);
 
     return {
         lessons,
         isLoading,
         getPublishedLessons,
         getLessonsByLevel,
-        getLessonById
-    }
-}
+        getLessonById,
+    };
+};

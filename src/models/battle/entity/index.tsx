@@ -22,7 +22,6 @@ export const BattleListLeaderBoardSeasonEntitySchema = z.object({
 });
 //----------------------End----------------------//
 
-
 /**
  * Battle Leader Board Season Detail Entity Schema
  */
@@ -40,17 +39,21 @@ export const BattleLeaderBoardSeasonDetailEntitySchema = z.object({
     ...at,
     nameTranslation: z.string().nullable(),
     nameTranslations: TranslationInputSchema,
-    seasonRankRewards: z.array(z.object({
-        id: z.number(),
-        rankName: z.string(),
-        order: z.number().nullable(),
-        rewards: z.array(z.object({
+    seasonRankRewards: z.array(
+        z.object({
             id: z.number(),
-            rewardType: z.union([z.string(), z.number()]),
-            rewardItem: z.union([z.string(), z.number()]),
-            rewardTarget: z.string().nullable(),
-            nameTranslation: z.string().nullable(),
-        })),
-    })),
-})
+            rankName: z.string(),
+            order: z.number().nullable(),
+            rewards: z.array(
+                z.object({
+                    id: z.number(),
+                    rewardType: z.union([z.string(), z.number()]),
+                    rewardItem: z.union([z.string(), z.number()]),
+                    rewardTarget: z.string().nullable(),
+                    nameTranslation: z.string().nullable(),
+                }),
+            ),
+        }),
+    ),
+});
 //----------------------End----------------------//

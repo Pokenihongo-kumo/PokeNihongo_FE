@@ -1,95 +1,123 @@
-import { useMemo, useState, useEffect } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import HeaderAdmin from '@organisms/Header/Admin'
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@ui/Card'
-import { Input } from '@ui/Input'
-import { Button } from '@ui/Button'
-import { Switch } from '@ui/Switch'
-import { Badge } from '@ui/Badge'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@ui/Select'
-import PaginationControls from '@ui/PaginationControls'
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@ui/Accordion'
-import { Skeleton } from '@ui/Skeleton'
-import { useGetAIConfigModelById, useGetAIModelConfigPolicySchemaFields, useUpdateModelConfigsPolicySchema } from '@hooks/useAI'
-import ModalEntityCustomAI from '@pages/AdminPage/AICustom/components/ModalEntity'
-import { ChevronLeft, Database, Settings, Brain, Sparkles, Hash, Calendar, Code, CheckCircle2, XCircle, Loader2, Undo, Redo, Save, X } from 'lucide-react'
-import { useTranslation } from 'react-i18next'
-import { toast } from 'react-toastify'
-import { AI_POLICY_SCOPE, PURPOSE_POLICY_AI } from '@constants/ai'
+import { useMemo, useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import HeaderAdmin from "@organisms/Header/Admin";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@ui/Card";
+import { Input } from "@ui/Input";
+import { Button } from "@ui/Button";
+import { Switch } from "@ui/Switch";
+import { Badge } from "@ui/Badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import PaginationControls from "@ui/PaginationControls";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@ui/Accordion";
+import { Skeleton } from "@ui/Skeleton";
+import {
+    useGetAIConfigModelById,
+    useGetAIModelConfigPolicySchemaFields,
+    useUpdateModelConfigsPolicySchema,
+} from "@hooks/useAI";
+import ModalEntityCustomAI from "@pages/AdminPage/AICustom/components/ModalEntity";
+import {
+    ChevronLeft,
+    Database,
+    Settings,
+    Brain,
+    Sparkles,
+    Hash,
+    Calendar,
+    Code,
+    CheckCircle2,
+    XCircle,
+    Loader2,
+    Undo,
+    Redo,
+    Save,
+    X,
+} from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import { AI_POLICY_SCOPE, PURPOSE_POLICY_AI } from "@constants/ai";
 
 const CustomAIDetail = () => {
-    const { t } = useTranslation()
-    const { configId } = useParams()
-    const navigate = useNavigate()
+    const { t } = useTranslation();
+    const { configId } = useParams();
+    const navigate = useNavigate();
 
     // Get config detail
-    const configIdNumber = configId ? parseInt(configId, 10) : 0
-    const { data: configData, isLoading: isLoadingConfig, error: configError } = useGetAIConfigModelById(configIdNumber)
+    const configIdNumber = configId ? parseInt(configId, 10) : 0;
+    const {
+        data: configData,
+        isLoading: isLoadingConfig,
+        error: configError,
+    } = useGetAIConfigModelById(configIdNumber);
 
     // Extract entities and policy info from configData
     const initialPolicy = useMemo(() => {
-        if (!configData?.extraParams) return null
-        return (configData.extraParams as any)?.policy || null
-    }, [configData])
+        if (!configData?.extraParams) return null;
+        return (configData.extraParams as any)?.policy || null;
+    }, [configData]);
 
     const entities = useMemo(() => {
-        if (!configData?.extraParams) return []
-        const policyEntities = (configData.extraParams as any)?.policy?.entities
-        const directEntities = configData.extraParams.entities
-        const result = Array.isArray(policyEntities) ? policyEntities : (Array.isArray(directEntities) ? directEntities : [])
-        console.log('🔍 entities from configData:', result)
-        return result
-    }, [configData])
+        if (!configData?.extraParams) return [];
+        const policyEntities = (configData.extraParams as any)?.policy?.entities;
+        const directEntities = configData.extraParams.entities;
+        const result = Array.isArray(policyEntities)
+            ? policyEntities
+            : Array.isArray(directEntities)
+              ? directEntities
+              : [];
+        console.log("🔍 entities from configData:", result);
+        return result;
+    }, [configData]);
 
     // Draft state (local changes, not saved yet)
     type DraftState = {
-        selectedSchemas: Set<string>
-        selectedFields: Record<string, Set<string>>
-        selectedLimits: Record<string, number | undefined>
-        selectedPurpose: string
-    }
-    const [history, setHistory] = useState<DraftState[]>([])
-    const [historyIndex, setHistoryIndex] = useState<number>(-1)
-    const [showEntityModal, setShowEntityModal] = useState(false)
-    const [expandedEntities, setExpandedEntities] = useState<string[]>([])
-    const [page, setPage] = useState(1)
-    const [limit, setLimit] = useState(15)
-    const [searchQuery, setSearchQuery] = useState('')
+        selectedSchemas: Set<string>;
+        selectedFields: Record<string, Set<string>>;
+        selectedLimits: Record<string, number | undefined>;
+        selectedPurpose: string;
+    };
+    const [history, setHistory] = useState<DraftState[]>([]);
+    const [historyIndex, setHistoryIndex] = useState<number>(-1);
+    const [showEntityModal, setShowEntityModal] = useState(false);
+    const [expandedEntities, setExpandedEntities] = useState<string[]>([]);
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(15);
+    const [searchQuery, setSearchQuery] = useState("");
 
     // Derive selectedSchemas and selectedFields directly from entities
     const selectedSchemasFromEntities = useMemo(() => {
         if (entities.length > 0) {
-            const entityNames = new Set(entities.map((e: any) => e.entity).filter(Boolean))
-            console.log('🔍 selectedSchemasFromEntities:', Array.from(entityNames))
-            return entityNames
+            const entityNames = new Set(entities.map((e: any) => e.entity).filter(Boolean));
+            console.log("🔍 selectedSchemasFromEntities:", Array.from(entityNames));
+            return entityNames;
         }
-        console.log('🔍 selectedSchemasFromEntities: empty')
-        return new Set<string>()
-    }, [entities])
+        console.log("🔍 selectedSchemasFromEntities: empty");
+        return new Set<string>();
+    }, [entities]);
 
     const selectedFieldsFromEntities = useMemo(() => {
-        const fieldsMap: Record<string, Set<string>> = {}
+        const fieldsMap: Record<string, Set<string>> = {};
         entities.forEach((entity: any) => {
             if (entity.entity && entity.fields && Array.isArray(entity.fields)) {
-                fieldsMap[entity.entity] = new Set(entity.fields)
+                fieldsMap[entity.entity] = new Set(entity.fields);
             }
-        })
-        return fieldsMap
-    }, [entities])
+        });
+        return fieldsMap;
+    }, [entities]);
 
     const selectedLimitsFromEntities = useMemo(() => {
-        const limitsMap: Record<string, number | undefined> = {}
+        const limitsMap: Record<string, number | undefined> = {};
         entities.forEach((entity: any) => {
             if (entity.entity) {
-                limitsMap[entity.entity] = entity.limit
+                limitsMap[entity.entity] = entity.limit;
             }
-        })
-        return limitsMap
-    }, [entities])
+        });
+        return limitsMap;
+    }, [entities]);
 
     const selectedPurposeFromPolicy = useMemo(() => {
-        return initialPolicy?.purpose || PURPOSE_POLICY_AI.PERSONALIZED_RECOMMENDATIONS
-    }, [initialPolicy])
+        return initialPolicy?.purpose || PURPOSE_POLICY_AI.PERSONALIZED_RECOMMENDATIONS;
+    }, [initialPolicy]);
 
     // Initialize draft from configData
     useEffect(() => {
@@ -98,305 +126,336 @@ const CustomAIDetail = () => {
                 selectedSchemas: selectedSchemasFromEntities,
                 selectedFields: selectedFieldsFromEntities,
                 selectedLimits: selectedLimitsFromEntities,
-                selectedPurpose: selectedPurposeFromPolicy
-            }
-            setHistory([initialDraft])
-            setHistoryIndex(0)
+                selectedPurpose: selectedPurposeFromPolicy,
+            };
+            setHistory([initialDraft]);
+            setHistoryIndex(0);
         } else if (configData && entities.length === 0) {
             // Config exists but no entities - initialize empty
             const emptyDraft: DraftState = {
                 selectedSchemas: new Set(),
                 selectedFields: {},
                 selectedLimits: {},
-                selectedPurpose: selectedPurposeFromPolicy
-            }
-            setHistory([emptyDraft])
-            setHistoryIndex(0)
+                selectedPurpose: selectedPurposeFromPolicy,
+            };
+            setHistory([emptyDraft]);
+            setHistoryIndex(0);
         }
-    }, [entities, configData, selectedSchemasFromEntities, selectedFieldsFromEntities, selectedLimitsFromEntities, selectedPurposeFromPolicy])
+    }, [
+        entities,
+        configData,
+        selectedSchemasFromEntities,
+        selectedFieldsFromEntities,
+        selectedLimitsFromEntities,
+        selectedPurposeFromPolicy,
+    ]);
 
     // Get current draft from history
     const currentDraft = useMemo(() => {
         if (historyIndex >= 0 && historyIndex < history.length) {
-            return history[historyIndex]
+            return history[historyIndex];
         }
         // Return entities state if history not initialized yet
         return {
             selectedSchemas: selectedSchemasFromEntities,
             selectedFields: selectedFieldsFromEntities,
             selectedLimits: selectedLimitsFromEntities,
-            selectedPurpose: selectedPurposeFromPolicy
-        }
-    }, [history, historyIndex, selectedSchemasFromEntities, selectedFieldsFromEntities, selectedLimitsFromEntities, selectedPurposeFromPolicy])
+            selectedPurpose: selectedPurposeFromPolicy,
+        };
+    }, [
+        history,
+        historyIndex,
+        selectedSchemasFromEntities,
+        selectedFieldsFromEntities,
+        selectedLimitsFromEntities,
+        selectedPurposeFromPolicy,
+    ]);
 
-    const selectedSchemas = currentDraft.selectedSchemas
-    const selectedFields = currentDraft.selectedFields
-    const selectedLimits = currentDraft.selectedLimits
-    const selectedPurpose = currentDraft.selectedPurpose
+    const selectedSchemas = currentDraft.selectedSchemas;
+    const selectedFields = currentDraft.selectedFields;
+    const selectedLimits = currentDraft.selectedLimits;
+    const selectedPurpose = currentDraft.selectedPurpose;
 
     // Push new state to history
     const pushHistory = (nextDraft: DraftState) => {
-        const base = history.slice(0, historyIndex + 1)
-        const newHistory = [...base, nextDraft]
-        setHistory(newHistory)
-        setHistoryIndex(newHistory.length - 1)
-    }
+        const base = history.slice(0, historyIndex + 1);
+        const newHistory = [...base, nextDraft];
+        setHistory(newHistory);
+        setHistoryIndex(newHistory.length - 1);
+    };
 
     const handleUndo = () => {
-        if (historyIndex <= 0) return
-        setHistoryIndex(historyIndex - 1)
-    }
+        if (historyIndex <= 0) return;
+        setHistoryIndex(historyIndex - 1);
+    };
 
     const handleRedo = () => {
-        if (historyIndex >= history.length - 1) return
-        setHistoryIndex(historyIndex + 1)
-    }
+        if (historyIndex >= history.length - 1) return;
+        setHistoryIndex(historyIndex + 1);
+    };
 
     // Get schema fields for selected entities
-    const selectedEntitiesArray = Array.from(selectedSchemas)
-    console.log('🔍 selectedEntitiesArray for API:', selectedEntitiesArray)
-    console.log('🔍 selectedSchemas size:', selectedSchemas.size)
-    const { data: schemaFieldsData, isLoading: isLoadingFields } = useGetAIModelConfigPolicySchemaFields(selectedEntitiesArray)
-    console.log('🔍 schemaFieldsData:', schemaFieldsData)
-    console.log('🔍 isLoadingFields:', isLoadingFields)
+    const selectedEntitiesArray = Array.from(selectedSchemas);
+    console.log("🔍 selectedEntitiesArray for API:", selectedEntitiesArray);
+    console.log("🔍 selectedSchemas size:", selectedSchemas.size);
+    const { data: schemaFieldsData, isLoading: isLoadingFields } =
+        useGetAIModelConfigPolicySchemaFields(selectedEntitiesArray);
+    console.log("🔍 schemaFieldsData:", schemaFieldsData);
+    console.log("🔍 isLoadingFields:", isLoadingFields);
 
     // Filter entities and fields based on search (local search only)
     const filteredSchemaFields = useMemo(() => {
-        if (!schemaFieldsData) return {}
-        if (!searchQuery.trim()) return schemaFieldsData
-        const query = searchQuery.toLowerCase()
-        const filtered: Record<string, string[]> = {}
+        if (!schemaFieldsData) return {};
+        if (!searchQuery.trim()) return schemaFieldsData;
+        const query = searchQuery.toLowerCase();
+        const filtered: Record<string, string[]> = {};
         Object.entries(schemaFieldsData).forEach(([entityName, fields]) => {
             if (entityName.toLowerCase().includes(query)) {
-                filtered[entityName] = fields as string[]
+                filtered[entityName] = fields as string[];
             } else {
                 const matchingFields = (fields as string[]).filter((field: string) =>
-                    field.toLowerCase().includes(query)
-                )
+                    field.toLowerCase().includes(query),
+                );
                 if (matchingFields.length > 0) {
-                    filtered[entityName] = matchingFields
+                    filtered[entityName] = matchingFields;
                 }
             }
-        })
-        return filtered
-    }, [schemaFieldsData, searchQuery])
+        });
+        return filtered;
+    }, [schemaFieldsData, searchQuery]);
 
-    const entityKeys = useMemo(() => Object.keys(filteredSchemaFields), [filteredSchemaFields])
+    const entityKeys = useMemo(() => Object.keys(filteredSchemaFields), [filteredSchemaFields]);
 
-    const totalItems = entityKeys.length
-    const totalPages = Math.max(1, Math.ceil(totalItems / limit))
+    const totalItems = entityKeys.length;
+    const totalPages = Math.max(1, Math.ceil(totalItems / limit));
     const paginatedEntityKeys = useMemo(() => {
-        const start = (page - 1) * limit
-        return entityKeys.slice(start, start + limit)
-    }, [entityKeys, page, limit])
+        const start = (page - 1) * limit;
+        return entityKeys.slice(start, start + limit);
+    }, [entityKeys, page, limit]);
 
-    useEffect(() => { setPage(1) }, [searchQuery])
+    useEffect(() => {
+        setPage(1);
+    }, [searchQuery]);
 
     const handlePurposeChange = (value: string) => {
         const nextDraft: DraftState = {
             selectedSchemas: new Set(selectedSchemas),
             selectedFields: { ...selectedFields },
             selectedLimits: { ...selectedLimits },
-            selectedPurpose: value
-        }
-        pushHistory(nextDraft)
-    }
+            selectedPurpose: value,
+        };
+        pushHistory(nextDraft);
+    };
 
     const toggleSelectEntityAllFields = (entityName: string, checked: boolean) => {
         const nextDraft: DraftState = {
             selectedSchemas: new Set(selectedSchemas),
             selectedFields: { ...selectedFields },
             selectedLimits: { ...selectedLimits },
-            selectedPurpose: selectedPurpose
-        }
-        const fields = (filteredSchemaFields[entityName] || []) as string[]
+            selectedPurpose: selectedPurpose,
+        };
+        const fields = (filteredSchemaFields[entityName] || []) as string[];
         if (checked) {
-            nextDraft.selectedFields[entityName] = new Set(fields)
+            nextDraft.selectedFields[entityName] = new Set(fields);
         } else {
-            delete nextDraft.selectedFields[entityName]
+            delete nextDraft.selectedFields[entityName];
         }
-        pushHistory(nextDraft)
-    }
+        pushHistory(nextDraft);
+    };
 
     const toggleSelectField = (entityName: string, fieldName: string, checked: boolean) => {
         const nextDraft: DraftState = {
             selectedSchemas: new Set(selectedSchemas),
             selectedFields: { ...selectedFields },
             selectedLimits: { ...selectedLimits },
-            selectedPurpose: selectedPurpose
-        }
-        if (!nextDraft.selectedFields[entityName]) nextDraft.selectedFields[entityName] = new Set()
+            selectedPurpose: selectedPurpose,
+        };
+        if (!nextDraft.selectedFields[entityName]) nextDraft.selectedFields[entityName] = new Set();
         if (checked) {
-            nextDraft.selectedFields[entityName].add(fieldName)
+            nextDraft.selectedFields[entityName].add(fieldName);
         } else {
-            nextDraft.selectedFields[entityName].delete(fieldName)
+            nextDraft.selectedFields[entityName].delete(fieldName);
             if (nextDraft.selectedFields[entityName].size === 0) {
-                delete nextDraft.selectedFields[entityName]
+                delete nextDraft.selectedFields[entityName];
             }
         }
-        pushHistory(nextDraft)
-    }
+        pushHistory(nextDraft);
+    };
 
     const handleLimitChange = (entityName: string, value: string) => {
         const nextDraft: DraftState = {
             selectedSchemas: new Set(selectedSchemas),
             selectedFields: { ...selectedFields },
             selectedLimits: { ...selectedLimits },
-            selectedPurpose: selectedPurpose
-        }
-        const numValue = value === '' ? undefined : parseInt(value, 10)
-        if (isNaN(numValue as number) && value !== '') return
-        nextDraft.selectedLimits[entityName] = numValue
-        pushHistory(nextDraft)
-    }
+            selectedPurpose: selectedPurpose,
+        };
+        const numValue = value === "" ? undefined : parseInt(value, 10);
+        if (isNaN(numValue as number) && value !== "") return;
+        nextDraft.selectedLimits[entityName] = numValue;
+        pushHistory(nextDraft);
+    };
 
     const handleRemoveEntity = (entityName: string) => {
         const nextDraft: DraftState = {
             selectedSchemas: new Set(selectedSchemas),
             selectedFields: { ...selectedFields },
             selectedLimits: { ...selectedLimits },
-            selectedPurpose: selectedPurpose
-        }
+            selectedPurpose: selectedPurpose,
+        };
         // Remove entity from selectedSchemas
-        nextDraft.selectedSchemas.delete(entityName)
+        nextDraft.selectedSchemas.delete(entityName);
         // Remove fields and limits for this entity
-        delete nextDraft.selectedFields[entityName]
-        delete nextDraft.selectedLimits[entityName]
-        pushHistory(nextDraft)
-    }
+        delete nextDraft.selectedFields[entityName];
+        delete nextDraft.selectedLimits[entityName];
+        pushHistory(nextDraft);
+    };
 
     // Check if draft has changes
     const isDirty = useMemo(() => {
-        if (history.length === 0) return false
-        if (historyIndex !== history.length - 1) return true
-        const initialDraft = history[0] || { selectedSchemas: new Set(), selectedFields: {}, selectedLimits: {}, selectedPurpose: PURPOSE_POLICY_AI.PERSONALIZED_RECOMMENDATIONS }
-        const current = history[historyIndex] || { selectedSchemas: new Set(), selectedFields: {}, selectedLimits: {}, selectedPurpose: PURPOSE_POLICY_AI.PERSONALIZED_RECOMMENDATIONS }
+        if (history.length === 0) return false;
+        if (historyIndex !== history.length - 1) return true;
+        const initialDraft = history[0] || {
+            selectedSchemas: new Set(),
+            selectedFields: {},
+            selectedLimits: {},
+            selectedPurpose: PURPOSE_POLICY_AI.PERSONALIZED_RECOMMENDATIONS,
+        };
+        const current = history[historyIndex] || {
+            selectedSchemas: new Set(),
+            selectedFields: {},
+            selectedLimits: {},
+            selectedPurpose: PURPOSE_POLICY_AI.PERSONALIZED_RECOMMENDATIONS,
+        };
 
         // Compare schemas
-        if (initialDraft.selectedSchemas.size !== current.selectedSchemas.size) return true
+        if (initialDraft.selectedSchemas.size !== current.selectedSchemas.size) return true;
         for (const schema of initialDraft.selectedSchemas) {
-            if (!current.selectedSchemas.has(schema)) return true
+            if (!current.selectedSchemas.has(schema)) return true;
         }
         for (const schema of current.selectedSchemas) {
-            if (!initialDraft.selectedSchemas.has(schema)) return true
+            if (!initialDraft.selectedSchemas.has(schema)) return true;
         }
 
         // Compare fields
-        const initialKeys = Object.keys(initialDraft.selectedFields)
-        const currentKeys = Object.keys(current.selectedFields)
-        if (initialKeys.length !== currentKeys.length) return true
+        const initialKeys = Object.keys(initialDraft.selectedFields);
+        const currentKeys = Object.keys(current.selectedFields);
+        if (initialKeys.length !== currentKeys.length) return true;
 
         for (const entityName of initialKeys) {
-            const initialFields = initialDraft.selectedFields[entityName] || new Set()
-            const currentFields = current.selectedFields[entityName] || new Set()
-            if (initialFields.size !== currentFields.size) return true
+            const initialFields = initialDraft.selectedFields[entityName] || new Set();
+            const currentFields = current.selectedFields[entityName] || new Set();
+            if (initialFields.size !== currentFields.size) return true;
             for (const field of initialFields) {
-                if (!currentFields.has(field)) return true
+                if (!currentFields.has(field)) return true;
             }
         }
 
         // Compare purpose
-        if (initialDraft.selectedPurpose !== current.selectedPurpose) return true
+        if (initialDraft.selectedPurpose !== current.selectedPurpose) return true;
 
-        return false
-    }, [history, historyIndex])
+        return false;
+    }, [history, historyIndex]);
 
     // Save mutation
-    const { mutateAsync: updatePolicySchema, isPending: isSaving } = useUpdateModelConfigsPolicySchema()
+    const { mutateAsync: updatePolicySchema, isPending: isSaving } = useUpdateModelConfigsPolicySchema();
 
     const handleSave = async () => {
         if (!configData) {
-            const errorMsg = t('aiCustom.errors.missingConfigData', { defaultValue: 'Không tìm thấy dữ liệu cấu hình. Vui lòng tải lại trang.' })
-            console.error('❌ Save failed: Missing configData')
-            toast.error(errorMsg)
-            return
+            const errorMsg = t("aiCustom.errors.missingConfigData", {
+                defaultValue: "Không tìm thấy dữ liệu cấu hình. Vui lòng tải lại trang.",
+            });
+            console.error("❌ Save failed: Missing configData");
+            toast.error(errorMsg);
+            return;
         }
 
-        const current = history[historyIndex]
-        console.log('💾 Saving changes...', { modelId: configIdNumber, current })
+        const current = history[historyIndex];
+        console.log("💾 Saving changes...", { modelId: configIdNumber, current });
 
         // Build entities array from draft
-        const entitiesArray = Array.from(current.selectedSchemas).map(entityName => {
-            const fields = Array.from(current.selectedFields[entityName] || [])
+        const entitiesArray = Array.from(current.selectedSchemas).map((entityName) => {
+            const fields = Array.from(current.selectedFields[entityName] || []);
             // Get scope from original entity or default to SELF_ONLY
-            const originalEntity = entities.find((e: any) => e.entity === entityName)
-            const scope = originalEntity?.scope || AI_POLICY_SCOPE.SELF_ONLY
-            const limit = current.selectedLimits[entityName]
+            const originalEntity = entities.find((e: any) => e.entity === entityName);
+            const scope = originalEntity?.scope || AI_POLICY_SCOPE.SELF_ONLY;
+            const limit = current.selectedLimits[entityName];
 
             return {
                 entity: entityName,
                 scope: scope as any,
                 fields: fields,
-                ...(limit !== undefined && { limit })
-            }
-        })
+                ...(limit !== undefined && { limit }),
+            };
+        });
 
         // Use maskingRules from initialPolicy if exists, otherwise use empty object
-        const maskingRules = initialPolicy?.maskingRules || {}
+        const maskingRules = initialPolicy?.maskingRules || {};
 
         const payload = {
             policy: {
                 purpose: current.selectedPurpose as any,
                 entities: entitiesArray,
                 maskingRules: maskingRules,
-            }
-        }
+            },
+        };
 
-        console.log('📤 API call payload:', payload)
+        console.log("📤 API call payload:", payload);
         try {
-            await updatePolicySchema({ modelId: configIdNumber, data: payload })
-            console.log('✅ Save successful')
+            await updatePolicySchema({ modelId: configIdNumber, data: payload });
+            console.log("✅ Save successful");
 
             // Reset history after save
             const savedDraft: DraftState = {
                 selectedSchemas: new Set(current.selectedSchemas),
                 selectedFields: { ...current.selectedFields },
                 selectedLimits: { ...current.selectedLimits },
-                selectedPurpose: current.selectedPurpose
-            }
-            setHistory([savedDraft])
-            setHistoryIndex(0)
+                selectedPurpose: current.selectedPurpose,
+            };
+            setHistory([savedDraft]);
+            setHistoryIndex(0);
         } catch (error) {
-            console.error('❌ Save error:', error)
-            throw error
+            console.error("❌ Save error:", error);
+            throw error;
         }
-    }
+    };
 
     const isAllFieldsSelectedInEntity = (entityName: string) => {
-        const fields = (filteredSchemaFields[entityName] || []) as string[]
-        const selected = selectedFields[entityName] || new Set()
-        return fields.length > 0 && fields.every(field => selected.has(field))
-    }
+        const fields = (filteredSchemaFields[entityName] || []) as string[];
+        const selected = selectedFields[entityName] || new Set();
+        return fields.length > 0 && fields.every((field) => selected.has(field));
+    };
 
     const getStatusBadgeColor = (isEnabled: boolean) => {
-        return isEnabled ? "bg-chart-4 text-white" : "bg-muted text-muted-foreground"
-    }
+        return isEnabled ? "bg-chart-4 text-white" : "bg-muted text-muted-foreground";
+    };
 
     const getStatusLabel = (isEnabled: boolean) => {
-        return isEnabled ? t('aiCustom.active', { defaultValue: 'Hoạt động' }) : t('aiCustom.inactive', { defaultValue: 'Tắt' })
-    }
+        return isEnabled
+            ? t("aiCustom.active", { defaultValue: "Hoạt động" })
+            : t("aiCustom.inactive", { defaultValue: "Tắt" });
+    };
 
     const formatDate = (dateString: string) => {
-        return new Date(dateString).toLocaleDateString(t('locale', { defaultValue: 'vi-VN' }) as string, {
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit',
-            hour: '2-digit',
-            minute: '2-digit'
-        })
-    }
+        return new Date(dateString).toLocaleDateString(t("locale", { defaultValue: "vi-VN" }) as string, {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    };
 
     return (
         <>
             <HeaderAdmin
                 title={`Config #${configId}`}
-                description={t('aiCustom.detailTitle', { defaultValue: 'Chi tiết cấu hình' }) as string}
+                description={t("aiCustom.detailTitle", { defaultValue: "Chi tiết cấu hình" }) as string}
             />
 
             <div className="mt-24 p-6">
                 <Button variant="outline" className="mb-4" onClick={() => navigate(-1)}>
                     <ChevronLeft className="h-4 w-4 mr-2" />
-                    {t('common.back', { defaultValue: 'Quay lại' })}
+                    {t("common.back", { defaultValue: "Quay lại" })}
                 </Button>
 
                 {/* Config Detail Card */}
@@ -405,7 +464,9 @@ const CustomAIDetail = () => {
                         <CardContent className="p-6">
                             <div className="flex items-center justify-center py-8">
                                 <Loader2 className="h-6 w-6 animate-spin text-primary mr-3" />
-                                <span className="text-sm text-muted-foreground">{t('aiCommon.loading', { defaultValue: 'Đang tải dữ liệu...' })}</span>
+                                <span className="text-sm text-muted-foreground">
+                                    {t("aiCommon.loading", { defaultValue: "Đang tải dữ liệu..." })}
+                                </span>
                             </div>
                         </CardContent>
                     </Card>
@@ -413,7 +474,9 @@ const CustomAIDetail = () => {
                     <Card className="mb-6 bg-slate-50 border-border border-destructive/50 shadow-md">
                         <CardContent className="p-6">
                             <div className="text-center py-8">
-                                <div className="text-destructive">{t('aiCommon.loadError', { defaultValue: 'Có lỗi xảy ra khi tải dữ liệu' })}</div>
+                                <div className="text-destructive">
+                                    {t("aiCommon.loadError", { defaultValue: "Có lỗi xảy ra khi tải dữ liệu" })}
+                                </div>
                             </div>
                         </CardContent>
                     </Card>
@@ -430,7 +493,9 @@ const CustomAIDetail = () => {
                                         </div>
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-2 flex-wrap">
-                                                <h3 className="text-lg font-semibold text-foreground">{configData.name}</h3>
+                                                <h3 className="text-lg font-semibold text-foreground">
+                                                    {configData.name}
+                                                </h3>
                                                 <Badge className={getStatusBadgeColor(configData.isEnabled)}>
                                                     {configData.isEnabled ? (
                                                         <CheckCircle2 className="h-3 w-3 mr-1" />
@@ -442,24 +507,34 @@ const CustomAIDetail = () => {
                                                 {configData.jsonMode && (
                                                     <Badge className="bg-chart-2 text-white">
                                                         <Code className="h-3 w-3 mr-1" />
-                                                        {t('aiCustom.jsonMode', { defaultValue: 'JSON Mode' })}
+                                                        {t("aiCustom.jsonMode", { defaultValue: "JSON Mode" })}
                                                     </Badge>
                                                 )}
                                             </div>
                                             <div className="flex items-center gap-3 text-sm text-muted-foreground flex-wrap">
                                                 <div className="flex items-center gap-1">
                                                     <Brain className="h-3 w-3" />
-                                                    <span>{t('aiCustom.modelLabel', { defaultValue: 'Model' })}: {configData.geminiModel?.key || `ID ${configData.geminiModelId}`}</span>
+                                                    <span>
+                                                        {t("aiCustom.modelLabel", { defaultValue: "Model" })}:{" "}
+                                                        {configData.geminiModel?.key ||
+                                                            `ID ${configData.geminiModelId}`}
+                                                    </span>
                                                 </div>
                                                 <span>•</span>
                                                 <div className="flex items-center gap-1">
                                                     <Sparkles className="h-3 w-3" />
-                                                    <span>{t('aiCustom.presetLabel', { defaultValue: 'Preset' })}: {configData.preset?.name || `ID ${configData.presetId}`}</span>
+                                                    <span>
+                                                        {t("aiCustom.presetLabel", { defaultValue: "Preset" })}:{" "}
+                                                        {configData.preset?.name || `ID ${configData.presetId}`}
+                                                    </span>
                                                 </div>
                                                 <span>•</span>
                                                 <div className="flex items-center gap-1">
                                                     <Hash className="h-3 w-3" />
-                                                    <span>{t('aiCustom.maxTokens', { defaultValue: 'Max Tokens' })}: {configData.maxTokens}</span>
+                                                    <span>
+                                                        {t("aiCustom.maxTokens", { defaultValue: "Max Tokens" })}:{" "}
+                                                        {configData.maxTokens}
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>
@@ -467,7 +542,9 @@ const CustomAIDetail = () => {
 
                                     {/* System Instruction Preview */}
                                     <div className="bg-muted/40 rounded-lg p-4 border border-border/50">
-                                        <p className="text-xs font-medium text-muted-foreground mb-2">{t('aiCustom.systemInstruction', { defaultValue: 'System Instruction:' })}</p>
+                                        <p className="text-xs font-medium text-muted-foreground mb-2">
+                                            {t("aiCustom.systemInstruction", { defaultValue: "System Instruction:" })}
+                                        </p>
                                         <p className="text-sm font-mono text-foreground leading-relaxed line-clamp-3">
                                             {configData.systemInstruction}
                                         </p>
@@ -477,17 +554,23 @@ const CustomAIDetail = () => {
                                     <div className="flex items-center gap-4 text-xs text-muted-foreground">
                                         <div className="flex items-center gap-1.5">
                                             <Calendar className="h-3.5 w-3.5" />
-                                            <span>{t('aiCommon.created', { defaultValue: 'Tạo' })}: {configData.createdAt ? formatDate(configData.createdAt) : 'N/A'}</span>
+                                            <span>
+                                                {t("aiCommon.created", { defaultValue: "Tạo" })}:{" "}
+                                                {configData.createdAt ? formatDate(configData.createdAt) : "N/A"}
+                                            </span>
                                         </div>
                                         <span>•</span>
                                         <div className="flex items-center gap-1.5">
                                             <Calendar className="h-3.5 w-3.5" />
-                                            <span>{t('aiCommon.updated', { defaultValue: 'Cập nhật' })}: {configData.updatedAt ? formatDate(configData.updatedAt) : 'N/A'}</span>
+                                            <span>
+                                                {t("aiCommon.updated", { defaultValue: "Cập nhật" })}:{" "}
+                                                {configData.updatedAt ? formatDate(configData.updatedAt) : "N/A"}
+                                            </span>
                                         </div>
                                         <span>•</span>
                                         <div className="flex items-center gap-1.5">
                                             <Code className="h-3.5 w-3.5" />
-                                            <span>MIME: {configData.extraParams?.responseMimeType || 'N/A'}</span>
+                                            <span>MIME: {configData.extraParams?.responseMimeType || "N/A"}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -505,11 +588,15 @@ const CustomAIDetail = () => {
                                     <div className="flex items-center gap-1.5">
                                         <span className="text-lg">⚙️</span>
                                         <CardTitle className="text-base font-bold text-gray-900">
-                                            {t('aiCustom.schemaEntities.title', { defaultValue: 'Schema Entities & Fields' })}
+                                            {t("aiCustom.schemaEntities.title", {
+                                                defaultValue: "Schema Entities & Fields",
+                                            })}
                                         </CardTitle>
                                     </div>
                                     <p className="text-xs text-gray-600">
-                                        {t('aiCustom.schemaEntities.description', { defaultValue: 'Search and select schema entities to configure' })}
+                                        {t("aiCustom.schemaEntities.description", {
+                                            defaultValue: "Search and select schema entities to configure",
+                                        })}
                                     </p>
                                     {selectedSchemas.size > 0 && (
                                         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-green-50 border border-green-200 rounded-lg">
@@ -518,7 +605,9 @@ const CustomAIDetail = () => {
                                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
                                             </span>
                                             <span className="text-xs font-bold text-green-700">
-                                                {selectedSchemas.size} {selectedSchemas.size === 1 ? 'entity' : 'entities'} {t('aiCustom.schemaEntities.selected', { defaultValue: 'selected' })}
+                                                {selectedSchemas.size}{" "}
+                                                {selectedSchemas.size === 1 ? "entity" : "entities"}{" "}
+                                                {t("aiCustom.schemaEntities.selected", { defaultValue: "selected" })}
                                             </span>
                                         </div>
                                     )}
@@ -529,7 +618,7 @@ const CustomAIDetail = () => {
                                     className="border-border hover:bg-primary/10 hover:border-primary"
                                 >
                                     <Database className="h-4 w-4 mr-2" />
-                                    {t('aiCustom.selectEntities', { defaultValue: 'Chọn Entities' })}
+                                    {t("aiCustom.selectEntities", { defaultValue: "Chọn Entities" })}
                                     {selectedSchemas.size > 0 && (
                                         <Badge className="ml-2 bg-primary text-white">{selectedSchemas.size}</Badge>
                                     )}
@@ -542,30 +631,50 @@ const CustomAIDetail = () => {
                                     <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-gray-200 hover:border-green-300 transition-all duration-200 shadow-sm">
                                         <Switch
                                             id="expand-all"
-                                            checked={expandedEntities.length === paginatedEntityKeys.length && paginatedEntityKeys.length > 0}
-                                            onCheckedChange={(val) => setExpandedEntities(val ? paginatedEntityKeys : [])}
+                                            checked={
+                                                expandedEntities.length === paginatedEntityKeys.length &&
+                                                paginatedEntityKeys.length > 0
+                                            }
+                                            onCheckedChange={(val) =>
+                                                setExpandedEntities(val ? paginatedEntityKeys : [])
+                                            }
                                         />
-                                        <label htmlFor="expand-all" className="text-xs font-bold cursor-pointer hover:text-green-600 transition-colors select-none text-gray-700">
-                                            {t('aiCustom.schemaEntities.expandAll', { defaultValue: 'Expand All' })}
+                                        <label
+                                            htmlFor="expand-all"
+                                            className="text-xs font-bold cursor-pointer hover:text-green-600 transition-colors select-none text-gray-700"
+                                        >
+                                            {t("aiCustom.schemaEntities.expandAll", { defaultValue: "Expand All" })}
                                         </label>
                                     </div>
                                     <div className="flex items-center gap-2">
-                                        <label htmlFor="purpose-select" className="text-xs font-bold text-gray-700 whitespace-nowrap">
-                                            {t('aiCustom.schemaEntities.purpose', { defaultValue: 'Purpose:' })}
+                                        <label
+                                            htmlFor="purpose-select"
+                                            className="text-xs font-bold text-gray-700 whitespace-nowrap"
+                                        >
+                                            {t("aiCustom.schemaEntities.purpose", { defaultValue: "Purpose:" })}
                                         </label>
                                         <Select value={selectedPurpose} onValueChange={handlePurposeChange}>
-                                            <SelectTrigger id="purpose-select" className="w-64 h-9 text-xs border-gray-200 hover:border-green-400 focus:border-green-500 bg-white">
+                                            <SelectTrigger
+                                                id="purpose-select"
+                                                className="w-64 h-9 text-xs border-gray-200 hover:border-green-400 focus:border-green-500 bg-white"
+                                            >
                                                 <SelectValue />
                                             </SelectTrigger>
                                             <SelectContent>
                                                 <SelectItem value={PURPOSE_POLICY_AI.PERSONALIZED_RECOMMENDATIONS}>
-                                                    {t('aiCustom.schemaEntities.purposePersonalizedRecommendations', { defaultValue: 'Personalized Recommendations' })}
+                                                    {t("aiCustom.schemaEntities.purposePersonalizedRecommendations", {
+                                                        defaultValue: "Personalized Recommendations",
+                                                    })}
                                                 </SelectItem>
                                                 <SelectItem value={PURPOSE_POLICY_AI.SPEAKING_EVALUATION}>
-                                                    {t('aiCustom.schemaEntities.purposeSpeakingEvaluation', { defaultValue: 'Speaking Evaluation' })}
+                                                    {t("aiCustom.schemaEntities.purposeSpeakingEvaluation", {
+                                                        defaultValue: "Speaking Evaluation",
+                                                    })}
                                                 </SelectItem>
                                                 <SelectItem value={PURPOSE_POLICY_AI.AI_KAIWA}>
-                                                    {t('aiCustom.schemaEntities.purposeAiKaiwa', { defaultValue: 'AI Kaiwa' })}
+                                                    {t("aiCustom.schemaEntities.purposeAiKaiwa", {
+                                                        defaultValue: "AI Kaiwa",
+                                                    })}
                                                 </SelectItem>
                                             </SelectContent>
                                         </Select>
@@ -578,16 +687,16 @@ const CustomAIDetail = () => {
                                         <button
                                             onClick={handleUndo}
                                             disabled={historyIndex <= 0}
-                                            className={`p-2 rounded-lg border border-gray-200 hover:border-green-300 transition-all ${historyIndex <= 0 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                                            title={t('aiCustom.schemaEntities.undo', { defaultValue: 'Undo' })}
+                                            className={`p-2 rounded-lg border border-gray-200 hover:border-green-300 transition-all ${historyIndex <= 0 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                                            title={t("aiCustom.schemaEntities.undo", { defaultValue: "Undo" })}
                                         >
                                             <Undo className="h-4 w-4" />
                                         </button>
                                         <button
                                             onClick={handleRedo}
                                             disabled={historyIndex >= history.length - 1}
-                                            className={`p-2 rounded-lg border border-gray-200 hover:border-green-300 transition-all ${historyIndex >= history.length - 1 ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-                                            title={t('aiCustom.schemaEntities.redo', { defaultValue: 'Redo' })}
+                                            className={`p-2 rounded-lg border border-gray-200 hover:border-green-300 transition-all ${historyIndex >= history.length - 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+                                            title={t("aiCustom.schemaEntities.redo", { defaultValue: "Redo" })}
                                         >
                                             <Redo className="h-4 w-4" />
                                         </button>
@@ -604,12 +713,14 @@ const CustomAIDetail = () => {
                                             {isSaving ? (
                                                 <>
                                                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                                    {t('aiCustom.schemaEntities.saving', { defaultValue: 'Saving...' })}
+                                                    {t("aiCustom.schemaEntities.saving", { defaultValue: "Saving..." })}
                                                 </>
                                             ) : (
                                                 <>
                                                     <Save className="h-4 w-4 mr-2" />
-                                                    {t('aiCustom.schemaEntities.saveChanges', { defaultValue: 'Save Changes' })}
+                                                    {t("aiCustom.schemaEntities.saveChanges", {
+                                                        defaultValue: "Save Changes",
+                                                    })}
                                                 </>
                                             )}
                                         </Button>
@@ -621,7 +732,7 @@ const CustomAIDetail = () => {
                             <div className="mb-4">
                                 <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5 mb-1.5">
                                     <span className="text-sm">🔎</span>
-                                    {t('aiCommon.search', { defaultValue: 'Search' })}
+                                    {t("aiCommon.search", { defaultValue: "Search" })}
                                 </label>
                                 <Input
                                     value={searchQuery}
@@ -634,7 +745,10 @@ const CustomAIDetail = () => {
                             {isLoadingFields ? (
                                 <div className="space-y-3">
                                     {Array.from({ length: 3 }).map((_, i) => (
-                                        <div key={i} className="rounded-xl border border-gray-200 p-4 bg-white animate-pulse">
+                                        <div
+                                            key={i}
+                                            className="rounded-xl border border-gray-200 p-4 bg-white animate-pulse"
+                                        >
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
                                                     <Skeleton className="h-10 w-10 rounded-lg bg-gray-200" />
@@ -651,18 +765,31 @@ const CustomAIDetail = () => {
                             ) : entityKeys.length === 0 ? (
                                 <div className="text-center py-12 px-6 bg-white rounded-xl border border-dashed border-gray-300">
                                     <Database className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
-                                    <h3 className="font-bold text-base mb-2 text-gray-900">{t('aiCustom.schemaEntities.noEntitiesFound', { defaultValue: 'No Entities Found' })}</h3>
+                                    <h3 className="font-bold text-base mb-2 text-gray-900">
+                                        {t("aiCustom.schemaEntities.noEntitiesFound", {
+                                            defaultValue: "No Entities Found",
+                                        })}
+                                    </h3>
                                     <p className="text-xs text-gray-600 max-w-md mx-auto">
                                         {selectedSchemas.size === 0
-                                            ? t('aiCustom.schemaEntities.selectEntitiesToView', { defaultValue: 'Select entities to view their fields' })
-                                            : t('aiCustom.schemaEntities.noEntitiesMatch', { defaultValue: 'No entities match your current search criteria.' })}
+                                            ? t("aiCustom.schemaEntities.selectEntitiesToView", {
+                                                  defaultValue: "Select entities to view their fields",
+                                              })
+                                            : t("aiCustom.schemaEntities.noEntitiesMatch", {
+                                                  defaultValue: "No entities match your current search criteria.",
+                                              })}
                                     </p>
                                 </div>
                             ) : (
-                                <Accordion type="multiple" value={expandedEntities} onValueChange={setExpandedEntities} className="w-full space-y-3">
+                                <Accordion
+                                    type="multiple"
+                                    value={expandedEntities}
+                                    onValueChange={setExpandedEntities}
+                                    className="w-full space-y-3"
+                                >
                                     {paginatedEntityKeys.map((entityName) => {
-                                        const fields = (filteredSchemaFields[entityName] || []) as string[]
-                                        const isAllSelected = isAllFieldsSelectedInEntity(entityName)
+                                        const fields = (filteredSchemaFields[entityName] || []) as string[];
+                                        const isAllSelected = isAllFieldsSelectedInEntity(entityName);
 
                                         return (
                                             <AccordionItem
@@ -673,41 +800,62 @@ const CustomAIDetail = () => {
                                                 <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-green-50 [&[data-state=open]]:bg-gradient-to-r [&[data-state=open]]:from-green-50 [&[data-state=open]]:to-green-50 transition-all duration-200">
                                                     <div className="flex items-center gap-3 flex-1">
                                                         <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-md">
-                                                            <span className="text-lg font-black text-white">{entityName.charAt(0)}</span>
+                                                            <span className="text-lg font-black text-white">
+                                                                {entityName.charAt(0)}
+                                                            </span>
                                                         </div>
                                                         <div className="text-left flex-1">
-                                                            <span className="font-bold text-sm text-gray-900 block">{entityName}</span>
+                                                            <span className="font-bold text-sm text-gray-900 block">
+                                                                {entityName}
+                                                            </span>
                                                             <div className="flex items-center gap-2 mt-0.5">
                                                                 <span className="text-[10px] font-medium text-gray-500">
-                                                                    {fields.length} {fields.length !== 1 ? t('aiCustom.schemaEntities.fieldsTotal', { defaultValue: 'fields' }) : t('aiCustom.schemaEntities.fieldTotal', { defaultValue: 'field' })}
+                                                                    {fields.length}{" "}
+                                                                    {fields.length !== 1
+                                                                        ? t("aiCustom.schemaEntities.fieldsTotal", {
+                                                                              defaultValue: "fields",
+                                                                          })
+                                                                        : t("aiCustom.schemaEntities.fieldTotal", {
+                                                                              defaultValue: "field",
+                                                                          })}
                                                                 </span>
-                                                                {selectedFields[entityName] && selectedFields[entityName].size > 0 && (
-                                                                    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 border border-green-300">
-                                                                        <span className="relative flex h-1.5 w-1.5">
-                                                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
-                                                                            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-600"></span>
+                                                                {selectedFields[entityName] &&
+                                                                    selectedFields[entityName].size > 0 && (
+                                                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-green-100 border border-green-300">
+                                                                            <span className="relative flex h-1.5 w-1.5">
+                                                                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-75"></span>
+                                                                                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-600"></span>
+                                                                            </span>
+                                                                            <span className="text-[10px] font-bold text-green-700">
+                                                                                {selectedFields[entityName].size}/
+                                                                                {fields.length}{" "}
+                                                                                {t("aiCustom.schemaEntities.selected", {
+                                                                                    defaultValue: "selected",
+                                                                                })}
+                                                                            </span>
                                                                         </span>
-                                                                        <span className="text-[10px] font-bold text-green-700">
-                                                                            {selectedFields[entityName].size}/{fields.length} {t('aiCustom.schemaEntities.selected', { defaultValue: 'selected' })}
-                                                                        </span>
-                                                                    </span>
-                                                                )}
+                                                                    )}
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div className="ml-auto flex items-center gap-3 pr-1">
                                                         <div className="flex items-center gap-2">
-                                                            <label htmlFor={`limit-${entityName}`} className="text-[10px] font-medium text-gray-600 whitespace-nowrap">
-                                                                {t('aiCustom.schemaEntities.limit', { defaultValue: 'Limit:' })}
+                                                            <label
+                                                                htmlFor={`limit-${entityName}`}
+                                                                className="text-[10px] font-medium text-gray-600 whitespace-nowrap"
+                                                            >
+                                                                {t("aiCustom.schemaEntities.limit", {
+                                                                    defaultValue: "Limit:",
+                                                                })}
                                                             </label>
                                                             <Input
                                                                 id={`limit-${entityName}`}
                                                                 type="number"
                                                                 min="0"
-                                                                value={selectedLimits[entityName] ?? ''}
+                                                                value={selectedLimits[entityName] ?? ""}
                                                                 onChange={(e) => {
-                                                                    e.stopPropagation()
-                                                                    handleLimitChange(entityName, e.target.value)
+                                                                    e.stopPropagation();
+                                                                    handleLimitChange(entityName, e.target.value);
                                                                 }}
                                                                 onClick={(e) => e.stopPropagation()}
                                                                 placeholder="0"
@@ -715,23 +863,32 @@ const CustomAIDetail = () => {
                                                             />
                                                         </div>
                                                         <div className="flex items-center gap-2">
-                                                            <label htmlFor={`select-entity-all-${entityName}`} className="text-xs font-bold text-gray-600 cursor-pointer hover:text-green-600 transition-colors select-none">
-                                                                {t('aiCustom.schemaEntities.selectAll', { defaultValue: 'Select All' })}
+                                                            <label
+                                                                htmlFor={`select-entity-all-${entityName}`}
+                                                                className="text-xs font-bold text-gray-600 cursor-pointer hover:text-green-600 transition-colors select-none"
+                                                            >
+                                                                {t("aiCustom.schemaEntities.selectAll", {
+                                                                    defaultValue: "Select All",
+                                                                })}
                                                             </label>
                                                             <Switch
                                                                 id={`select-entity-all-${entityName}`}
                                                                 checked={isAllSelected}
-                                                                onCheckedChange={(val) => toggleSelectEntityAllFields(entityName, val)}
+                                                                onCheckedChange={(val) =>
+                                                                    toggleSelectEntityAllFields(entityName, val)
+                                                                }
                                                                 onClick={(e) => e.stopPropagation()}
                                                             />
                                                         </div>
                                                         <button
                                                             onClick={(e) => {
-                                                                e.stopPropagation()
-                                                                handleRemoveEntity(entityName)
+                                                                e.stopPropagation();
+                                                                handleRemoveEntity(entityName);
                                                             }}
                                                             className="p-1.5 rounded-lg border border-red-200 hover:border-red-400 hover:bg-red-50 transition-all duration-200 text-red-600 hover:text-white cursor-pointer"
-                                                            title={t('aiCustom.schemaEntities.removeEntity', { defaultValue: 'Remove entity' })}
+                                                            title={t("aiCustom.schemaEntities.removeEntity", {
+                                                                defaultValue: "Remove entity",
+                                                            })}
                                                         >
                                                             <X className="h-4 w-4" />
                                                         </button>
@@ -740,7 +897,8 @@ const CustomAIDetail = () => {
                                                 <AccordionContent className="px-4 py-3 border-t border-gray-200 bg-gray-50">
                                                     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-3 mt-3">
                                                         {fields.map((fieldName) => {
-                                                            const isSelected = selectedFields[entityName]?.has(fieldName) || false
+                                                            const isSelected =
+                                                                selectedFields[entityName]?.has(fieldName) || false;
                                                             return (
                                                                 <div
                                                                     key={`${entityName}-${fieldName}`}
@@ -751,7 +909,13 @@ const CustomAIDetail = () => {
                                                                             <Switch
                                                                                 id={`field-${entityName}-${fieldName}`}
                                                                                 checked={isSelected}
-                                                                                onCheckedChange={(val) => toggleSelectField(entityName, fieldName, val)}
+                                                                                onCheckedChange={(val) =>
+                                                                                    toggleSelectField(
+                                                                                        entityName,
+                                                                                        fieldName,
+                                                                                        val,
+                                                                                    )
+                                                                                }
                                                                             />
                                                                         </div>
                                                                         <div className="flex-1 min-w-0">
@@ -764,12 +928,12 @@ const CustomAIDetail = () => {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            )
+                                                            );
                                                         })}
                                                     </div>
                                                 </AccordionContent>
                                             </AccordionItem>
-                                        )
+                                        );
                                     })}
                                 </Accordion>
                             )}
@@ -781,7 +945,10 @@ const CustomAIDetail = () => {
                                 totalItems={totalItems}
                                 itemsPerPage={limit}
                                 onPageChange={(p) => setPage(p)}
-                                onItemsPerPageChange={(size) => { setLimit(size); setPage(1) }}
+                                onItemsPerPageChange={(size) => {
+                                    setLimit(size);
+                                    setPage(1);
+                                }}
                                 isLoading={isLoadingFields}
                             />
                         </CardFooter>
@@ -799,24 +966,24 @@ const CustomAIDetail = () => {
                         selectedSchemas: new Set(selected),
                         selectedFields: { ...selectedFields },
                         selectedLimits: { ...selectedLimits },
-                        selectedPurpose: selectedPurpose
-                    }
+                        selectedPurpose: selectedPurpose,
+                    };
                     // Remove fields and limits for entities that are no longer selected
-                    Object.keys(nextDraft.selectedFields).forEach(entityName => {
+                    Object.keys(nextDraft.selectedFields).forEach((entityName) => {
                         if (!nextDraft.selectedSchemas.has(entityName)) {
-                            delete nextDraft.selectedFields[entityName]
+                            delete nextDraft.selectedFields[entityName];
                         }
-                    })
-                    Object.keys(nextDraft.selectedLimits).forEach(entityName => {
+                    });
+                    Object.keys(nextDraft.selectedLimits).forEach((entityName) => {
                         if (!nextDraft.selectedSchemas.has(entityName)) {
-                            delete nextDraft.selectedLimits[entityName]
+                            delete nextDraft.selectedLimits[entityName];
                         }
-                    })
-                    pushHistory(nextDraft)
+                    });
+                    pushHistory(nextDraft);
                 }}
             />
         </>
-    )
-}
+    );
+};
 
-export default CustomAIDetail
+export default CustomAIDetail;

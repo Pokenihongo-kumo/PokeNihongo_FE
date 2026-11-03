@@ -21,46 +21,43 @@ const PermissionManagement = () => {
      * Role List
      */
     const [roleId, setRoleId] = useState<number>(1);
-    const [roleParams] = useState<IQueryRequest>({ page: 1, limit: 100, sortBy: 'name' });
+    const [roleParams] = useState<IQueryRequest>({ page: 1, limit: 100, sortBy: "name" });
     const { data: roleData, isLoading: roleLoading } = useRoleList(roleParams);
-    const safeRoleId = useMemo(() => (roleId ?? (roleData?.results?.[0]?.id ?? null)), [roleId, roleData]);
+    const safeRoleId = useMemo(() => roleId ?? roleData?.results?.[0]?.id ?? null, [roleId, roleData]);
     //-----------------------End--------------------//
-
 
     /**
      * Permission List - Query Params (FE filter)
      */
-    const [permParams, setPermParams] = useState<IQueryRequest>({ page: 1, limit: 15, sortBy: 'module' });
+    const [permParams, setPermParams] = useState<IQueryRequest>({ page: 1, limit: 15, sortBy: "module" });
     const [moduleSearch, setModuleSearch] = useState<string>("");
     const [pathSearch, setPathSearch] = useState<string>("");
     const debouncedModule = useDebounce(moduleSearch, 400);
     const debouncedPath = useDebounce(pathSearch, 400);
 
-
-    const permQueryParams = useMemo(() => ({ sortBy: 'module' } as IQueryRequest), []);
+    const permQueryParams = useMemo(() => ({ sortBy: "module" }) as IQueryRequest, []);
 
     const { data: permData, isLoading: permLoading } = usePermissionList(safeRoleId || 0, permQueryParams);
 
     const permissionsList = useMemo(() => {
         if (Array.isArray(permData)) return permData as IPermission[];
-        if (permData && Array.isArray((permData as any).permissions)) return (permData as any).permissions as IPermission[];
+        if (permData && Array.isArray((permData as any).permissions))
+            return (permData as any).permissions as IPermission[];
         if (permData && Array.isArray((permData as any).results)) return (permData as any).results as IPermission[];
         return [] as IPermission[];
     }, [permData]);
 
     // FE filtering
     const filteredPermissions = useMemo(() => {
-        const moduleKey = (debouncedModule || '').toLowerCase().trim();
-        const pathKey = (debouncedPath || '').replace(/^\/+/, '').toLowerCase().trim();
+        const moduleKey = (debouncedModule || "").toLowerCase().trim();
+        const pathKey = (debouncedPath || "").replace(/^\/+/, "").toLowerCase().trim();
         return permissionsList.filter((p: IPermission) => {
-            const modOk = moduleKey ? (p.module || '').toLowerCase().includes(moduleKey) : true;
-            const pathOk = pathKey ? (p.path || '').toLowerCase().includes(pathKey) : true;
+            const modOk = moduleKey ? (p.module || "").toLowerCase().includes(moduleKey) : true;
+            const pathOk = pathKey ? (p.path || "").toLowerCase().includes(pathKey) : true;
             return modOk && pathOk;
         });
     }, [permissionsList, debouncedModule, debouncedPath]);
     //-----------------------End--------------------//
-
-
 
     /**
      * Selection UI State
@@ -72,17 +69,16 @@ const PermissionManagement = () => {
     useEffect(() => {
         if (permissionsList.length) {
             const hasPermissionIds = new Set<number>(
-                permissionsList.filter((p: IPermission) => p.hasPermission).map((p: IPermission) => p.id)
+                permissionsList.filter((p: IPermission) => p.hasPermission).map((p: IPermission) => p.id),
             );
             setSelectedIds(hasPermissionIds);
         }
     }, [permissionsList]);
 
-
     const groupedByModule = useMemo(() => {
         const groups: Record<string, IPermission[]> = {};
         filteredPermissions.forEach((p: IPermission) => {
-            const key = p.module || 'Unknown';
+            const key = p.module || "Unknown";
             if (!groups[key]) groups[key] = [];
             groups[key].push(p);
         });
@@ -111,25 +107,26 @@ const PermissionManagement = () => {
     const isAllSelectedOnPage = allIdsOnPage.length > 0 && allIdsOnPage.every((id: number) => selectedIds.has(id));
 
     const toggleSelectAllOnPage = (checked: boolean) => {
-        setSelectedIds(prev => {
+        setSelectedIds((prev) => {
             const next = new Set(prev);
-            allIdsOnPage.forEach((id: number) => checked ? next.add(id) : next.delete(id));
+            allIdsOnPage.forEach((id: number) => (checked ? next.add(id) : next.delete(id)));
             return next;
         });
     };
 
     const toggleSelectModule = (moduleName: string, checked: boolean) => {
         const ids = (groupedByModule[moduleName] || []).map((p: IPermission) => p.id);
-        setSelectedIds(prev => {
+        setSelectedIds((prev) => {
             const next = new Set(prev);
-            ids.forEach(id => checked ? next.add(id) : next.delete(id));
+            ids.forEach((id) => (checked ? next.add(id) : next.delete(id)));
             return next;
         });
     };
     const toggleSelectOne = (id: number, checked: boolean) => {
-        setSelectedIds(prev => {
+        setSelectedIds((prev) => {
             const next = new Set(prev);
-            if (checked) next.add(id); else next.delete(id);
+            if (checked) next.add(id);
+            else next.delete(id);
             return next;
         });
     };
@@ -138,21 +135,20 @@ const PermissionManagement = () => {
         return selectedIds.size > 0;
     }, [selectedIds]);
 
-
     const methodBadgeClass = (method: string) => {
-        const m = (method || '').toUpperCase();
+        const m = (method || "").toUpperCase();
         switch (m) {
-            case 'GET':
-                return 'bg-emerald-500 text-white';
-            case 'POST':
-                return 'bg-blue-500 text-white';
-            case 'PUT':
-            case 'PATCH':
-                return 'bg-amber-500 text-white';
-            case 'DELETE':
-                return 'bg-rose-500 text-white';
+            case "GET":
+                return "bg-emerald-500 text-white";
+            case "POST":
+                return "bg-blue-500 text-white";
+            case "PUT":
+            case "PATCH":
+                return "bg-amber-500 text-white";
+            case "DELETE":
+                return "bg-rose-500 text-white";
             default:
-                return 'bg-gray-300 text-gray-900';
+                return "bg-gray-300 text-gray-900";
         }
     };
 
@@ -165,35 +161,35 @@ const PermissionManagement = () => {
     };
     //-----------------------End--------------------//
 
-
     /**
      * Handle Save Update Permissions
      */
     const { mutate: updatePermissions, isPending: isUpdating } = useUpdatePermissionByRoleId(safeRoleId ?? 0);
     const handleSave = () => {
-        updatePermissions({ name: roleData?.results?.find((r: any) => r.id === safeRoleId)?.name || '', description: roleData?.results?.find((r: any) => r.id === safeRoleId)?.description || '', isActive: true, permissionIds: Array.from(selectedIds) });
+        updatePermissions({
+            name: roleData?.results?.find((r: any) => r.id === safeRoleId)?.name || "",
+            description: roleData?.results?.find((r: any) => r.id === safeRoleId)?.description || "",
+            isActive: true,
+            permissionIds: Array.from(selectedIds),
+        });
     };
     //-----------------------End--------------------//
 
     return (
         <>
-            <HeaderAdmin
-                title={t('permission.title')}
-                description={t('permission.description')}
-            />
+            <HeaderAdmin title={t("permission.title")} description={t("permission.description")} />
             <div className="mt-24 min-h-screen bg-gray-50">
                 <div className="max-w-[1600px] mx-auto p-3 md:p-4 lg:p-6 space-y-4">
-
                     {/* Filters Card */}
                     <Card className="shadow-lg border-gray-200 overflow-hidden bg-white">
                         <CardHeader className="border-b border-gray-200 bg-gradient-to-r from-gray-50 to-blue-50 py-3">
                             <div className="flex items-center gap-1.5">
                                 <span className="text-base">⚙️</span>
                                 <div>
-                                    <CardTitle className="text-base font-bold text-gray-900">{t('permission.config.title')}</CardTitle>
-                                    <p className="text-xs text-gray-600 mt-0.5">
-                                        {t('permission.config.subtitle')}
-                                    </p>
+                                    <CardTitle className="text-base font-bold text-gray-900">
+                                        {t("permission.config.title")}
+                                    </CardTitle>
+                                    <p className="text-xs text-gray-600 mt-0.5">{t("permission.config.subtitle")}</p>
                                 </div>
                             </div>
                         </CardHeader>
@@ -202,15 +198,23 @@ const PermissionManagement = () => {
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                                         <span className="text-sm">👤</span>
-                                        {t('permission.config.selectRole')}
+                                        {t("permission.config.selectRole")}
                                     </label>
-                                    <Select onValueChange={(val) => handleSelectRole({ target: { value: val } } as any)} disabled={roleLoading} value={String(safeRoleId)}>
+                                    <Select
+                                        onValueChange={(val) => handleSelectRole({ target: { value: val } } as any)}
+                                        disabled={roleLoading}
+                                        value={String(safeRoleId)}
+                                    >
                                         <SelectTrigger className="h-9 border border-gray-200 hover:border-blue-400 transition-all duration-200 shadow-sm hover:shadow bg-white text-sm">
-                                            <SelectValue placeholder={t('permission.config.selectRolePlaceholder')} />
+                                            <SelectValue placeholder={t("permission.config.selectRolePlaceholder")} />
                                         </SelectTrigger>
                                         <SelectContent className="border-gray-200 bg-white">
                                             {roleData?.results?.map((r: any) => (
-                                                <SelectItem key={r.id} value={String(r.id)} className="cursor-pointer text-sm">
+                                                <SelectItem
+                                                    key={r.id}
+                                                    value={String(r.id)}
+                                                    className="cursor-pointer text-sm"
+                                                >
                                                     <div className="flex items-center gap-1.5">
                                                         <div className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500"></div>
                                                         <span className="font-medium">{r.name}</span>
@@ -224,10 +228,10 @@ const PermissionManagement = () => {
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                                         <span className="text-sm">📦</span>
-                                        {t('permission.config.filterByModule')}
+                                        {t("permission.config.filterByModule")}
                                     </label>
                                     <Input
-                                        placeholder={t('permission.config.filterByModulePlaceholder')}
+                                        placeholder={t("permission.config.filterByModulePlaceholder")}
                                         value={moduleSearch}
                                         onChange={(e) => setModuleSearch(e.target.value)}
                                         className="h-9 border border-gray-200 hover:border-blue-400 transition-all duration-200 shadow-sm hover:shadow focus-visible:border-blue-500 bg-white text-sm"
@@ -237,10 +241,10 @@ const PermissionManagement = () => {
                                 <div className="space-y-1.5">
                                     <label className="text-xs font-bold text-gray-700 flex items-center gap-1.5">
                                         <span className="text-sm">🔗</span>
-                                        {t('permission.config.filterByPath')}
+                                        {t("permission.config.filterByPath")}
                                     </label>
                                     <Input
-                                        placeholder={t('permission.config.filterByPathPlaceholder')}
+                                        placeholder={t("permission.config.filterByPathPlaceholder")}
                                         value={pathSearch}
                                         onChange={(e) => setPathSearch(e.target.value)}
                                         className="h-9 border border-gray-200 hover:border-blue-400 transition-all duration-200 shadow-sm hover:shadow focus-visible:border-blue-500 bg-white text-sm"
@@ -258,12 +262,10 @@ const PermissionManagement = () => {
                                     <div className="flex items-center gap-1.5">
                                         <span className="text-lg">✨</span>
                                         <CardTitle className="text-base font-bold text-gray-900">
-                                            {t('permission.matrix.title')}
+                                            {t("permission.matrix.title")}
                                         </CardTitle>
                                     </div>
-                                    <p className="text-xs text-gray-600">
-                                        {t('permission.matrix.description')}
-                                    </p>
+                                    <p className="text-xs text-gray-600">{t("permission.matrix.description")}</p>
                                     {selectedIds.size > 0 && (
                                         <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-blue-50 border border-blue-200 rounded-lg">
                                             <span className="relative flex h-2 w-2">
@@ -271,7 +273,7 @@ const PermissionManagement = () => {
                                                 <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
                                             </span>
                                             <span className="text-xs font-bold text-blue-700">
-                                                {selectedIds.size} {t('permission.matrix.selected')}
+                                                {selectedIds.size} {t("permission.matrix.selected")}
                                             </span>
                                         </div>
                                     )}
@@ -286,12 +288,12 @@ const PermissionManagement = () => {
                                         {isUpdating ? (
                                             <>
                                                 <span className="animate-spin mr-1.5 text-sm">⏳</span>
-                                                {t('permission.matrix.saving')}
+                                                {t("permission.matrix.saving")}
                                             </>
                                         ) : (
                                             <>
                                                 <span className="mr-1.5 text-sm">💾</span>
-                                                {t('permission.matrix.saveChanges')}
+                                                {t("permission.matrix.saveChanges")}
                                             </>
                                         )}
                                     </Button>
@@ -306,18 +308,27 @@ const PermissionManagement = () => {
                                         checked={isAllSelectedOnPage}
                                         onCheckedChange={toggleSelectAllOnPage}
                                     />
-                                    <label htmlFor="select-all-page" className="text-xs font-bold cursor-pointer hover:text-blue-600 transition-colors select-none text-gray-700">
-                                        {t('permission.matrix.selectAll')}
+                                    <label
+                                        htmlFor="select-all-page"
+                                        className="text-xs font-bold cursor-pointer hover:text-blue-600 transition-colors select-none text-gray-700"
+                                    >
+                                        {t("permission.matrix.selectAll")}
                                     </label>
                                 </div>
                                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white border border-gray-200 hover:border-blue-300 transition-all duration-200 shadow-sm">
                                     <Switch
                                         id="expand-all"
-                                        checked={expandedModules.length === paginatedModuleKeys.length && paginatedModuleKeys.length > 0}
+                                        checked={
+                                            expandedModules.length === paginatedModuleKeys.length &&
+                                            paginatedModuleKeys.length > 0
+                                        }
                                         onCheckedChange={(val) => setExpandedModules(val ? paginatedModuleKeys : [])}
                                     />
-                                    <label htmlFor="expand-all" className="text-xs font-bold cursor-pointer hover:text-blue-600 transition-colors select-none text-gray-700">
-                                        {t('permission.matrix.expandAll')}
+                                    <label
+                                        htmlFor="expand-all"
+                                        className="text-xs font-bold cursor-pointer hover:text-blue-600 transition-colors select-none text-gray-700"
+                                    >
+                                        {t("permission.matrix.expandAll")}
                                     </label>
                                 </div>
                             </div>
@@ -326,7 +337,10 @@ const PermissionManagement = () => {
                             {permLoading ? (
                                 <div className="space-y-3">
                                     {Array.from({ length: 3 }).map((_, i) => (
-                                        <div key={i} className="rounded-xl border border-gray-200 p-4 bg-white animate-pulse">
+                                        <div
+                                            key={i}
+                                            className="rounded-xl border border-gray-200 p-4 bg-white animate-pulse"
+                                        >
                                             <div className="flex items-center justify-between">
                                                 <div className="flex items-center gap-2">
                                                     <Skeleton className="h-10 w-10 rounded-lg bg-gray-200" />
@@ -341,10 +355,17 @@ const PermissionManagement = () => {
                                     ))}
                                 </div>
                             ) : (
-                                <Accordion type="multiple" value={expandedModules} onValueChange={setExpandedModules} className="w-full space-y-3">
+                                <Accordion
+                                    type="multiple"
+                                    value={expandedModules}
+                                    onValueChange={setExpandedModules}
+                                    className="w-full space-y-3"
+                                >
                                     {paginatedModuleKeys.map((moduleName) => {
                                         const items = groupedByModule[moduleName];
-                                        const isAllSelectedInModule = items.every((p: IPermission) => selectedIds.has(p.id));
+                                        const isAllSelectedInModule = items.every((p: IPermission) =>
+                                            selectedIds.has(p.id),
+                                        );
 
                                         return (
                                             <AccordionItem
@@ -355,23 +376,35 @@ const PermissionManagement = () => {
                                                 <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-blue-50 [&[data-state=open]]:bg-gradient-to-r [&[data-state=open]]:from-blue-50 [&[data-state=open]]:to-indigo-50 transition-all duration-200">
                                                     <div className="flex items-center gap-3 flex-1">
                                                         <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-md">
-                                                            <span className="text-lg font-black text-white">{moduleName.charAt(0)}</span>
+                                                            <span className="text-lg font-black text-white">
+                                                                {moduleName.charAt(0)}
+                                                            </span>
                                                         </div>
                                                         <div className="text-left">
-                                                            <span className="font-bold text-sm text-gray-900 block">{moduleName}</span>
+                                                            <span className="font-bold text-sm text-gray-900 block">
+                                                                {moduleName}
+                                                            </span>
                                                             <span className="text-[10px] font-semibold text-gray-500">
-                                                                {items.length} {items.length !== 1 ? t('permission.matrix.permissions') : t('permission.matrix.permission')}
+                                                                {items.length}{" "}
+                                                                {items.length !== 1
+                                                                    ? t("permission.matrix.permissions")
+                                                                    : t("permission.matrix.permission")}
                                                             </span>
                                                         </div>
                                                     </div>
                                                     <div className="ml-auto flex items-center gap-2 pr-1">
-                                                        <label htmlFor={`select-module-${moduleName}`} className="text-xs font-bold text-gray-600 cursor-pointer hover:text-blue-600 transition-colors select-none">
-                                                            {t('permission.matrix.enableAll')}
+                                                        <label
+                                                            htmlFor={`select-module-${moduleName}`}
+                                                            className="text-xs font-bold text-gray-600 cursor-pointer hover:text-blue-600 transition-colors select-none"
+                                                        >
+                                                            {t("permission.matrix.enableAll")}
                                                         </label>
                                                         <Switch
                                                             id={`select-module-${moduleName}`}
                                                             checked={isAllSelectedInModule}
-                                                            onCheckedChange={(val) => toggleSelectModule(moduleName, val)}
+                                                            onCheckedChange={(val) =>
+                                                                toggleSelectModule(moduleName, val)
+                                                            }
                                                             onClick={(e) => e.stopPropagation()}
                                                         />
                                                     </div>
@@ -388,7 +421,9 @@ const PermissionManagement = () => {
                                                                         <Switch
                                                                             id={`perm-${p.id}`}
                                                                             checked={selectedIds.has(p.id)}
-                                                                            onCheckedChange={(val) => toggleSelectOne(p.id, val)}
+                                                                            onCheckedChange={(val) =>
+                                                                                toggleSelectOne(p.id, val)
+                                                                            }
                                                                         />
                                                                     </div>
                                                                     <div className="flex-1 min-w-0 space-y-1.5">
@@ -399,8 +434,10 @@ const PermissionManagement = () => {
                                                                             {p.name}
                                                                         </label>
                                                                         <div className="flex flex-col gap-1">
-                                                                            <Badge className={`${methodBadgeClass(p.method)} w-fit text-[9px] font-black px-2 py-0.5`}>
-                                                                                {(p.method || '').toUpperCase()}
+                                                                            <Badge
+                                                                                className={`${methodBadgeClass(p.method)} w-fit text-[9px] font-black px-2 py-0.5`}
+                                                                            >
+                                                                                {(p.method || "").toUpperCase()}
                                                                             </Badge>
                                                                             <span className="text-[10px] text-gray-600 font-mono break-all leading-relaxed bg-gray-100 px-1.5 py-0.5 rounded">
                                                                                 {p.path}
@@ -418,9 +455,11 @@ const PermissionManagement = () => {
                                     {!moduleKeys.length && (
                                         <div className="text-center py-12 px-6 bg-white rounded-xl border border-dashed border-gray-300">
                                             <div className="text-5xl mb-3 animate-bounce">🔍</div>
-                                            <h3 className="font-bold text-base mb-2 text-gray-900">{t('permission.matrix.noPermissionsFound')}</h3>
+                                            <h3 className="font-bold text-base mb-2 text-gray-900">
+                                                {t("permission.matrix.noPermissionsFound")}
+                                            </h3>
                                             <p className="text-xs text-gray-600 max-w-md mx-auto">
-                                                {t('permission.matrix.noPermissionsMatch')}
+                                                {t("permission.matrix.noPermissionsMatch")}
                                             </p>
                                         </div>
                                     )}
@@ -434,7 +473,9 @@ const PermissionManagement = () => {
                                 totalItems={moduleKeys.length}
                                 itemsPerPage={permParams.limit ?? 20}
                                 onPageChange={(pageNum) => setPermParams((prev) => ({ ...prev, page: pageNum }))}
-                                onItemsPerPageChange={(size) => setPermParams((prev) => ({ ...prev, limit: size, page: 1 }))}
+                                onItemsPerPageChange={(size) =>
+                                    setPermParams((prev) => ({ ...prev, limit: size, page: 1 }))
+                                }
                                 isLoading={permLoading}
                             />
                         </CardFooter>
@@ -446,5 +487,3 @@ const PermissionManagement = () => {
 };
 
 export default PermissionManagement;
-
-

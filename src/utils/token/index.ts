@@ -1,6 +1,5 @@
-
-import { CookiesService } from '@utils/cookies';
-import { jwtDecode, JwtPayload } from 'jwt-decode';
+import { CookiesService } from "@utils/cookies";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 
 //#region [Method] decodeJWT
 /**
@@ -8,7 +7,7 @@ import { jwtDecode, JwtPayload } from 'jwt-decode';
  * @returns JWTPayload | null
  */
 export const decodeJWT = () => {
-    const token = CookiesService.get('accessToken');
+    const token = CookiesService.get("accessToken");
     try {
         if (!token) {
             return null;
@@ -27,8 +26,8 @@ export const decodeJWT = () => {
 //#region [Method] isTokenExpired
 /**
  * Check token is expired
- * @param token 
- * @returns 
+ * @param token
+ * @returns
  */
 export const isTokenExpired = (token: string | null) => {
     if (!token) return true;
@@ -37,7 +36,7 @@ export const isTokenExpired = (token: string | null) => {
         const currentTime = Date.now() / 1000;
         return decodedToken.exp ? decodedToken.exp < currentTime : true;
     } catch (error) {
-        console.error('Error decoding token:', error);
+        console.error("Error decoding token:", error);
         return true;
     }
 };

@@ -1,206 +1,223 @@
-import { useState, useEffect, useMemo } from "react"
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@ui/Card"
-import { Badge } from "@ui/Badge"
-import { Button } from "@ui/Button"
-import { Input } from "@ui/Input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select"
-import { Trophy, Calendar, Users, Search, Edit, Trash2, Loader2, Clock, CheckCircle2, X, Plus, TrendingUp } from "lucide-react"
-import HeaderAdmin from "@organisms/Header/Admin"
-import { useTranslation } from "react-i18next"
-import { useBattleListLeaderBoardSeason } from "@hooks/useBattle"
-import { useGetDashboardLeaderboardSeasonStats } from "@hooks/useDashboard"
-import PaginationControls from "@ui/PaginationControls"
-import { BATTLE } from "@constants/battle"
-import CustomDatePicker from "@ui/DatePicker"
-import CreateSeason from "./components/CreateSeason"
-import DialogDeleteSeason from "./components/DialogDeleteSeason"
-import { ROUTES } from "@constants/route"
-import { useNavigate } from "react-router-dom"
+import { useState, useEffect, useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@ui/Card";
+import { Badge } from "@ui/Badge";
+import { Button } from "@ui/Button";
+import { Input } from "@ui/Input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@ui/Select";
+import {
+    Trophy,
+    Calendar,
+    Users,
+    Search,
+    Edit,
+    Trash2,
+    Loader2,
+    Clock,
+    CheckCircle2,
+    X,
+    Plus,
+    TrendingUp,
+} from "lucide-react";
+import HeaderAdmin from "@organisms/Header/Admin";
+import { useTranslation } from "react-i18next";
+import { useBattleListLeaderBoardSeason } from "@hooks/useBattle";
+import { useGetDashboardLeaderboardSeasonStats } from "@hooks/useDashboard";
+import PaginationControls from "@ui/PaginationControls";
+import { BATTLE } from "@constants/battle";
+import CustomDatePicker from "@ui/DatePicker";
+import CreateSeason from "./components/CreateSeason";
+import DialogDeleteSeason from "./components/DialogDeleteSeason";
+import { ROUTES } from "@constants/route";
+import { useNavigate } from "react-router-dom";
 
-import { BATTLE_STATUS_CONFIG, getStatusBadgeColor, getStatusText, StatusStyleConfig } from "@atoms/BadgeStatusColor"
-import { formatDate } from "@utils/date"
+import { BATTLE_STATUS_CONFIG, getStatusBadgeColor, getStatusText, StatusStyleConfig } from "@atoms/BadgeStatusColor";
+import { formatDate } from "@utils/date";
 
 export default function TournamentManagement() {
-    const { t } = useTranslation()
-    const router = useNavigate()
+    const { t } = useTranslation();
+    const router = useNavigate();
 
-    const [searchQuery, setSearchQuery] = useState<string>("")
-    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("")
-    const [selectedStatus, setSelectedStatus] = useState<string>("all")
-    const [filterStartDate, setFilterStartDate] = useState<Date | null>(null)
-    const [filterEndDate, setFilterEndDate] = useState<Date | null>(null)
-    const [filterHasOpened, setFilterHasOpened] = useState<"all" | "opened" | "notOpened">("all")
-    const [showAddDialog, setShowAddDialog] = useState<boolean>(false)
-    const [currentPage, setCurrentPage] = useState<number>(1)
-    const [pageSize, setPageSize] = useState<number>(15)
+    const [searchQuery, setSearchQuery] = useState<string>("");
+    const [debouncedSearchQuery, setDebouncedSearchQuery] = useState<string>("");
+    const [selectedStatus, setSelectedStatus] = useState<string>("all");
+    const [filterStartDate, setFilterStartDate] = useState<Date | null>(null);
+    const [filterEndDate, setFilterEndDate] = useState<Date | null>(null);
+    const [filterHasOpened, setFilterHasOpened] = useState<"all" | "opened" | "notOpened">("all");
+    const [showAddDialog, setShowAddDialog] = useState<boolean>(false);
+    const [currentPage, setCurrentPage] = useState<number>(1);
+    const [pageSize, setPageSize] = useState<number>(15);
 
     // Debounce search query
     useEffect(() => {
         const timer = setTimeout(() => {
-            setDebouncedSearchQuery(searchQuery)
-            setCurrentPage(1) // Reset to first page when search changes
-        }, 500)
+            setDebouncedSearchQuery(searchQuery);
+            setCurrentPage(1); // Reset to first page when search changes
+        }, 500);
 
-        return () => clearTimeout(timer)
-    }, [searchQuery])
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
 
     // Format dates for API (YYYY-MM-DD format)
     const formatDateForAPI = (date: Date | null) => {
-        if (!date) return undefined
-        const year = date.getFullYear()
-        const month = String(date.getMonth() + 1).padStart(2, '0')
-        const day = String(date.getDate()).padStart(2, '0')
-        return `${year}-${month}-${day}`
-    }
+        if (!date) return undefined;
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, "0");
+        const day = String(date.getDate()).padStart(2, "0");
+        return `${year}-${month}-${day}`;
+    };
 
     // Build query params
     const queryParams = useMemo(() => {
         const params: any = {
             currentPage,
             pageSize,
-        }
+        };
 
         if (debouncedSearchQuery) {
-            params.nameTranslation = debouncedSearchQuery
+            params.nameTranslation = debouncedSearchQuery;
         }
 
         if (selectedStatus !== "all") {
-            params.status = selectedStatus
+            params.status = selectedStatus;
         }
 
         if (filterStartDate) {
-            params.startDate = formatDateForAPI(filterStartDate)
+            params.startDate = formatDateForAPI(filterStartDate);
         }
 
         if (filterEndDate) {
-            params.endDate = formatDateForAPI(filterEndDate)
+            params.endDate = formatDateForAPI(filterEndDate);
         }
 
         if (filterHasOpened === "opened") {
-            params.hasOpened = true
+            params.hasOpened = true;
         } else if (filterHasOpened === "notOpened") {
-            params.hasOpened = false
+            params.hasOpened = false;
         }
 
-        return params
-    }, [currentPage, pageSize, debouncedSearchQuery, selectedStatus, filterStartDate, filterEndDate, filterHasOpened])
+        return params;
+    }, [currentPage, pageSize, debouncedSearchQuery, selectedStatus, filterStartDate, filterEndDate, filterHasOpened]);
 
     // Fetch tournaments data
-    const { data: tournaments, pagination, isLoading, error } = useBattleListLeaderBoardSeason(queryParams)
+    const { data: tournaments, pagination, isLoading, error } = useBattleListLeaderBoardSeason(queryParams);
 
     // Fetch leaderboard season stats overview
-    const { data: seasonStats } = useGetDashboardLeaderboardSeasonStats()
+    const { data: seasonStats } = useGetDashboardLeaderboardSeasonStats();
 
     // Ensure tournaments is always an array
-    const tournamentsList = Array.isArray(tournaments) ? tournaments : []
+    const tournamentsList = Array.isArray(tournaments) ? tournaments : [];
 
     // Stats calculations
     const stats = useMemo(() => {
-        const totalTournaments = seasonStats?.totalSeasons || pagination?.totalItem || 0
-        const activeTournaments = seasonStats?.activeSeasons || tournamentsList.filter((t: any) => t.status === BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.ACTIVE).length
-        const totalParticipants = seasonStats?.currentParticipants || 0
-        const participationChangeRate = seasonStats?.participationChangeRate || 0
+        const totalTournaments = seasonStats?.totalSeasons || pagination?.totalItem || 0;
+        const activeTournaments =
+            seasonStats?.activeSeasons ||
+            tournamentsList.filter((t: any) => t.status === BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.ACTIVE)
+                .length;
+        const totalParticipants = seasonStats?.currentParticipants || 0;
+        const participationChangeRate = seasonStats?.participationChangeRate || 0;
 
         return [
             {
-                label: t('tournaments.list.stats.totalTournaments'),
+                label: t("tournaments.list.stats.totalTournaments"),
                 value: totalTournaments.toString(),
                 icon: Trophy,
                 gradient: "from-yellow-500/20 to-amber-500/20",
                 iconBg: "bg-yellow-500/10",
                 iconColor: "text-yellow-500",
-                borderColor: "border-yellow-500/20"
+                borderColor: "border-yellow-500/20",
             },
             {
-                label: t('tournaments.list.stats.activeTournaments'),
+                label: t("tournaments.list.stats.activeTournaments"),
                 value: activeTournaments.toString(),
                 icon: Calendar,
                 gradient: "from-blue-500/20 to-cyan-500/20",
                 iconBg: "bg-blue-500/10",
                 iconColor: "text-blue-500",
-                borderColor: "border-blue-500/20"
+                borderColor: "border-blue-500/20",
             },
             {
-                label: t('tournaments.list.stats.totalParticipants'),
+                label: t("tournaments.list.stats.totalParticipants"),
                 value: totalParticipants.toString() || "0",
                 icon: Users,
                 gradient: "from-green-500/20 to-emerald-500/20",
                 iconBg: "bg-green-500/10",
                 iconColor: "text-green-500",
-                borderColor: "border-green-500/20"
+                borderColor: "border-green-500/20",
             },
             {
-                label: t('tournaments.list.stats.growthRate'),
-                value: participationChangeRate > 0
-                    ? `+${participationChangeRate}%`
-                    : participationChangeRate < 0
-                        ? `${participationChangeRate}%`
-                        : "0%",
+                label: t("tournaments.list.stats.growthRate"),
+                value:
+                    participationChangeRate > 0
+                        ? `+${participationChangeRate}%`
+                        : participationChangeRate < 0
+                          ? `${participationChangeRate}%`
+                          : "0%",
                 icon: TrendingUp,
                 gradient: "from-purple-500/20 to-pink-500/20",
                 iconBg: "bg-purple-500/10",
                 iconColor: "text-purple-500",
-                borderColor: "border-purple-500/20"
+                borderColor: "border-purple-500/20",
             },
-        ]
-    }, [tournamentsList, pagination, seasonStats, t])
+        ];
+    }, [tournamentsList, pagination, seasonStats, t]);
 
     // Handle clear filters
     const handleClearFilters = () => {
-        setFilterStartDate(null)
-        setFilterEndDate(null)
-        setFilterHasOpened("all")
-        setSelectedStatus("all")
-        setSearchQuery("")
-        setCurrentPage(1)
-    }
+        setFilterStartDate(null);
+        setFilterEndDate(null);
+        setFilterHasOpened("all");
+        setSelectedStatus("all");
+        setSearchQuery("");
+        setCurrentPage(1);
+    };
 
     const hasActiveFilters =
-        !!filterStartDate ||
-        !!filterEndDate ||
-        filterHasOpened !== "all" ||
-        selectedStatus !== "all" ||
-        !!searchQuery
+        !!filterStartDate || !!filterEndDate || filterHasOpened !== "all" || selectedStatus !== "all" || !!searchQuery;
 
     // Brightened badge config for better visibility in TournamentManagement
     const BRIGHTENED_BATTLE_STATUS_CONFIG: StatusStyleConfig = {
         [BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.ACTIVE]: {
-            colorClass: "bg-gradient-to-r from-green-500/50 to-emerald-500/50 text-green-700 border-2 border-green-500/70 shadow-md",
-            label: t('tournaments.list.status.active'),
+            colorClass:
+                "bg-gradient-to-r from-green-500/50 to-emerald-500/50 text-green-700 border-2 border-green-500/70 shadow-md",
+            label: t("tournaments.list.status.active"),
         },
         [BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.PREVIEW]: {
-            colorClass: "bg-gradient-to-r from-blue-500/50 to-cyan-500/50 text-blue-700 border-2 border-blue-500/70 shadow-md",
-            label: t('tournaments.list.status.preview'),
+            colorClass:
+                "bg-gradient-to-r from-blue-500/50 to-cyan-500/50 text-blue-700 border-2 border-blue-500/70 shadow-md",
+            label: t("tournaments.list.status.preview"),
         },
         [BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.EXPIRED]: {
-            colorClass: "bg-gradient-to-r from-gray-500/50 to-slate-500/50 text-gray-700 border-2 border-gray-500/70 shadow-md",
-            label: t('tournaments.list.status.expired'),
+            colorClass:
+                "bg-gradient-to-r from-gray-500/50 to-slate-500/50 text-gray-700 border-2 border-gray-500/70 shadow-md",
+            label: t("tournaments.list.status.expired"),
         },
         [BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.INACTIVE]: {
-            colorClass: "bg-gradient-to-r from-red-500/50 to-rose-500/50 text-red-700 border-2 border-red-500/70 shadow-md",
-            label: t('tournaments.list.status.inactive'),
+            colorClass:
+                "bg-gradient-to-r from-red-500/50 to-rose-500/50 text-red-700 border-2 border-red-500/70 shadow-md",
+            label: t("tournaments.list.status.inactive"),
         },
         DEFAULT: {
-            colorClass: "bg-gradient-to-r from-gray-500/50 to-slate-500/50 text-gray-700 border-2 border-gray-500/70 shadow-md",
-            label: t('tournaments.list.status.unknown'),
+            colorClass:
+                "bg-gradient-to-r from-gray-500/50 to-slate-500/50 text-gray-700 border-2 border-gray-500/70 shadow-md",
+            label: t("tournaments.list.status.unknown"),
         },
-    }
+    };
 
     // Helper to get brightened badge color
     const getBrightenedBadgeColor = (status: string) => {
-        return getStatusBadgeColor(status, BRIGHTENED_BATTLE_STATUS_CONFIG)
-    }
+        return getStatusBadgeColor(status, BRIGHTENED_BATTLE_STATUS_CONFIG);
+    };
 
     /**
      * Delete Candidate
      */
-    const [deleteCandidate, setDeleteCandidate] = useState<{ id: number; name: string } | null>(null)
+    const [deleteCandidate, setDeleteCandidate] = useState<{ id: number; name: string } | null>(null);
     //------------------------End------------------------//
 
     return (
-
         <>
-            <HeaderAdmin title={t('tournaments.title')} description={t('tournaments.description')} />
+            <HeaderAdmin title={t("tournaments.title")} description={t("tournaments.description")} />
             <div className="mt-24 p-8 space-y-8">
                 {/* Stats Cards */}
                 <div className="grid gap-6 md:grid-cols-4">
@@ -212,16 +229,16 @@ export default function TournamentManagement() {
                             <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent rounded-full -mr-16 -mt-16" />
                             <CardHeader className="pb-3">
                                 <div className="flex items-center justify-between">
-                                    <CardTitle className="text-sm font-semibold text-foreground/90">{stat.label}</CardTitle>
+                                    <CardTitle className="text-sm font-semibold text-foreground/90">
+                                        {stat.label}
+                                    </CardTitle>
                                     <div className={`p-2 rounded-lg ${stat.iconBg} ${stat.iconColor}`}>
                                         <stat.icon className="w-5 h-5" />
                                     </div>
                                 </div>
                             </CardHeader>
                             <CardContent>
-                                <div className="text-4xl font-bold text-foreground mb-1">
-                                    {stat.value}
-                                </div>
+                                <div className="text-4xl font-bold text-foreground mb-1">{stat.value}</div>
                                 <div className="h-1 w-16 bg-gradient-to-r from-transparent via-current to-transparent opacity-20 mt-2" />
                             </CardContent>
                         </Card>
@@ -236,14 +253,16 @@ export default function TournamentManagement() {
                                 <div className="p-2 bg-primary/10 rounded-lg">
                                     <Trophy className="w-5 h-5 text-primary" />
                                 </div>
-                                <CardTitle className="text-xl font-bold text-foreground">{t('tournaments.list.title')}</CardTitle>
+                                <CardTitle className="text-xl font-bold text-foreground">
+                                    {t("tournaments.list.title")}
+                                </CardTitle>
                             </div>
                             <Button
                                 className="bg-gradient-to-r from-primary to-primary/80 text-primary-foreground hover:from-primary/90 hover:to-primary/70 shadow-lg"
                                 onClick={() => setShowAddDialog(true)}
                             >
                                 <Plus className="w-4 h-4 mr-2" />
-                                {t('tournaments.list.createTournament')}
+                                {t("tournaments.list.createTournament")}
                             </Button>
                         </div>
                     </CardHeader>
@@ -253,17 +272,17 @@ export default function TournamentManagement() {
                             <div className="flex flex-col lg:flex-row gap-4">
                                 <div className="flex-1">
                                     <label className="text-sm font-medium text-foreground mb-2 block">
-                                        {t('tournaments.list.filters.search')}
+                                        {t("tournaments.list.filters.search")}
                                     </label>
                                     <div className="relative">
                                         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground z-10" />
                                         <Input
                                             type="text"
-                                            placeholder={t('tournaments.list.filters.searchPlaceholder')}
+                                            placeholder={t("tournaments.list.filters.searchPlaceholder")}
                                             value={searchQuery}
                                             onChange={(e) => {
-                                                setSearchQuery(e.target.value)
-                                                setCurrentPage(1)
+                                                setSearchQuery(e.target.value);
+                                                setCurrentPage(1);
                                             }}
                                             className="pl-10 bg-background border-border text-foreground h-11 shadow-sm focus:shadow-md transition-shadow"
                                         />
@@ -271,31 +290,45 @@ export default function TournamentManagement() {
                                 </div>
                                 <div className="lg:w-[220px]">
                                     <label className="text-sm font-medium text-foreground mb-2 block">
-                                        {t('tournaments.list.filters.status')}
+                                        {t("tournaments.list.filters.status")}
                                     </label>
                                     <Select
                                         value={selectedStatus}
                                         onValueChange={(value) => {
-                                            setSelectedStatus(value)
-                                            setCurrentPage(1)
+                                            setSelectedStatus(value);
+                                            setCurrentPage(1);
                                         }}
                                     >
                                         <SelectTrigger className="w-full bg-background border-border text-foreground h-11 shadow-sm">
-                                            <SelectValue placeholder={t('tournaments.list.filters.statusPlaceholder')} />
+                                            <SelectValue
+                                                placeholder={t("tournaments.list.filters.statusPlaceholder")}
+                                            />
                                         </SelectTrigger>
                                         <SelectContent className="bg-card border-border">
-                                            <SelectItem value="all">{t('tournaments.list.filters.all')}</SelectItem>
+                                            <SelectItem value="all">{t("tournaments.list.filters.all")}</SelectItem>
                                             <SelectItem value={BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.ACTIVE}>
-                                                {getStatusText(BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.ACTIVE, BATTLE_STATUS_CONFIG)}
+                                                {getStatusText(
+                                                    BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.ACTIVE,
+                                                    BATTLE_STATUS_CONFIG,
+                                                )}
                                             </SelectItem>
                                             <SelectItem value={BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.PREVIEW}>
-                                                {getStatusText(BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.PREVIEW, BATTLE_STATUS_CONFIG)}
+                                                {getStatusText(
+                                                    BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.PREVIEW,
+                                                    BATTLE_STATUS_CONFIG,
+                                                )}
                                             </SelectItem>
                                             <SelectItem value={BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.EXPIRED}>
-                                                {getStatusText(BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.EXPIRED, BATTLE_STATUS_CONFIG)}
+                                                {getStatusText(
+                                                    BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.EXPIRED,
+                                                    BATTLE_STATUS_CONFIG,
+                                                )}
                                             </SelectItem>
                                             <SelectItem value={BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.INACTIVE}>
-                                                {getStatusText(BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.INACTIVE, BATTLE_STATUS_CONFIG)}
+                                                {getStatusText(
+                                                    BATTLE.BATTLE_LIST_LEADER_BOARD_SEASON_STATUS.INACTIVE,
+                                                    BATTLE_STATUS_CONFIG,
+                                                )}
                                             </SelectItem>
                                         </SelectContent>
                                     </Select>
@@ -306,54 +339,60 @@ export default function TournamentManagement() {
                             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                                 <div>
                                     <label className="text-sm font-medium text-foreground mb-2 block">
-                                        {t('tournaments.list.filters.startDate')}
+                                        {t("tournaments.list.filters.startDate")}
                                     </label>
                                     <CustomDatePicker
                                         value={filterStartDate}
                                         onChange={(date) => {
-                                            setFilterStartDate(date)
-                                            setCurrentPage(1)
+                                            setFilterStartDate(date);
+                                            setCurrentPage(1);
                                         }}
-                                        placeholder={t('tournaments.list.filters.startDatePlaceholder')}
+                                        placeholder={t("tournaments.list.filters.startDatePlaceholder")}
                                         dayPickerProps={{
-                                            disabled: false
+                                            disabled: false,
                                         }}
                                     />
                                 </div>
                                 <div>
                                     <label className="text-sm font-medium text-foreground mb-2 block">
-                                        {t('tournaments.list.filters.endDate')}
+                                        {t("tournaments.list.filters.endDate")}
                                     </label>
                                     <CustomDatePicker
                                         value={filterEndDate}
                                         onChange={(date) => {
-                                            setFilterEndDate(date)
-                                            setCurrentPage(1)
+                                            setFilterEndDate(date);
+                                            setCurrentPage(1);
                                         }}
-                                        placeholder={t('tournaments.list.filters.endDatePlaceholder')}
+                                        placeholder={t("tournaments.list.filters.endDatePlaceholder")}
                                         dayPickerProps={{
-                                            disabled: false
+                                            disabled: false,
                                         }}
                                     />
                                 </div>
                                 <div className="lg:w-[220px]">
                                     <label className="text-sm font-medium text-foreground mb-2 block">
-                                        {t('tournaments.list.filters.openStatus')}
+                                        {t("tournaments.list.filters.openStatus")}
                                     </label>
                                     <Select
                                         value={filterHasOpened}
                                         onValueChange={(value: "all" | "opened" | "notOpened") => {
-                                            setFilterHasOpened(value)
-                                            setCurrentPage(1)
+                                            setFilterHasOpened(value);
+                                            setCurrentPage(1);
                                         }}
                                     >
                                         <SelectTrigger className="w-full bg-background border-border text-foreground h-11 shadow-sm">
-                                            <SelectValue placeholder={t('tournaments.list.filters.openStatusPlaceholder')} />
+                                            <SelectValue
+                                                placeholder={t("tournaments.list.filters.openStatusPlaceholder")}
+                                            />
                                         </SelectTrigger>
                                         <SelectContent className="bg-card border-border">
-                                            <SelectItem value="all">{t('tournaments.list.filters.all')}</SelectItem>
-                                            <SelectItem value="opened">{t('tournaments.list.filters.opened')}</SelectItem>
-                                            <SelectItem value="notOpened">{t('tournaments.list.filters.notOpened')}</SelectItem>
+                                            <SelectItem value="all">{t("tournaments.list.filters.all")}</SelectItem>
+                                            <SelectItem value="opened">
+                                                {t("tournaments.list.filters.opened")}
+                                            </SelectItem>
+                                            <SelectItem value="notOpened">
+                                                {t("tournaments.list.filters.notOpened")}
+                                            </SelectItem>
                                         </SelectContent>
                                     </Select>
                                 </div>
@@ -365,7 +404,7 @@ export default function TournamentManagement() {
                                             className="w-full border-border text-foreground hover:bg-muted shadow-sm h-11"
                                         >
                                             <X className="w-4 h-4 mr-2" />
-                                            {t('tournaments.list.filters.clearFilters')}
+                                            {t("tournaments.list.filters.clearFilters")}
                                         </Button>
                                     ) : (
                                         <div className="h-11" />
@@ -382,7 +421,7 @@ export default function TournamentManagement() {
                         <CardContent className="p-12">
                             <div className="flex flex-col items-center justify-center gap-4">
                                 <Loader2 className="w-12 h-12 animate-spin text-primary" />
-                                <p className="text-muted-foreground">{t('tournaments.list.messages.loading')}</p>
+                                <p className="text-muted-foreground">{t("tournaments.list.messages.loading")}</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -393,7 +432,7 @@ export default function TournamentManagement() {
                                 <div className="p-3 bg-destructive/10 rounded-full">
                                     <Trophy className="w-8 h-8 text-destructive" />
                                 </div>
-                                <p className="text-destructive font-medium">{t('tournaments.list.messages.error')}</p>
+                                <p className="text-destructive font-medium">{t("tournaments.list.messages.error")}</p>
                             </div>
                         </CardContent>
                     </Card>
@@ -404,7 +443,9 @@ export default function TournamentManagement() {
                                 <div className="p-3 bg-muted rounded-full">
                                     <Trophy className="w-8 h-8 text-muted-foreground" />
                                 </div>
-                                <p className="text-muted-foreground font-medium">{t('tournaments.list.messages.noTournaments')}</p>
+                                <p className="text-muted-foreground font-medium">
+                                    {t("tournaments.list.messages.noTournaments")}
+                                </p>
                             </div>
                         </CardContent>
                     </Card>
@@ -438,13 +479,15 @@ export default function TournamentManagement() {
                                     <CardContent className="relative space-y-4">
                                         {/* Status Badges */}
                                         <div className="flex flex-wrap gap-2">
-                                            <Badge className={`${getBrightenedBadgeColor(tournament.status)} font-semibold`}>
+                                            <Badge
+                                                className={`${getBrightenedBadgeColor(tournament.status)} font-semibold`}
+                                            >
                                                 {getStatusText(tournament.status, BATTLE_STATUS_CONFIG)}
                                             </Badge>
                                             {tournament.hasOpened && (
                                                 <Badge className="bg-gradient-to-r from-green-500/50 to-emerald-500/50 text-green-800 border-2 border-green-500/70 shadow-md font-semibold flex items-center gap-1.5">
                                                     <CheckCircle2 className="w-3.5 h-3.5" />
-                                                    {t('tournaments.list.card.opened')}
+                                                    {t("tournaments.list.card.opened")}
                                                 </Badge>
                                             )}
                                         </div>
@@ -454,10 +497,11 @@ export default function TournamentManagement() {
                                             <div className="flex items-center justify-between text-sm">
                                                 <span className="text-muted-foreground flex items-center gap-2 font-medium">
                                                     <Clock className="w-4 h-4" />
-                                                    {t('tournaments.list.card.time')}
+                                                    {t("tournaments.list.card.time")}
                                                 </span>
                                                 <span className="text-foreground font-semibold">
-                                                    {formatDate(tournament.startDate)} - {formatDate(tournament.endDate)}
+                                                    {formatDate(tournament.startDate)} -{" "}
+                                                    {formatDate(tournament.endDate)}
                                                 </span>
                                             </div>
                                             <div className="h-px bg-border/50" />
@@ -482,7 +526,10 @@ export default function TournamentManagement() {
                                                 className="border-border text-destructive hover:bg-destructive/10 hover:border-destructive hover:text-destructive transition-all shadow-sm"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    setDeleteCandidate({ id: tournament.id, name: tournament.nameTranslation || tournament.nameKey });
+                                                    setDeleteCandidate({
+                                                        id: tournament.id,
+                                                        name: tournament.nameTranslation || tournament.nameKey,
+                                                    });
                                                 }}
                                             >
                                                 <Trash2 className="w-4 h-4" />
@@ -504,8 +551,8 @@ export default function TournamentManagement() {
                                         itemsPerPage={pagination.pageSize}
                                         onPageChange={setCurrentPage}
                                         onItemsPerPageChange={(newSize) => {
-                                            setPageSize(newSize)
-                                            setCurrentPage(1)
+                                            setPageSize(newSize);
+                                            setCurrentPage(1);
                                         }}
                                         isLoading={isLoading}
                                     />
@@ -522,7 +569,7 @@ export default function TournamentManagement() {
                     isOpen={!!deleteCandidate}
                     onCancel={() => setDeleteCandidate(null)}
                 />
-            </div >
+            </div>
         </>
-    )
+    );
 }

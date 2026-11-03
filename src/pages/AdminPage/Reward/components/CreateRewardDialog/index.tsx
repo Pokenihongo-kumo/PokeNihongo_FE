@@ -78,33 +78,33 @@ const CreateRewardDialog = ({ isOpen, onClose, editingReward }: CreateRewardDial
 
     // Get options using flattened JSON localization keys
     const rewardTypeOptions = [
-        { value: REWARD_TYPE.LESSON, label: t('reward.rewardTypeLESSON') },
-        { value: REWARD_TYPE.DAILY_REQUEST, label: t('reward.rewardTypeDAILY_REQUEST') },
-        { value: REWARD_TYPE.EVENT, label: t('reward.rewardTypeEVENT') },
-        { value: REWARD_TYPE.ACHIEVEMENT, label: t('reward.rewardTypeACHIEVEMENT') },
-        { value: REWARD_TYPE.LEVEL, label: t('reward.rewardTypeLEVEL') },
+        { value: REWARD_TYPE.LESSON, label: t("reward.rewardTypeLESSON") },
+        { value: REWARD_TYPE.DAILY_REQUEST, label: t("reward.rewardTypeDAILY_REQUEST") },
+        { value: REWARD_TYPE.EVENT, label: t("reward.rewardTypeEVENT") },
+        { value: REWARD_TYPE.ACHIEVEMENT, label: t("reward.rewardTypeACHIEVEMENT") },
+        { value: REWARD_TYPE.LEVEL, label: t("reward.rewardTypeLEVEL") },
     ];
 
     const rewardTargetOptions = [
-        { value: REWARD_TARGET.EXP, label: t('reward.rewardTargetEXP') },
-        { value: REWARD_TARGET.POKEMON, label: t('reward.rewardTargetPOKEMON') },
-        { value: REWARD_TARGET.POKE_COINS, label: t('reward.rewardTargetPOKE_COINS') },
-        { value: REWARD_TARGET.SPARKLES, label: t('reward.rewardTargetSPARKLES') },
+        { value: REWARD_TARGET.EXP, label: t("reward.rewardTargetEXP") },
+        { value: REWARD_TARGET.POKEMON, label: t("reward.rewardTargetPOKEMON") },
+        { value: REWARD_TARGET.POKE_COINS, label: t("reward.rewardTargetPOKE_COINS") },
+        { value: REWARD_TARGET.SPARKLES, label: t("reward.rewardTargetSPARKLES") },
     ];
 
     const handleFormSubmit = async (data: ICreateRewardRequest) => {
         try {
             if (editingReward) {
                 await updateRewardMutation.mutateAsync({ id: editingReward.id, data });
-                toast.success(t('reward.updateSuccess'));
+                toast.success(t("reward.updateSuccess"));
             } else {
                 await createRewardMutation.mutateAsync(data);
-                toast.success(t('reward.createSuccess'));
+                toast.success(t("reward.createSuccess"));
             }
             onClose();
         } catch (error) {
             console.error("Error saving reward:", error);
-            toast.error(editingReward ? t('reward.updateError') : t('reward.createError'));
+            toast.error(editingReward ? t("reward.updateError") : t("reward.createError"));
         }
     };
 
@@ -115,14 +115,14 @@ const CreateRewardDialog = ({ isOpen, onClose, editingReward }: CreateRewardDial
             <DialogContent className="bg-white border-border">
                 <DialogHeader>
                     <DialogTitle className="text-foreground">
-                        {editingReward ? t('reward.editTitle') : t('reward.addTitle')}
+                        {editingReward ? t("reward.editTitle") : t("reward.addTitle")}
                     </DialogTitle>
                 </DialogHeader>
 
                 <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4" noValidate>
                     {/* Multilingual Name Input */}
                     <MultilingualInput
-                        label={t('reward.name')}
+                        label={t("reward.name")}
                         fields={nameFields}
                         register={register}
                         errors={errors.nameTranslations}
@@ -133,17 +133,20 @@ const CreateRewardDialog = ({ isOpen, onClose, editingReward }: CreateRewardDial
 
                     {/* Reward Type */}
                     <>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            {t('reward.rewardType')}
-                        </label>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">{t("reward.rewardType")}</label>
                         <Controller
                             name="rewardType"
                             control={control}
-                            rules={{ required: t('reward.rewardTypeRequired') }}
+                            rules={{ required: t("reward.rewardTypeRequired") }}
                             render={({ field }) => (
                                 <Select value={field.value} onValueChange={field.onChange}>
-                                    <SelectTrigger className={cn("bg-background text-foreground", errors.rewardType && "border-error focus-visible:ring-destructive")}>
-                                        <SelectValue placeholder={t('reward.rewardTypePlaceholder')} />
+                                    <SelectTrigger
+                                        className={cn(
+                                            "bg-background text-foreground",
+                                            errors.rewardType && "border-error focus-visible:ring-destructive",
+                                        )}
+                                    >
+                                        <SelectValue placeholder={t("reward.rewardTypePlaceholder")} />
                                     </SelectTrigger>
                                     <SelectContent className="bg-card border-border">
                                         {rewardTypeOptions.map((option) => (
@@ -155,9 +158,7 @@ const CreateRewardDialog = ({ isOpen, onClose, editingReward }: CreateRewardDial
                                 </Select>
                             )}
                         />
-                        {errors.rewardType && (
-                            <p className="mt-1 text-xs text-red-500">{errors.rewardType.message}</p>
-                        )}
+                        {errors.rewardType && <p className="mt-1 text-xs text-red-500">{errors.rewardType.message}</p>}
                     </>
 
                     {/* Reward Item */}
@@ -166,13 +167,13 @@ const CreateRewardDialog = ({ isOpen, onClose, editingReward }: CreateRewardDial
                         control={control}
                         render={({ field }) => (
                             <Input
-                                label={t('reward.rewardItem')}
+                                label={t("reward.rewardItem")}
                                 type="number"
                                 {...field}
-                                value={field.value || ''}
+                                value={field.value || ""}
                                 onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                                 error={errors.rewardItem?.message}
-                                placeholder={t('reward.rewardItemPlaceholder')}
+                                placeholder={t("reward.rewardItemPlaceholder")}
                                 className="bg-background border-border text-foreground h-11"
                             />
                         )}
@@ -180,16 +181,21 @@ const CreateRewardDialog = ({ isOpen, onClose, editingReward }: CreateRewardDial
 
                     <>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            {t('reward.rewardTarget')}
+                            {t("reward.rewardTarget")}
                         </label>
                         <Controller
                             name="rewardTarget"
                             control={control}
-                            rules={{ required: t('reward.rewardTargetRequired') }}
+                            rules={{ required: t("reward.rewardTargetRequired") }}
                             render={({ field }) => (
                                 <Select value={field.value} onValueChange={field.onChange}>
-                                    <SelectTrigger className={cn("bg-background text-foreground", errors.rewardTarget && "border-error focus-visible:ring-destructive")}>
-                                        <SelectValue placeholder={t('reward.rewardTargetPlaceholder')} />
+                                    <SelectTrigger
+                                        className={cn(
+                                            "bg-background text-foreground",
+                                            errors.rewardTarget && "border-error focus-visible:ring-destructive",
+                                        )}
+                                    >
+                                        <SelectValue placeholder={t("reward.rewardTargetPlaceholder")} />
                                     </SelectTrigger>
                                     <SelectContent className="bg-card border-border">
                                         {rewardTargetOptions.map((option) => (
@@ -207,20 +213,15 @@ const CreateRewardDialog = ({ isOpen, onClose, editingReward }: CreateRewardDial
                     </>
 
                     <div className="flex justify-end space-x-2 pt-4">
-                        <Button
-                            type="button"
-                            variant="outline"
-                            onClick={onClose}
-                            disabled={isLoading}
-                        >
-                            {t('common.cancel')}
+                        <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
+                            {t("common.cancel")}
                         </Button>
                         <Button
                             type="submit"
                             disabled={isLoading}
                             className="bg-primary text-primary-foreground hover:bg-primary/90"
                         >
-                            {isLoading ? t('common.saving') : (editingReward ? t('common.update') : t('common.create'))}
+                            {isLoading ? t("common.saving") : editingReward ? t("common.update") : t("common.create")}
                         </Button>
                     </div>
                 </form>

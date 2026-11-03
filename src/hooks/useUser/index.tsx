@@ -9,18 +9,17 @@ import { toast } from "react-toastify";
 /**
  * Handle User List
  * @param params IQueryRequest
- * @returns 
+ * @returns
  */
 export const useUserList = (params: IQueryRequest) => {
     const currentLanguage = useSelector(selectCurrentLanguage);
     const { data, isLoading, error } = useQuery({
-        queryKey: ['user-list', params, currentLanguage],
+        queryKey: ["user-list", params, currentLanguage],
         queryFn: () => userService.getUserList(params),
     });
     return { data: data?.data?.data, isLoading, error };
-}
+};
 //----------------------End----------------------//
-
 
 /**
  * Handle Create User
@@ -30,7 +29,7 @@ export const useCreateUser = () => {
     const createUserMutation = useMutation({
         mutationFn: (data: ICreateUserRequest) => userService.createUser(data),
         onSuccess: (data: any) => {
-            queryClient.invalidateQueries({ queryKey: ['user-list'] });
+            queryClient.invalidateQueries({ queryKey: ["user-list"] });
             toast.success(data?.message || "Tạo người dùng thành công");
         },
         onError: (error: any) => {
@@ -38,5 +37,5 @@ export const useCreateUser = () => {
         },
     });
     return createUserMutation;
-}
+};
 //----------------------End----------------------//

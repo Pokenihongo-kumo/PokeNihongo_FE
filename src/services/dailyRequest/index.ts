@@ -3,19 +3,21 @@ import { ICreateDailyRequestRequest } from "@models/dailyRequest/request";
 import { IQueryRequest } from "@models/common/request";
 
 const dailyRequestService = {
-    getDailyRequestList: async (params?: IQueryRequest & {
-        nameTranslation?: string;
-        isStreak?: boolean;
-        isActive?: boolean;
-        rewardId?: number;
-        dailyRequestType?: string;
-    }) => {
+    getDailyRequestList: async (
+        params?: IQueryRequest & {
+            nameTranslation?: string;
+            isStreak?: boolean;
+            isActive?: boolean;
+            rewardId?: number;
+            dailyRequestType?: string;
+        },
+    ) => {
         const queryParams = new URLSearchParams();
         const qsParts: string[] = [];
 
         // Sort
         if (params?.sortBy) {
-            const sortDirection = params.sort === 'desc' ? '-' : '';
+            const sortDirection = params.sort === "desc" ? "-" : "";
             qsParts.push(`sort:${sortDirection}${params.sortBy}`);
         }
 
@@ -42,23 +44,23 @@ const dailyRequestService = {
 
         // Add qs parameter if we have any filters
         if (qsParts.length > 0) {
-            queryParams.append('qs', qsParts.join(','));
+            queryParams.append("qs", qsParts.join(","));
         }
 
         // Pagination
         if (params?.page) {
-            queryParams.append('currentPage', params.page.toString());
+            queryParams.append("currentPage", params.page.toString());
         }
 
         if (params?.limit) {
-            queryParams.append('pageSize', params.limit.toString());
+            queryParams.append("pageSize", params.limit.toString());
         }
 
         const queryString = queryParams.toString();
-        return axiosPrivate.get(`/daily-request${queryString ? `?${queryString}` : ''}`);
+        return axiosPrivate.get(`/daily-request${queryString ? `?${queryString}` : ""}`);
     },
     createDailyRequest: async (data: ICreateDailyRequestRequest) => {
-        return axiosPrivate.post('/daily-request', data);
+        return axiosPrivate.post("/daily-request", data);
     },
     //TODO: Update daily request sau khi Pilu thêm cái get by daily request id cho admin
     updateDailyRequest: async (dailyRequestId: number, data: ICreateDailyRequestRequest) => {

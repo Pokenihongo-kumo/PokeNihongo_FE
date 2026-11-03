@@ -5,11 +5,12 @@ import z from "zod";
 /**
  * Battle List Leader Board Season Response Schema
  */
-const BattleListLeaderBoardSeasonResponseSchema = BackendPaginationResponseModel(BattleListLeaderBoardSeasonEntitySchema);
+const BattleListLeaderBoardSeasonResponseSchema = BackendPaginationResponseModel(
+    BattleListLeaderBoardSeasonEntitySchema,
+);
 
 export type IBattleListLeaderBoardSeasonResponse = z.infer<typeof BattleListLeaderBoardSeasonResponseSchema>;
 //----------------------End----------------------//
-
 
 /**
  * Battle Leader Board Season Detail Response Schema

@@ -1,5 +1,10 @@
 import { axiosPrivate } from "@configs/axios";
-import { ICreateGeminiConfigModelsRequest, ICreateServiceConfigRequest, IUpdateGeminiConfigPromptsRequest, IUpdateModelConfigsPolicySchemaRequest } from "@models/ai/request";
+import {
+    ICreateGeminiConfigModelsRequest,
+    ICreateServiceConfigRequest,
+    IUpdateGeminiConfigPromptsRequest,
+    IUpdateModelConfigsPolicySchemaRequest,
+} from "@models/ai/request";
 import { IQueryRequest } from "@models/common/request";
 
 const geminiService = {
@@ -8,16 +13,16 @@ const geminiService = {
         const qsParts: string[] = [];
 
         if (sortBy && sortOrder) {
-            const sortPrefix = sortOrder === 'desc' ? '-' : '';
+            const sortPrefix = sortOrder === "desc" ? "-" : "";
             qsParts.push(`sort:${sortPrefix}${sortBy}`);
         } else if (sortBy) {
             qsParts.push(`sort:${sortBy}`);
         }
 
         Object.entries(rest).forEach(([key, value]) => {
-            if (value !== undefined && value !== null && value !== '') {
-                if (key.endsWith('Like')) {
-                    const fieldName = key.replace('Like', '');
+            if (value !== undefined && value !== null && value !== "") {
+                if (key.endsWith("Like")) {
+                    const fieldName = key.replace("Like", "");
                     qsParts.push(`${fieldName}:like=${encodeURIComponent(String(value))}`);
                 } else {
                     qsParts.push(`${key}=${encodeURIComponent(String(value))}`);
@@ -41,7 +46,7 @@ const geminiService = {
     },
 
     createConfigCustomPrompts: async (data: IUpdateGeminiConfigPromptsRequest) => {
-        return await axiosPrivate.post('/gemini-config/promt', data);
+        return await axiosPrivate.post("/gemini-config/promt", data);
     },
 
     updateConfigCustomPrompts: async (id: number, data: IUpdateGeminiConfigPromptsRequest) => {
@@ -53,11 +58,11 @@ const geminiService = {
     },
 
     getConfigPresets: async () => {
-        return await axiosPrivate.get('/gemini-config/presets');
+        return await axiosPrivate.get("/gemini-config/presets");
     },
 
     getGeminiModels: async () => {
-        return await axiosPrivate.get('/gemini-config/models');
+        return await axiosPrivate.get("/gemini-config/models");
     },
 
     getConfigModels: async (params?: IQueryRequest) => {
@@ -65,16 +70,16 @@ const geminiService = {
         const qsParts: string[] = [];
 
         if (sortBy && sortOrder) {
-            const sortPrefix = sortOrder === 'desc' ? '-' : '';
+            const sortPrefix = sortOrder === "desc" ? "-" : "";
             qsParts.push(`sort:${sortPrefix}${sortBy}`);
         } else if (sortBy) {
             qsParts.push(`sort:${sortBy}`);
         }
 
         Object.entries(rest).forEach(([key, value]) => {
-            if (value !== undefined && value !== null && value !== '') {
-                if (key.endsWith('Like')) {
-                    const fieldName = key.replace('Like', '');
+            if (value !== undefined && value !== null && value !== "") {
+                if (key.endsWith("Like")) {
+                    const fieldName = key.replace("Like", "");
                     qsParts.push(`${fieldName}:like=${encodeURIComponent(String(value))}`);
                 } else {
                     qsParts.push(`${key}=${encodeURIComponent(String(value))}`);
@@ -84,7 +89,7 @@ const geminiService = {
 
         const qs = qsParts.join(",");
 
-        return await axiosPrivate.get('/gemini-config/config-models', {
+        return await axiosPrivate.get("/gemini-config/config-models", {
             params: {
                 qs,
                 currentPage: page,
@@ -102,45 +107,45 @@ const geminiService = {
     },
 
     getModelConfigsPolicySchema: async (q?: string) => {
-        return await axiosPrivate.get('/gemini-config/admin/schema', {
+        return await axiosPrivate.get("/gemini-config/admin/schema", {
             params: q ? { q } : undefined,
         });
     },
 
     getModelConfigsPolicySchemaFields: async (entities: string[]) => {
         try {
-            const response = await axiosPrivate.get('/gemini-config/admin/schema/fields', {
+            const response = await axiosPrivate.get("/gemini-config/admin/schema/fields", {
                 params: {
-                    entities: entities.join(','),
+                    entities: entities.join(","),
                 },
             });
-            return response
+            return response;
         } catch (error) {
-            console.error('🔍 Service: API error:', error)
-            throw error
+            console.error("🔍 Service: API error:", error);
+            throw error;
         }
     },
 
     updateModelConfigsPolicySchema: async (modelId: number, data: IUpdateModelConfigsPolicySchemaRequest) => {
         const response = await axiosPrivate.patch(`/gemini-config/config-models/${modelId}/policy`, data);
-        return response
+        return response;
     },
 
     createGeminiConfigModels: async (data: ICreateGeminiConfigModelsRequest) => {
-        return await axiosPrivate.post('/gemini-config/config-models', data);
+        return await axiosPrivate.post("/gemini-config/config-models", data);
     },
 
     getServiceConfigs: async () => {
-        return await axiosPrivate.get('/gemini-config/service-configs');
+        return await axiosPrivate.get("/gemini-config/service-configs");
     },
 
     createServiceConfig: async (data: ICreateServiceConfigRequest) => {
-        return await axiosPrivate.post('/gemini-config/service-configs', data);
+        return await axiosPrivate.post("/gemini-config/service-configs", data);
     },
 
     deleteServiceConfig: async (id: number) => {
         return await axiosPrivate.delete(`/gemini-config/service-configs/${id}`);
     },
-}
+};
 
 export default geminiService;
