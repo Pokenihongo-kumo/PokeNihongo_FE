@@ -36,7 +36,6 @@ axiosPrivate.interceptors.request.use(
         const token = CookiesService.get(COOKIES.ACCESS_TOKEN);
         const language = localStorage.getItem('language') || 'vi';
 
-        console.log('token', token);
         // const userRole = Cookies.get('userRole');
 
         if (token) {
