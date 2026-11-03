@@ -31,9 +31,13 @@ i18n
             escapeValue: false, // React already does escaping
         },
 
+        // Same source as the Redux language slice and the Accept-Language header
+        // (localStorage 'language', default vi), so pages without the
+        // LanguageSwitcher (login) show the language the API answers in
         detection: {
-            order: ['localStorage', 'navigator', 'htmlTag'],
-            caches: ['localStorage'],
+            order: ['localStorage'],
+            lookupLocalStorage: 'language',
+            caches: [],
         }
     });
 
