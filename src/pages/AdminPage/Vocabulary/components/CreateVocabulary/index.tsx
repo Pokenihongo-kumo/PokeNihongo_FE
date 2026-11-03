@@ -283,7 +283,7 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
                                                                 <SelectValue placeholder={t("vocabulary.createVocabulary.basicInfo.wordTypePlaceholder")} />
                                                             </SelectTrigger>
                                                             <SelectContent>
-                                                                {wordTypesData?.results?.map((t: any) => (
+                                                                {wordTypesData?.results?.map((t) => (
                                                                     <SelectItem key={t.id} value={String(t.id)}>{t.name}</SelectItem>
                                                                 ))}
                                                             </SelectContent>

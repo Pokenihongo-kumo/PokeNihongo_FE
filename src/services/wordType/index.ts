@@ -1,12 +1,14 @@
 import { axiosPrivate } from "@configs/axios";
 import { IQueryRequest } from "@models/common/request";
+import { WordTypeListSchema } from "@models/wordType";
+import { toApiResult } from "@utils/api-response";
 
 const wordTypeService = {
     getAllWordTypes: async (params: IQueryRequest) => {
-
-        return await axiosPrivate.get('/wordtype', {
+        const response = await axiosPrivate.get('/wordtype', {
             params: params,
         });
+        return toApiResult(response, WordTypeListSchema);
     }
 }
 
