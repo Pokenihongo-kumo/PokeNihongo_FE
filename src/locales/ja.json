@@ -983,6 +983,8 @@
             "title": "語彙リスト",
             "searchPlaceholder": "語彙を検索...",
             "addNew": "新規追加",
+            "empty": "語彙がありません",
+            "loadError": "語彙一覧を読み込めませんでした",
             "columns": {
                 "wordJp": "日本語",
                 "reading": "読み方",
@@ -1053,6 +1055,7 @@
             "creating": "作成中...",
             "create": "語彙を作成",
             "createSuccess": "語彙が正常に作成されました",
+            "meaningAdded": "この語彙は既に存在するため、新しい意味を追加しました",
             "validationErrors": "検証エラー",
             "validationError": "検証エラーが発生しました",
             "generalError": "エラーが発生しました"
@@ -1064,6 +1067,8 @@
             "deleting": "削除中..."
         },
         "deleteSuccess": "語彙が正常に削除されました",
+        "updateSuccess": "語彙が正常に更新されました",
+        "updateError": "語彙の更新中にエラーが発生しました",
         "deleteError": "語彙の削除中にエラーが発生しました",
         "kanji": {
             "title": "漢字管理",

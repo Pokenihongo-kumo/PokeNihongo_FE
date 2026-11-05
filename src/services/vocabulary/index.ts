@@ -1,9 +1,16 @@
 import { axiosPrivate } from "@configs/axios";
 import { ICreateVocabularyFullMultipartType, IUpdateVocabularyPayload } from "@models/vocabulary/request";
 import { IQueryRequest } from "@models/common/request";
+import {
+    CreateVocabularyFullResultSchema,
+    VocabularyListSchema,
+    VocabularySchema,
+    VocabularyStatisticsSchema,
+} from "@models/vocabulary";
+import { toApiResult } from "@utils/api-response";
 
 const vocabularyService = {
-    createVocabulary: (payload: ICreateVocabularyFullMultipartType) => {
+    createVocabulary: async (payload: ICreateVocabularyFullMultipartType) => {
         // Build FormData for multipart submission, including optional files
         const formData = new FormData();
         formData.append("word_jp", String(payload.word_jp));
@@ -20,16 +27,17 @@ const vocabularyService = {
         formData.append("translations", translationsValue);
 
         // Optional media files
-        if ((payload as any).imageFile) {
-            formData.append("imageFile", (payload as any).imageFile as File);
+        if (payload.imageFile) {
+            formData.append("imageFile", payload.imageFile as File);
         }
-        if ((payload as any).audioFile) {
-            formData.append("audioFile", (payload as any).audioFile as File);
+        if (payload.audioFile) {
+            formData.append("audioFile", payload.audioFile as File);
         }
 
-        return axiosPrivate.post("/vocabulary/full", formData, {
+        const response = await axiosPrivate.post("/vocabulary/full", formData, {
             headers: { "Content-Type": "multipart/form-data" },
         });
+        return toApiResult(response, CreateVocabularyFullResultSchema);
     },
     getAllVocabularies: async (data: IQueryRequest) => {
         const queryParams = new URLSearchParams();
@@ -41,10 +49,12 @@ const vocabularyService = {
         if (data.sort) queryParams.append("sort", data.sort);
         if (data.lessonId) queryParams.append("lessonId", data.lessonId.toString());
 
-        return axiosPrivate.get(`/vocabulary?${queryParams.toString()}`);
+        const response = await axiosPrivate.get(`/vocabulary?${queryParams.toString()}`);
+        return toApiResult(response, VocabularyListSchema);
     },
     getStatistics: async () => {
-        return axiosPrivate.get("/vocabulary/statistics");
+        const response = await axiosPrivate.get("/vocabulary/statistics");
+        return toApiResult(response, VocabularyStatisticsSchema);
     },
     putVocabulary: async (wordJp: string, payload: IUpdateVocabularyPayload, regenerateAudio: boolean = false) => {
         const formData = new FormData();
@@ -76,16 +86,18 @@ const vocabularyService = {
             formData.append("audioUrl", payload.audioUrl);
         }
 
-        return axiosPrivate.put(
+        const response = await axiosPrivate.put(
             `/vocabulary/by-word/${encodeURIComponent(wordJp)}?regenerateAudio=${Boolean(regenerateAudio)}`,
             formData,
             {
                 headers: { "Content-Type": "multipart/form-data" },
             },
         );
+        return toApiResult(response, VocabularySchema);
     },
     deleteVocabulary: async (id: number) => {
-        return axiosPrivate.delete(`/vocabulary/${id}`);
+        const response = await axiosPrivate.delete(`/vocabulary/${id}`);
+        return toApiResult(response, VocabularySchema);
     },
 };
 

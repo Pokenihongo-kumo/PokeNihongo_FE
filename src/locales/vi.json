@@ -993,6 +993,8 @@
             "title": "Danh sách từ vựng",
             "searchPlaceholder": "Tìm kiếm từ vựng...",
             "addNew": "Thêm mới",
+            "empty": "Không có từ vựng nào",
+            "loadError": "Không tải được danh sách từ vựng",
             "columns": {
                 "wordJp": "Tiếng Nhật",
                 "reading": "Cách đọc",
@@ -1063,6 +1065,7 @@
             "creating": "Đang tạo...",
             "create": "Tạo từ vựng",
             "createSuccess": "Tạo từ vựng thành công",
+            "meaningAdded": "Từ vựng đã tồn tại, đã thêm nghĩa mới",
             "validationErrors": "Lỗi xác thực",
             "validationError": "Có lỗi xác thực",
             "generalError": "Đã có lỗi xảy ra"
@@ -1074,6 +1077,8 @@
             "deleting": "Đang xóa..."
         },
         "deleteSuccess": "Xóa từ vựng thành công",
+        "updateSuccess": "Cập nhật từ vựng thành công",
+        "updateError": "Có lỗi xảy ra khi cập nhật từ vựng",
         "deleteError": "Có lỗi xảy ra khi xóa từ vựng",
         "kanji": {
             "title": "Quản lý Kanji",

@@ -7,17 +7,14 @@ import { Controller, useForm } from "react-hook-form";
 import { Textarea } from "@ui/Textarea";
 import { useEffect, useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import vocabularyService from "@services/vocabulary";
 import { CreateVocabularyFullMultipartSchema, ICreateVocabularyFullMultipartType } from "@models/vocabulary/request";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card";
 import { Plus, Trash2, Languages, UploadCloud } from "lucide-react";
-import { getApiErrorMessage } from "@utils/api-error";
 import { cn } from "@utils/CN";
 import ImageDropzone from "@ui/ImageDropzone/ImageDropzone";
 import AudioDropzone from "@ui/AudioDropzone";
 import { useWordTypeList } from "@hooks/useWordType";
+import { useCreateVocabulary } from "@hooks/useVocabulary";
 import { useTranslation } from "react-i18next";
 
 interface CreateVocabularyProps {
@@ -56,7 +53,6 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
         },
     });
 
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
     const [creationMode, setCreationMode] = useState<"manual" | "import">("manual");
     const [selectedImportFile, setSelectedImportFile] = useState<File | null>(null);
     const [imagePreview, setImagePreview] = useState<string | null>(null);
@@ -93,40 +89,22 @@ const CreateVocabulary = ({ setIsAddDialogOpen }: CreateVocabularyProps) => {
         };
     }, [imagePreview, audioPreview]);
 
-    const createVocabularyMutation = useMutation({
-        mutationFn: vocabularyService.createVocabulary,
-        onSuccess: () => {
-            reset();
-            setIsAddDialogOpen(false);
-            setIsSubmitting(false);
-            toast.success(t("vocabulary.createVocabulary.createSuccess"));
-        },
-        onError: (error: any) => {
-            setIsSubmitting(false);
-            console.error("Error creating Vocabulary:", error);
-            console.error("Error response:", error.response?.data?.message);
+    const createVocabularyMutation = useCreateVocabulary();
+    const isSubmitting = createVocabularyMutation.isPending;
 
-            toast.error(getApiErrorMessage(error, t("vocabulary.createVocabulary.generalError")));
-        },
-    });
-
-    const onSubmit = async (data: ICreateVocabularyFullMultipartType) => {
-        setIsSubmitting(true);
-        try {
-            // Ensure files are passed along (service builds FormData)
-            const submitPayload: any = {
-                ...data,
-            };
-            const imageFile: File | undefined = watch("imageFile") as any as File | undefined;
-            const audioFile: File | undefined = watch("audioFile") as any as File | undefined;
-            if (imageFile) submitPayload.imageFile = imageFile;
-            if (audioFile) submitPayload.audioFile = audioFile;
-            createVocabularyMutation.mutate(submitPayload as ICreateVocabularyFullMultipartType);
-        } catch (error: any) {
-            setIsSubmitting(false);
-            console.error("Unexpected error:", error);
-            toast.error(error.response?.data?.message || t("vocabulary.createVocabulary.generalError"));
-        }
+    // The hook shows the success/error toast; here only the dialog is closed and reset
+    const onSubmit = (data: ICreateVocabularyFullMultipartType) => {
+        const imageFile = watch("imageFile") as File | undefined;
+        const audioFile = watch("audioFile") as File | undefined;
+        createVocabularyMutation.mutate(
+            { ...data, imageFile, audioFile },
+            {
+                onSuccess: () => {
+                    reset();
+                    setIsAddDialogOpen(false);
+                },
+            },
+        );
     };
 
     return (
