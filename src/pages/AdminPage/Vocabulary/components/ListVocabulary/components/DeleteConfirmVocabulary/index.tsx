@@ -31,8 +31,8 @@ const DeleteConfirmVocabulary = ({ vocabularyIdToDelete, setVocabularyIdToDelete
         try {
             await deleteMutation.mutateAsync(vocabularyIdToDelete);
             setVocabularyIdToDelete(null);
-        } catch (error) {
-            console.error("Error deleting vocabulary:", error);
+        } catch {
+            // The mutation already showed the error toast; keep the dialog open
         }
     };
     //------------------------End------------------------//

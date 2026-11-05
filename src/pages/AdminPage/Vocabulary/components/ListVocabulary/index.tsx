@@ -17,6 +17,7 @@ import TabListLevelJLBT from "@organisms/TabListLevelJLBT";
 import DeleteConfirmVocabulary from "./components/DeleteConfirmVocabulary";
 import { useTranslation } from "react-i18next";
 import UpdateVocabularyDialog from "./components/UpdateVocabularyDialog";
+import { IVocabulary } from "@models/vocabulary";
 
 interface Vocabulary {
     isAddVocabularyDialogOpen: boolean;
@@ -37,8 +38,12 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
     const [sortBy, setSortBy] = useState<string | undefined>("createdAt");
     const [sort, setSort] = useState<"asc" | "desc" | undefined>("desc");
     const [vocabularyIdToDelete, setVocabularyIdToDelete] = useState<number | null>(null);
-    const [vocabularyToEdit, setVocabularyToEdit] = useState<MODELS.VocabularyForUpdate | null>(null);
-    const { data: vocabularies, isLoading } = useVocabularyList({
+    const [vocabularyToEdit, setVocabularyToEdit] = useState<IVocabulary | null>(null);
+    const {
+        data: vocabularies,
+        isLoading,
+        isError,
+    } = useVocabularyList({
         page: page,
         limit: itemsPerPage,
         search: debouncedSearchQuery,
@@ -258,7 +263,21 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {vocabularies?.results?.map((vocab: any) => (
+                                    {isError && (
+                                        <TableRow>
+                                            <TableCell colSpan={6} className="py-8 text-center text-error">
+                                                {t("vocabulary.listVocabulary.loadError")}
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                    {!isError && vocabularies?.results.length === 0 && (
+                                        <TableRow>
+                                            <TableCell colSpan={6} className="py-8 text-center text-gray-500">
+                                                {t("vocabulary.listVocabulary.empty")}
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                    {vocabularies?.results.map((vocab) => (
                                         <TableRow key={vocab.id} className="border-gray-200 hover:bg-gray-50">
                                             <TableCell className="font-semibold text-lg text-gray-800 w-40 whitespace-nowrap">
                                                 {vocab.wordJp}
@@ -268,8 +287,7 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
                                             </TableCell>
                                             <TableCell className="w-28 whitespace-nowrap">
                                                 {(() => {
-                                                    const typeName =
-                                                        (vocab?.wordType?.name as string | undefined) || "unknown";
+                                                    const typeName = vocab.wordType?.name || "unknown";
                                                     const label = t(
                                                         `vocabulary.listVocabulary.wordTypes.${typeName}`,
                                                         typeName,
@@ -293,7 +311,7 @@ const ListVocabulary = ({ isAddVocabularyDialogOpen, setIsAddVocabularyDialogOpe
                                                             variant="ghost"
                                                             size="icon"
                                                             className="h-8 w-8 text-blue-500 hover:bg-blue-100 rounded-full"
-                                                            onClick={() => handlePlayAudio(vocab.audioUrl)}
+                                                            onClick={() => handlePlayAudio(vocab.audioUrl!)}
                                                         >
                                                             <Volume2 className="h-4 w-4" />
                                                         </Button>

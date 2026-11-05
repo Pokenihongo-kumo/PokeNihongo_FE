@@ -1005,6 +1005,8 @@
             "title": "Vocabulary List",
             "searchPlaceholder": "Search vocabulary...",
             "addNew": "Add New",
+            "empty": "No vocabulary found",
+            "loadError": "Could not load the vocabulary list",
             "columns": {
                 "wordJp": "Japanese",
                 "reading": "Reading",
@@ -1075,6 +1077,7 @@
             "creating": "Creating...",
             "create": "Create Vocabulary",
             "createSuccess": "Vocabulary created successfully",
+            "meaningAdded": "The word already exists; a new meaning was added",
             "validationErrors": "Validation Errors",
             "validationError": "Validation error",
             "generalError": "An error occurred"
@@ -1086,6 +1089,8 @@
             "deleting": "Deleting..."
         },
         "deleteSuccess": "Vocabulary deleted successfully",
+        "updateSuccess": "Vocabulary updated successfully",
+        "updateError": "An error occurred while updating vocabulary",
         "deleteError": "An error occurred while deleting vocabulary",
         "kanji": {
             "title": "Kanji Management",

@@ -6,6 +6,7 @@ import { Input } from "@ui/Input";
 import { Switch } from "@ui/Switch";
 import { useUpdateVocabulary } from "@hooks/useVocabulary";
 import { IUpdateVocabularyPayload } from "@models/vocabulary/request";
+import { IVocabulary } from "@models/vocabulary";
 import ImageDropzone from "@ui/ImageDropzone/ImageDropzone";
 import AudioDropzone from "@ui/AudioDropzone";
 import { Loader2 } from "lucide-react";
@@ -13,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 interface UpdateVocabularyDialogProps {
-    vocabulary: MODELS.VocabularyForUpdate | null;
+    vocabulary: IVocabulary | null;
     onClose: () => void;
 }
 
@@ -81,8 +82,8 @@ const UpdateVocabularyDialog = ({ vocabulary, onClose }: UpdateVocabularyDialogP
                 payload,
             });
             onClose();
-        } catch (error) {
-            console.error("Failed to update vocabulary", error);
+        } catch {
+            // The mutation already showed the error toast; keep the dialog open
         }
     };
 

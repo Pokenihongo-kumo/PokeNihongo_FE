@@ -144,8 +144,8 @@ const VocabularyManagement = () => {
         );
     }
 
-    if (error) {
-        return <div className="text-red-500">Error: {error.message}</div>;
+    if (error || !stats) {
+        return <div className="text-red-500">Error: {error?.message}</div>;
     }
 
     return (
