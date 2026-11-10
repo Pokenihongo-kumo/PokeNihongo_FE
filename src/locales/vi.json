@@ -336,6 +336,10 @@
                     "title": "Thanh toán đã bị hủy",
                     "description": "Giao dịch thanh toán đã bị hủy. Bạn có thể thử lại nếu muốn tiếp tục thanh toán."
                 },
+                "payment_pending": {
+                    "title": "Thanh toán đang được xử lý",
+                    "description": "Chúng tôi chưa nhận được xác nhận thanh toán từ PayOS. Nếu bạn đã thanh toán, gói sẽ được kích hoạt ngay khi có xác nhận; vui lòng kiểm tra lại sau ít phút."
+                },
                 "unknown": {
                     "title": "Lỗi không xác định",
                     "description": "Đã xảy ra lỗi không xác định trong quá trình thanh toán. Vui lòng thử lại hoặc liên hệ hỗ trợ."
