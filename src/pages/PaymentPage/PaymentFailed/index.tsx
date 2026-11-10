@@ -1,9 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Card, CardContent, CardHeader, CardTitle } from "@ui/Card";
-import { XCircle, AlertCircle, FileQuestion, RefreshCw } from "lucide-react";
+import { XCircle, AlertCircle, FileQuestion, RefreshCw, Clock } from "lucide-react";
 
-type PaymentErrorType = "payment_not_found" | "payment_failed" | "system_error" | "payment_cancelled";
+// payment_pending: PayOS has not confirmed yet (the backend settles it via the webhook)
+type PaymentErrorType =
+    "payment_not_found" | "payment_failed" | "system_error" | "payment_cancelled" | "payment_pending";
 
 const PaymentFailed = () => {
     const [searchParams] = useSearchParams();
@@ -54,6 +56,15 @@ const PaymentFailed = () => {
                     color: "text-blue-600",
                     bgColor: "bg-blue-50",
                     borderColor: "border-blue-200",
+                };
+            case "payment_pending":
+                return {
+                    icon: Clock,
+                    title: t("payment.failed.errors.payment_pending.title"),
+                    description: t("payment.failed.errors.payment_pending.description"),
+                    color: "text-amber-600",
+                    bgColor: "bg-amber-50",
+                    borderColor: "border-amber-200",
                 };
             default:
                 return {

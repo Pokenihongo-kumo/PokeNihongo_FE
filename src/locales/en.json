@@ -347,6 +347,10 @@
                     "title": "Payment Cancelled",
                     "description": "The payment transaction has been cancelled. You can try again if you wish to continue with the payment."
                 },
+                "payment_pending": {
+                    "title": "Payment is being processed",
+                    "description": "We have not received the payment confirmation from PayOS yet. If you have paid, your plan will be activated as soon as it arrives; please check again in a few minutes."
+                },
                 "unknown": {
                     "title": "Unknown Error",
                     "description": "An unknown error occurred during payment processing. Please try again or contact support."
